@@ -5,24 +5,24 @@ Authors@R: person("Neil", "Shephard", email = "n.shephard@sheffield.ac.uk", role
 Description:
 Depends:
     R (>= 3.3.4),
-    broom (>= 0.4.1),
+    broom (>= 0.4.2),
     ctru (>= 0.0.0.9001),
     DT (>= 0.2),
     forcats (>= 0.2.0),
     formattable (>= 0.2.0.1),
-    ggfortify (>= 0.2.0),
+    ggfortify (>= 0.4.1),
     ggplot2 (>= 2.2.1),
-    haven (>= 0.2.0),
-    Hmisc (>= 3.17-1),
+    haven (>= 1.0.0),
+    Hmisc (>= 4.0-3),
     knitr (>= 1.11),
     lazyeval (>= 0.2.0),
     magrittr (>= 1.5),
-    rms (>= 4.5-0),
+    rms (>= 5.1-1),
     shiny(>= 1.0.3),
     stringr (>= 1.2.0),
     tidyr (>= 0.6.2),
     tidyverse (>= 1.1.1)
-    xtable (>= 1.7-4)
+    xtable (>= 1.8-2)
 License: GPL-3
 LazyData: true
 RoxygenNote: 6.0.1
