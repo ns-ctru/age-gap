@@ -1,0 +1,24 @@
+This data is exported from the Prospect database with the following options.  Because of the way
+in which Prospect is implemented (most work is done in Ruby rather than the SQL backend) the
+'Study Data > Events List' table should be excluded from the main export as it takes a very long
+time.
+
+
+Option                                                  | Choice
+--------------------------------------------------------+-------------------
+Use numerical values for lookup lists                   | Yes
+Include time/user stamps                                | No
+Include site column in events/forms/subforms            | Yes
+Include the row number of the subform                   | No
+Include verified column in forms/subforms               | No
+Remove line breaks					| Yes
+Convert numeric string fields to Excel-friendly format  | No
+Include database IDs					| No
+Export blank strings as ""				| Yes
+Date format						| yyyy-mm-dd
+Boolean format						| 1 = Ticked; 0 = Not ticked
+File format						| CSV
+Newline character					| CR+LF (\n\r)
+Sites							| All
+Study Data						| In Stages
+Study Forms and SubForms				| All
