@@ -7,7 +7,7 @@ Depends:
     R (>= 3.3.4),
     blogdown (>= 0.0.40),
     broom (>= 0.4.2),
-    ctru (>= 0.0.0.9001),
+    ctru (>= 0.0.0.20170517),
     DT (>= 0.2),
     forcats (>= 0.2.0),
     formattable (>= 0.2.0.1),
