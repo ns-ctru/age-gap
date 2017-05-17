@@ -5,6 +5,7 @@ Authors@R: person("Neil", "Shephard", email = "n.shephard@sheffield.ac.uk", role
 Description:
 Depends:
     R (>= 3.3.4),
+    blogdown (>= 0.0.40),
     broom (>= 0.4.2),
     ctru (>= 0.0.0.9001),
     DT (>= 0.2),
