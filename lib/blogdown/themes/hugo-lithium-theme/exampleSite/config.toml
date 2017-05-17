@@ -1,7 +1,7 @@
 baseurl = "/"
 relativeurls = true
-languageCode = "en-us"
-title = "A Hugo website"
+languageCode = "en-uk"
+title = "Bridging The Age Gap RCT"
 theme = "hugo-lithium-theme"
 googleAnalytics = ""
 disqusShortname = ""
@@ -12,13 +12,13 @@ ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
 
 [[menu.main]]
     name = "About"
-    url = "/about/"
-[[menu.main]]
-    name = "GitHub"
-    url = "https://github.com/rstudio/blogdown"
-[[menu.main]]
-    name = "Twitter"
-    url = "https://twitter.com/rstudio"
+    url = "https://www.shu.ac.uk/research/specialisms/centre-for-health-and-social-care-research/what-we-do/our-expertise/health-care-and-service-delivery-research/case-studies/bridging-the-age-gap-in-breast-cancer-research-improving-outcomes-for-older-women"
+# [[menu.main]]
+#     name = "GitHub"
+#     url = "https://github.com/rstudio/blogdown"
+# [[menu.main]]
+#     name = "Twitter"
+#     url = "https://twitter.com/rstudio"
 
 [params]
     description = "A website built through Hugo and blogdown."
@@ -37,4 +37,3 @@ ignoreFiles = ["\\.Rmd$", "_files$", "_cache$"]
     width = 50
     height = 50
     alt = "Logo"
-
