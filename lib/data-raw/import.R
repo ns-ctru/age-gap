@@ -16,6 +16,16 @@ master$lookups <- read_prospect(file = 'Lookups.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = NULL)
+## File   : Age Gap database specification - Forms.csv
+## Source : https://goo.gl/oFBs4j
+master$lookups.form <- read.csv(file = 'Age Gap database specification - Forms.csv',
+                                header = TRUE)
+## File   : Age Gap database specification - Forms.csv
+## Source : https://goo.gl/oFBs4j
+master$lookups.fields <- read.csv(file = 'Age Gap database specification - Fields.csv',
+                                  header = TRUE)
+master$lookups.fields <- dplyr::select(master$lookups.fields, Form, Subform, Identifier, Label)
+names(master$lookups.fields) <- names(master$lookups.fields) %>% tolower()
 ## File : Abridged Patient Generated Assessment.csv
 master$abridged_patient_assessment <- read_prospect(file = 'Abridged Patient Generated Assessment.csv',
                          header              = TRUE,
@@ -338,6 +348,13 @@ master$unavailable_forms <- read_prospect(file = 'Unavailable Forms.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookup)
+## File : Forms.csv
+master$forms <- read_prospect(file = 'Forms.csv',
+                         header              = TRUE,
+                         sep                 = ',',
+                         convert.dates       = TRUE,
+                         convert.underscores = TRUE,
+                         dictionary          = master$lookup)
 ## File : Annotations.csv
 master$annoations <- read_prospect(file = 'Annotations.csv',
                          header              = TRUE,
@@ -352,3 +369,15 @@ master$annoations <- read_prospect(file = 'Annotations.csv',
 ## EQ5D
 
 ##
+
+###################################################################################
+## README files describing all variables                                         ##
+###################################################################################
+
+###################################################################################
+## Save and Export                                                               ##
+###################################################################################
+save(master,
+     file = '../data/age-gap.RData',
+     compression_level = 9)
+## write_dta(age_gap, version = 14, path = 'stata/age_gap.dta')
