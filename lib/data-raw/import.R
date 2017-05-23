@@ -597,7 +597,62 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
 
 
 ###################################################################################
-## Combine baseline and multiple timepoints into one
+## Combine the RCT components                                                    ##
+###################################################################################
+master$rct <- full_join(dplyr::select(master$treatment_decision_support_consultations,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      surg_pet_consult, surg_pet_consult_dt, surg_pet_offer,
+                                      surg_pet_follow, chemo_no_consult, chemo_no_consult_dt,
+                                      chemo_no_offer, chemo_no_follow),
+                        dplyr::select(master$treatment_decision_support_consultations,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      trt_opt_discussed, odt_staff_used,
+                                      odt_staff_used_no_not_time_o, odt_staff_used_no_pt_not_suit_o,
+                                      odt_staff_used_no_staff_not_like_o, odt_staff_used_no_no_access_o,
+                                      odt_staff_used_no_already_decide_o, odt_staff_used_no_oth_o,
+                                      odt_staff_used_no_oth, odt_pt_shown, odt_pt_shown_no_not_time_o,
+                                      odt_pt_shown_no_pt_not_suit_o, odt_pt_shown_no_staff_not_like_o,
+                                      odt_pt_shown_no_no_access_o, odt_pt_shown_no_distressed_o,
+                                      odt_pt_shown_no_not_understood_o, odt_pt_shown_no_decided_o,
+                                      odt_pt_shown_no_fam_reluctant_o, odt_pt_shown_no_oth_o,
+                                      odt_pt_shown_no_oth, odt_taken_home, odt_taken_home_no_not_time_o,
+                                      odt_taken_home_no_pt_not_suit_o, odt_taken_home_no_staff_not_like_o,
+                                      odt_taken_home_no_no_access_o, odt_taken_home_no_not_offer_o,
+                                      odt_taken_home_no_distressed_o, odt_taken_home_no_not_understood_o,
+                                      odt_taken_home_no_decided_o, odt_taken_home_no_pt_reluctant_o,
+                                      odt_taken_home_no_fam_reluctant_o, odt_taken_home_no_oth_o,
+                                      odt_taken_home_no_oth, og_staff_used, og_staff_used_no_not_time_o,
+                                      og_staff_used_no_pt_not_suit_o, og_staff_used_no_staff_not_like_o,
+                                      og_staff_used_no_not_avail_o, og_staff_used_no_distressed_o,
+                                      og_staff_used_no_not_understood_o, og_staff_used_no_decided_o,
+                                      og_staff_used_no_pt_reluctant_o, og_staff_used_no_fam_reluctant_o,
+                                      og_staff_used_no_oth_o, og_staff_used_no_oth, og_taken_home,
+                                      og_taken_home_no_not_time_o, og_taken_home_no_pt_not_suit_o,
+                                      og_taken_home_no_staff_not_like_o, og_taken_home_no_not_avail_o,
+                                      og_taken_home_no_not_offer_o, og_taken_home_no_distressed_o,
+                                      og_taken_home_no_not_understood_o, og_taken_home_no_decided_o,
+                                      og_taken_home_no_pt_reluctant_o, og_taken_home_no_fam_reluctant_o,
+                                      og_taken_home_no_oth_o, og_taken_home_no_oth, b_staff_used,
+                                      b_staff_used_no_not_time_o, b_staff_used_no_pt_not_suit_o,
+                                      b_staff_used_no_staff_not_like_o, b_staff_used_no_not_avail_o,
+                                      b_staff_used_no_distressed_o, b_staff_used_no_not_understood_o,
+                                      b_staff_used_no_decided_o, b_staff_used_no_pt_reluctant_o,
+                                      b_staff_used_no_fam_reluctant_o, b_staff_used_no_oth_o,
+                                      b_staff_used_no_oth, b_taken_home, b_taken_home_no_not_time_o,
+                                      b_taken_home_no_pt_not_suit_o, b_taken_home_no_staff_not_like_o,
+                                      b_taken_home_no_not_avail_o, b_taken_home_no_not_offer_o,
+                                      b_taken_home_no_distressed_o, b_taken_home_no_not_understood_o,
+                                      b_taken_home_no_decided_o, b_taken_home_no_pt_reluctant_o,
+                                      b_taken_home_no_fam_reluctant_o, b_taken_home_no_oth_o, b_taken_home_no_oth),
+                        by = c('individual_id', 'site', 'event_name'))
+
+###################################################################################
+## Combine baseline and multiple timepoints into one coherent data frame         ##
+###################################################################################
+age_gap <- full_join(master$therapy_qol,
+                     master$baseline,
+                     by = c('individual_id', 'site', 'event_name'))
+
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
 ###################################################################################
