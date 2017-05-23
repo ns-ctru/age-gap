@@ -1,0 +1,19 @@
+## 2017-05-17 Investigating "Factor levels are duplicated"
+master$clinical_assessment_pet <- read_prospect(file = 'Clinical Assessment (PET).csv',
+                         header          = TRUE,
+                         sep             = ',',
+                         convert.dates   = TRUE,
+                         dictionary      = master$lookup)
+## Check for duplicates across all lookups
+dim(master$lookups)
+unique(master$lookups) %>% dim()
+## Look at fields for just this form
+dplyr::filter(master$lookups, form == 'Clinical Assessment (PET)') %>% dim()
+dplyr::filter(master$lookups, form == 'Clinical Assessment (PET)') %>% unique() %>% dim()
+## Group by form/subform/field/code and look for duplicates
+dplyr::filter(master$lookups, form == 'Clinical Assessment (PET)') %>%
+    group_by(form, subform, field, code) %>%
+    mutate(n = n()) %>%
+    dplyr::filter(n > 1)
+## Looks like the problem is with uni.bilateral
+system("head -n1 Clinical\\ Assessment\\ \\(PET\\).csv")

@@ -572,7 +572,7 @@ age_gap <- age_gap %>%
 ## Elapsed time from consent/randomisation to noted event
            group_by(individual_id) %>%
            mutate(start_date = min(consent_dt, na.rm = TRUE),
-                  elapsed    = interval(event_date - start_date)) %>%
+                  elapsed    = interval(event_date, start_date)) %>%
            dplyr::select(-start_date) %>%
            ungroup()
 

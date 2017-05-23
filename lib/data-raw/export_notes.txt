@@ -1,0 +1,35 @@
+Age Gap export
+23/05/2017 09:33:53
+
+Settings
+---------
+
+[yes] Use numerical values for lookup lists
+ [no] Include time/user stamps
+[yes] Include site column in events/forms/subforms
+ [no] Include verified column in forms/subforms
+ [no] Show subform row number
+[yes] Remove line breaks
+ [no] Convert numeric string fields to Excel-friendly format
+[yes] Include database IDs
+[yes] Include event database IDs
+[yes] Export blank strings as ""
+
+Date format: yyyy-mm-dd
+Boolean format: 1=Ticked, 0=Not ticked
+File format: CSV
+Newline character: CR+LF (\n\r)
+Site(s): All
+
+Study data
+-----------
+
+Lookup codes
+Individuals list (5844)
+Site list (56)
+Unavailable forms (6715)
+Transfers
+Field Annotations
+Discrepancies (19/05/2017 08:36)
+Forms list
+

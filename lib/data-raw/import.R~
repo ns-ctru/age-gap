@@ -1,0 +1,50 @@
+## Filename    : import.R
+## Author      : n.shephard@sheffield.ac.uk
+## Description : Imports the CSV files exported from the Prospect database
+##               and recreates a lot of the links that existed there to
+##               produce one single data set for analysis
+Abridged Patient Generated Assessment.csv
+Activities of Daily Living.csv
+Adverse Events - AeEvent.csv
+Adverse Events.csv
+Age Gap_data_20170517_1315.zip
+Baseline Medications.csv
+Baseline Medications - Med.csv
+Baseline Tumour Assessment.csv
+Breast Cancer Treatment Choices - chemo vs no chemo.csv
+Breast Cancer Treatment Choices - surgery vs pills.csv
+Brief COPE.csv
+Change in level of participation.csv
+Chemotherapy - Chemotherapy.csv
+Chemotherapy.csv
+Clinical Assessment (non-PET).csv
+Clinical Assessment (PET).csv
+CollaboRATE.csv
+Consent Form.csv
+Decision Making Preferences.csv
+Decision Regret Scale (DRS).csv
+Discussing treatment options.csv
+ECOG Performance Status Score.csv
+Eligibility checklist.csv
+Endocrine Therapy.csv
+EORTC-QLQ-BR23.csv
+EORTC-QLQ-C30.csv
+EORTC-QLQ-ELD15.csv
+EQ5D.csv
+export_notes.txt
+Instrumental Activities of Daily Living.csv
+Lookups.csv
+Mini-Mental State Examination.csv
+Modified Charlson Co-Morbidity.csv
+Process Evaluation log.csv
+QoL  LoL Questionnaire.csv
+Radiotherapy.csv
+Screening Form.csv
+Spielberger State-Trait Anxiety Inventory (STAI).csv
+Study completion  discontinuation form.csv
+Surgery and Post Operative Pathology.csv
+The Brief Illness Perception Questionnaire (BIPQ).csv
+Therapy Assessment.csv
+Trastuzumab.csv
+Treatment decision.csv
+Treatment decision support consultations.csv

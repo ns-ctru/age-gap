@@ -1,0 +1,4 @@
+# CSV files (raw data)
+*.csv
+# R files
+.*.RData
