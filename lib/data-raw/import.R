@@ -391,150 +391,213 @@ master$individuals <- read_prospect(file = 'Individuals.csv',
 ###################################################################################
 ## Derive a single data frame for all data components
 ## Consent and Baseline Tumor Assessment
-age_gap <- full_join(dplyr::select(master$consent_form,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   consent_dt, written_consent, participation_lvl, dob),
-                     dplyr::select(master$baseline_tumour_assessment,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   uni_bilateral)) %>%
+master$baseline <- full_join(dplyr::select(master$consent_form,
+                                           individual_id, site, ## event_name, event_date, database_id,
+                                           screening_no, dob, participation_lvl),
+                             dplyr::select(master$baseline_tumour_assessment,
+                                           individual_id, site, event_name, event_date, ## database_id,
+                                           uni_bilateral, primary_tumour,
+                                           r_focal, r_num_tumours, r_cancer_palpable, r_size_clin_assess,
+                                           r_method_assess, r_size_ultrasound, r_size_mammo,
+                                           r_axillary_present, r_axillary_nodes, r_axillary_axis,
+                                           r_biopsy_type, r_confirm_present, r_histo_grade, r_histo_subtype,
+                                           r_histo_spcfy, r_allred, r_h_score, r_pgr_score, r_her_2_score,
+                                           l_focal, l_num_tumours, l_cancer_palpable, l_size_clin_assess,
+                                           l_method_assess, l_size_ultrasound, l_size_mammo,
+                                           l_axillary_present, l_axillary_nodes, l_axillary_axis, l_biopsy_type,
+                                           l_confirm_present, l_histo_grade, l_histo_subtype, l_histo_spcfy,
+                                           l_allred, l_h_score, l_pgr_score, l_her_2_score, taking_meds),
+                             by = c('individual_id', 'site')) %>%
 ## Baseline Medications
            ## full_join(.,
            ##           dplyr::select(master$baseline_medications_med,
            ##                         individual_id, site, event_name, event_date, ## database_id,
            ##                         )) %>%
 ## Decision making preferences
-           full_join(.,
-                     dplyr::select(master$decision_making_preferences,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   ideal_situation, actual_situation)) %>%
+                  full_join(.,
+                            dplyr::select(master$decision_making_preferences,
+                                          individual_id, site, event_name, event_date, ## database_id,
+                                          ideal_situation, actual_situation),
+                            by = c('individual_id', 'site', 'event_name')) %>%
 ## Abridged Patient Assessment
-           full_join(.,
-                     dplyr::select(master$abridged_patient_assessment,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   weight_current_kg, weight_current_st, weight_current_lb,
-                                   weight_1m_kg, weight_1m_st, weight_1m_lb,
-                                   weight_6m_kg, weight_6m_st, weight_6m_lb,
-                                   height_cm, height_ft, height_in)) %>%
+                  full_join(.,
+                            dplyr::select(master$abridged_patient_assessment,
+                                          individual_id, site, event_name, ## event_date, database_id,
+                                          weight_current_kg, weight_current_st, weight_current_lb,
+                                          weight_1m_kg, weight_1m_st, weight_1m_lb,
+                                          weight_6m_kg, weight_6m_st, weight_6m_lb,
+                                          height_cm, height_ft, height_in),
+                            by = c('individual_id', 'site', 'event_name')) %>%
 ## Mini Mental State Examination
-           full_join(.,
-                     dplyr::select(master$mini_mental_state_examination,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   orientation_1, orientation_2,
-                                   attention_1, attention_2,
-                                   recall_1, naming_1, repetition_1, comprehension_1,
-                                   reading_1, writing_1, drawing_1)) %>%
+                  full_join(.,
+                            dplyr::select(master$mini_mental_state_examination,
+                                          individual_id, site, event_name, ## event_date, database_id,
+                                          orientation_1, orientation_2,
+                                          attention_1, attention_2,
+                                          recall_1, naming_1, repetition_1, comprehension_1,
+                                          reading_1, writing_1, drawing_1),
+                            by = c('individual_id', 'site', 'event_name')) %>%
 ## Activites of Daily Living
-           full_join(.,
-                     dplyr::select(master$activities_daily_living,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   feeding, transfer_bed_chair, personal_toilet, toiletting,
-                                   bathing, walking_wheelchair, ascend_descend, dressing,
-                                   bowels, bladder, adl_score)) %>%
+                  full_join(.,
+                            dplyr::select(master$activities_daily_living,
+                                          individual_id, site, event_name, ## event_date, database_id,
+                                          feeding, transfer_bed_chair, personal_toilet, toiletting,
+                                          bathing, walking_wheelchair, ascend_descend, dressing,
+                                          bowels, bladder, adl_score),
+                            by = c('individual_id', 'site', 'event_name')) %>%
 ## Instrumental Activites Daily Living
-           full_join(.,
-                     dplyr::select(master$instrumental_activities_daily_living,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   telephone, shopping, food_prep, housekeeping,
-                                   laundry, transport, medication, finances, iadl_score)) %>%
+                  full_join(.,
+                            dplyr::select(master$instrumental_activities_daily_living,
+                                          individual_id, site, event_name, ## event_date, database_id,
+                                          telephone, shopping, food_prep, housekeeping,
+                                          laundry, transport, medication, finances, iadl_score),
+                            by = c('individual_id', 'site', 'event_name')) %>%
 ## Modified CHarlson Co-Morbidity
-           full_join(.,
-                     dplyr::select(master$modified_charlson_comorbidity,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   age, aids, cerebrovascular, pulmonary, heart_failure,
-                                   connective_tissue, dementia, hemiplegia, leukemia,
-                                   lymphoma, myocardial, perpheral_vascular, diabetes,
-                                   liver_diease, renal_disease, malignant_tumour,
-                                   cci_score, cci_probability)) %>%
-## EORTC-QLQ-C30
-           full_join(.,
-                     dplyr::select(master$eortc_qlq_c30,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   c30_q1,  c30_q2,  c30_q3,  c30_q4,  c30_q5,
-                                   c30_q6,  c30_q7,  c30_q8,  c30_q9,  c30_q10,
-                                   c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
-                                   c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
-                                   c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
-                                   c30_q26, c30_q27, c30_q28, c30_q29, c30_q30,
-                                   ql_raw, ql_scale, pf_raw,
-                                   pf_scale, rf_raw, rf_scale, ef_raw, ef_scale, cf_raw,
-                                   cf_scale, sf_raw, sf_scale, fa_raw, fa_scale, nv_raw,
-                                   nv_scale, pa_raw, pa_scale, dy_scale, sl_scale, ap_scale,
-                                   co_scale, di_scale, fi_scale)) %>%
-## EORTC-QLQ-BR23
-           full_join(.,
-                     dplyr::select(master$eortc_qlq_br23,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
-                                   br23_q36, br23_q37, br23_q38, br23_q39, br23_q40, br23_q41,
-                                   br23_q42, br23_q43, br23_q44, br23_q45, br23_q46, br23_q47,
-                                   br23_q48, br23_q49, br23_q50, br23_q51, br23_q52, br23_q53,
-                                   brbi_raw, brbi_scale, brsef_raw, brsef_scale, brsee_scale, brfu_scale,
-                                   brst_raw, brst_scale, brbs_raw, brbs_scale, bras_raw, bras_scale,
-                                   brhl_scale)) %>%
-## EORTC-QLQ-ELD15
-           full_join(.,
-                     dplyr::select(master$eortc_qlq_eld15,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
-                                   eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63, eld15_q64,
-                                   eld15_q65, eld15_q66, eld15_q67, eld15_q68, mo_raw, mo_scale,
-                                   wao_raw, wao_scale, wo_raw, wo_scale, mp_raw, mp_scale,
-                                   boi_raw, boi_scale, js_scale, fs_scale)) %>%
-## EQ5D
-           full_join(.,
-                     dplyr::select(master$eq5d,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   mobility, self_care, usual_activity, pain_discomfort,
-                                   anxiety_depression, health_today, eq5d_number, eq5d_score)) %>%
-## Therapy Assessment
-           full_join(.,
-                     dplyr::select(master$therapy_assessment,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   any_treatment, endocrine_therapy, radiotherapy,
-                                   chemotherapy, trastuzumab, surgery)) %>%
-## Endocrine Therapy
-           full_join(.,
-                     dplyr::select(master$endocrine_therapy,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   primary_adjuvant, reason_pet, reason_pet_risk, reason_pet_spcfy,
-                                   endocrine_type, endocrine_type_oth, therapy_changed, therapy_changed_dtls,
-                                   compliance, endocrine_aes, et_hot_flushes, et_asthenia,
-                                   et_joint_pain, et_vaginal_dryness, et_hair_thinning, et_rash,
-                                   et_nausea, et_diarrhoea, et_headache, et_vaginal_bleeding,
-                                   et_vomiting, et_somnolence)) %>%
-## Radiotherapy
-           full_join(.,
-                     dplyr::select(master$radiotherapy,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   which_breast_right_o, which_breast_left_o, r_site_breast_o, r_site_axilla_o,
-                                   r_site_supraclavicular_o, r_site_chest_wall_o, r_site_other_o,
-                                   r_breast_fractions, r_axilla_fractions, r_supra_fractions,
-                                   r_chest_fractions, r_other_fractions, r_radiotherapy_aes,
-                                   l_site_breast_o, l_site_axilla_o, l_site_supraclavicular_o,
-                                   l_site_chest_wall_o, l_site_other_o, l_breast_fractions, l_axilla_fractions,
-                                   l_supra_fractions, l_chest_fractions, l_other_fractions, l_radiotherapy_aes,
-                                   r_skin_erythema, r_pain, r_breast_oedema, r_breast_shrink,
-                                   r_breast_pain, l_skin_erythema, l_pain, l_breast_oedema,
-                                   l_breast_shrink, l_breast_pain)) %>%
-## Chemotherapy
-           full_join(.,
-                     dplyr::select(master$chemotherapy,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   chemo_received, chemo_aes,
-                                   c_fatigue, c_anaemia, c_low_wc_count, c_thrombocytopenia, c_allergic,
-                                   c_hair_thinning, c_nausea, c_infection)) ##%>%
+                   full_join(.,
+                             dplyr::select(master$modified_charlson_comorbidity,
+                                           individual_id, site, event_name, event_date, ## database_id,
+                                           age, aids, cerebrovascular, pulmonary, heart_failure,
+                                           connective_tissue, dementia, hemiplegia, leukemia,
+                                           lymphoma, myocardial, perpheral_vascular, diabetes,
+                                           liver_diease, renal_disease, malignant_tumour,
+                                           cci_score, cci_probability),
+                             by = c('individual_id', 'site', 'event_name')) %>%
 ## ## Chemotherapy - Chemotherapy
-## TODO - Convert to wide first
+## ## TODO - Convert to wide first
 ##            full_join(.,
 ##                      dplyr::select(master$chemotherapy_chemotherapy,
 ##                                    individual_id, site, event_name, event_date, ## database_id,
 ##                                    )) %>%
+## ECOG Performance
+                  full_join(.,
+                            dplyr::select(master$ecog_performance_status_score,
+                                          individual_id, site, event_name, event_date, ## database_id,
+                                          ecog_grade),
+                            by = c('individual_id', 'site', 'event_name')) %>%
 ## ##
 ##            full_join(.,
-##                      dplyr::select(master$,
-##                                    individual_id, site, event_name, event_date, ## database_id,
-##                                    ))
+                     ## dplyr::select(master$chemotherapy_chemotherapy,
+                     ##               individual_id, site, event_name, event_date, ## database_id,
+                     ##               )) %>%
 
+###################################################################################
+## Combine questionnaires and therapy assessments made at multiple time points   ##
+###################################################################################
+## EORTC-QLQ-C30 and EORTC-QLQ-BR23
+master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
+                                              individual_id, site, event_name, event_date, database_id,
+                                              c30_q1,  c30_q2,  c30_q3,  c30_q4,  c30_q5,
+                                              c30_q6,  c30_q7,  c30_q8,  c30_q9,  c30_q10,
+                                              c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                                              c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                                              c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                                              c30_q26, c30_q27, c30_q28, c30_q29, c30_q30,
+                                              ql_raw, ql_scale, pf_raw,
+                                              pf_scale, rf_raw, rf_scale, ef_raw, ef_scale, cf_raw,
+                                              cf_scale, sf_raw, sf_scale, fa_raw, fa_scale, nv_raw,
+                                              nv_scale, pa_raw, pa_scale, dy_scale, sl_scale, ap_scale,
+                                              co_scale, di_scale, fi_scale),
+                                dplyr::select(master$eortc_qlq_br23,
+                                              individual_id, site, event_name, event_date, database_id,
+                                              br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
+                                              br23_q36, br23_q37, br23_q38, br23_q39, br23_q40, br23_q41,
+                                              br23_q42, br23_q43, br23_q44, br23_q45, br23_q46, br23_q47,
+                                              br23_q48, br23_q49, br23_q50, br23_q51, br23_q52, br23_q53,
+                                              brbi_raw, brbi_scale, brsef_raw, brsef_scale, brsee_scale, brfu_scale,
+                                              brst_raw, brst_scale, brbs_raw, brbs_scale, bras_raw, bras_scale,
+                                              brhl_scale),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## EORTC-QLQ-ELD15
+                      full_join(.,
+                                dplyr::select(master$eortc_qlq_eld15,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
+                                              eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63, eld15_q64,
+                                              eld15_q65, eld15_q66, eld15_q67, eld15_q68, mo_raw, mo_scale,
+                                              wao_raw, wao_scale, wo_raw, wo_scale, mp_raw, mp_scale,
+                                              boi_raw, boi_scale, js_scale, fs_scale),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## EQ5D
+                      full_join(.,
+                                dplyr::select(master$eq5d,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              mobility, self_care, usual_activity, pain_discomfort,
+                                              anxiety_depression, health_today, eq5d_number, eq5d_score),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Therapy Assessment
+                      full_join(.,
+                                dplyr::select(master$therapy_assessment,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              any_treatment, endocrine_therapy, radiotherapy,
+                                              chemotherapy, trastuzumab, surgery),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Endocrine Therapy
+                      full_join(.,
+                                dplyr::select(master$endocrine_therapy,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              primary_adjuvant, reason_pet, reason_pet_risk,
+                                              reason_pet_spcfy, endocrine_type, endocrine_type_oth,
+                                              therapy_changed, therapy_changed_dtls,
+                                              compliance, endocrine_aes, et_hot_flushes, et_asthenia,
+                                              et_joint_pain, et_vaginal_dryness, et_hair_thinning, et_rash,
+                                              et_nausea, et_diarrhoea, et_headache, et_vaginal_bleeding,
+                                              et_vomiting, et_somnolence),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Radiotherapy
+                      full_join(.,
+                                dplyr::select(master$radiotherapy,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              which_breast_right_o, which_breast_left_o, r_site_breast_o,
+                                              r_site_axilla_o, r_site_supraclavicular_o, r_site_chest_wall_o,
+                                              r_site_other_o, r_breast_fractions, r_axilla_fractions,
+                                              r_supra_fractions, r_chest_fractions, r_other_fractions,
+                                              r_radiotherapy_aes,
+                                              l_site_breast_o, l_site_axilla_o, l_site_supraclavicular_o,
+                                              l_site_chest_wall_o, l_site_other_o, l_breast_fractions,
+                                              l_axilla_fractions, l_supra_fractions, l_chest_fractions,
+                                              l_other_fractions, l_radiotherapy_aes,
+                                              r_skin_erythema, r_pain, r_breast_oedema, r_breast_shrink,
+                                              r_breast_pain, l_skin_erythema, l_pain, l_breast_oedema,
+                                              l_breast_shrink, l_breast_pain),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Chemotherapy
+                      full_join(.,
+                                dplyr::select(master$chemotherapy,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              chemo_received, chemo_aes,
+                                              c_fatigue, c_anaemia, c_low_wc_count, c_thrombocytopenia, c_allergic,
+                                              c_hair_thinning, c_nausea, c_infection),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Clinical Assessment Non-Pet
+                      full_join(.,
+                                dplyr::select(master$clinical_assessment_non_pet,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              recurrence, recurrence_dt, recurrence_where_breast_o,
+                                              recurrence_where_chest_wall_o, recurrence_where_axilla_o,
+                                              recurrence_where_metastatic_o, recurrence_met_bone_o,
+                                              recurrence_met_liver_o, recurrence_met_lung_o,
+                                              recurrence_met_superclavicular_o, recurrence_met_brain_o
+                                              recurrence_met_other_o,
+                                              recurrence_met_spcfy, new_tumour_yn, new_tumour_dtls,
+                                              clinical_plan, plan_local_surgery_o, plan_local_radio_o,
+                                              plan_local_endocrine_o, plan_local_chemo_o, plan_local_trast_o,
+                                              plan_local_oth_o, plan_local_spcfy, plan_met_radio_o,
+                                              plan_met_endocrine_o, plan_met_chemo_o, plan_met_trast_o,
+                                              plan_met_oth_o, plan_met_spcfy, plan_routine_surgery_o,
+                                              plan_routine_radio_o, plan_routine_endocrine_o, plan_routine_chemo_o,
+                                              plan_routine_trast_o, plan_routine_oth_o, plan_routine_spcfy),
+                                by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Trastuzumab
+                      full_join(.,
+                                dplyr::select(master$trastuzumab,
+                                              individual_id, site, event_name, event_date, ## database_id,
+                                              trast_received, infusion_no, trast_aes, t_cardiac_fail,
+                                              t_flu_like, t_nausea, t_diarrhoea, t_headache, t_allergy),
+                                by = c('individual_id', 'site', 'event_name', 'event_date'))
+
+
+###################################################################################
+## Combine baseline and multiple timepoints into one
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
 ###################################################################################
