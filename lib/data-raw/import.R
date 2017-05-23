@@ -372,7 +372,7 @@ master$annotations <- read_prospect(file = 'Annotations.csv',
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
 ## File : individuals.csv
-master$individuals <- read_prospect(file = 'individuals.csv',
+master$individuals <- read_prospect(file = 'Individuals.csv',
                          header              = TRUE,
                          sep                 = ',',
                          convert.dates       = TRUE,
@@ -538,12 +538,10 @@ age_gap <- full_join(dplyr::select(master$consent_form,
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
 ###################################################################################
-master$duplicates <- group_by(age_gap, individual_id, site, event_name, event_date) %>%
+master$duplicates <- age_gap %>%
+                     group_by(individual_id, site, event_name, event_date) %>%
                      summarise(n = n())
 
-###################################################################################
-## Data set for screening and recruitment summarisation                          ##
-###################################################################################
 
 ###################################################################################
 ## Tidy data, deriving variables, removing outliers etc                          ##
@@ -570,7 +568,7 @@ age_gap <- age_gap %>%
 ## Derive BMI
            mutate(bmi = weight_kg / (height_cm /100)^2) %>%
 ## Age based on Date of Birth
-           mutate(age_exact = consent_dt - dob)
+           mutate(age_exact = consent_dt - dob) %>%
 ## Elapsed time from consent/randomisation to noted event
            group_by(individual_id) %>%
            mutate(start_date = min(consent_dt, na.rm = TRUE),
