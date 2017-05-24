@@ -1,6 +1,6 @@
 Package: age-gap
 Title: Package for Bridging The Age Gap Randomised Control Trial
-Version: 0.20170512
+Version: 0.20170524
 Authors@R: person("Neil", "Shephard", email = "n.shephard@sheffield.ac.uk", role = c("aut", "cre"))
 Description:
 Depends:
@@ -11,6 +11,8 @@ Depends:
     DT (>= 0.2),
     forcats (>= 0.2.0),
     formattable (>= 0.2.0.1),
+    gee (>= 4.13-19),
+    geepack (>= 1.2-1),
     ggfortify (>= 0.4.1),
     ggplot2 (>= 2.2.1),
     haven (>= 1.0.0),
