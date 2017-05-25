@@ -82,14 +82,14 @@ master$baseline_tumour_assessment <- read_prospect(file = 'Baseline Tumour Asses
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
 ## File : Breast Cancer Treatment Choices - chemo vs no chemo.csv
-master$treatment_choices_chemo_no_chemo <- read_prospect(file = 'Breast Cancer Treatment Choices - chemo vs no chemo.csv',
+master$breast_cancer_treatment_choices_chemo_no_chemo <- read_prospect(file = 'Breast Cancer Treatment Choices - chemo vs no chemo.csv',
                          header              = TRUE,
                          sep                 = ',',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
 ## File : Breast Cancer Treatment Choices - surgery vs pills.csv
-master$treatment_choices_surgery_pills <- read_prospect(file = 'Breast Cancer Treatment Choices - surgery vs pills.csv',
+master$breast_cancer_treatment_choices_surgery_pills <- read_prospect(file = 'Breast Cancer Treatment Choices - surgery vs pills.csv',
                          header          = TRUE,
                          sep             = ',',
                          convert.dates   = TRUE,
@@ -393,7 +393,7 @@ master$individuals <- read_prospect(file = 'Individuals.csv',
 ## Consent and Baseline Tumor Assessment
 master$baseline <- full_join(dplyr::select(master$consent_form,
                                            individual_id, site, ## event_name, event_date, database_id,
-                                           screening_no, dob, participation_lvl),
+                                           screening_no, dob, participation_lvl, consent_dt),
                              dplyr::select(master$baseline_tumour_assessment,
                                            individual_id, site, event_name, event_date, ## database_id,
                                            uni_bilateral, primary_tumour,
@@ -473,12 +473,12 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             dplyr::select(master$ecog_performance_status_score,
                                           individual_id, site, event_name, event_date, ## database_id,
                                           ecog_grade),
-                            by = c('individual_id', 'site', 'event_name')) %>%
-## ##
+                            by = c('individual_id', 'site', 'event_name'))
+## ## TEMPLATE
 ##            full_join(.,
-                     ## dplyr::select(master$chemotherapy_chemotherapy,
-                     ##               individual_id, site, event_name, event_date, ## database_id,
-                     ##               )) %>%
+##                      dplyr::select(master$TEMPLATE,
+##                                    individual_id, site, event_name, event_date, ## database_id,
+##                                    )) %>%
 
 ###################################################################################
 ## Combine questionnaires and therapy assessments made at multiple time points   ##
@@ -576,7 +576,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                                               recurrence_where_chest_wall_o, recurrence_where_axilla_o,
                                               recurrence_where_metastatic_o, recurrence_met_bone_o,
                                               recurrence_met_liver_o, recurrence_met_lung_o,
-                                              recurrence_met_superclavicular_o, recurrence_met_brain_o
+                                              recurrence_met_superclavicular_o, recurrence_met_brain_o,
                                               recurrence_met_other_o,
                                               recurrence_met_spcfy, new_tumour_yn, new_tumour_dtls,
                                               clinical_plan, plan_local_surgery_o, plan_local_radio_o,
@@ -599,12 +599,13 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
 ###################################################################################
 ## Combine the RCT components                                                    ##
 ###################################################################################
+## Treatment Decision Support Consultations + Treatment Decision
 master$rct <- full_join(dplyr::select(master$treatment_decision_support_consultations,
                                       individual_id, site, event_name, event_date, ## database_id,
                                       surg_pet_consult, surg_pet_consult_dt, surg_pet_offer,
                                       surg_pet_follow, chemo_no_consult, chemo_no_consult_dt,
                                       chemo_no_offer, chemo_no_follow),
-                        dplyr::select(master$treatment_decision_support_consultations,
+                        dplyr::select(master$treatment_decision,
                                       individual_id, site, event_name, event_date, ## database_id,
                                       trt_opt_discussed, odt_staff_used,
                                       odt_staff_used_no_not_time_o, odt_staff_used_no_pt_not_suit_o,
@@ -644,6 +645,100 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
                                       b_taken_home_no_distressed_o, b_taken_home_no_not_understood_o,
                                       b_taken_home_no_decided_o, b_taken_home_no_pt_reluctant_o,
                                       b_taken_home_no_fam_reluctant_o, b_taken_home_no_oth_o, b_taken_home_no_oth),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Collaborate
+              full_join(.,
+                        dplyr::select(master$collaborate,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      understand_issues, listen_to_issues, matters_most, calc_score),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Breast Cancer Treatment Choices - surgery vs pills
+              full_join(.,
+                        dplyr::select(master$breast_cancer_treatment_choices_surgery_pills,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      hblock_chemo, surg_no_hblock,
+                                      hblock_hosp_chk, hblock_stop,
+                                      hblock_stay_alive, hblock_change,
+                                      surg_swell, need_radio,
+                                      know_enough, aware,
+                                      option_pref, decision,
+                                      moment_think, influence_dcsn_int_no_dec_o,
+                                      influence_dcsn_int_tlk_fam_o, influence_dcsn_int_rd_bklt_o,
+                                      influence_dcsn_int_rd_oth_o, influence_dcsn_int_opt_grd_o,
+                                      influence_dcsn_int_tlk_hlth_prof_o, influence_dcsn_int_tlk_gp_o,
+                                      influence_dcsn_int_tlk_oth_pts_o, influence_dcsn_int_other_o,
+                                      other_int, influence_dcsn_cont_no_dec_o,
+                                      influence_dcsn_cont_tlk_fam_o, influence_dcsn_cont_rd_oth_o,
+                                      influence_dcsn_cont_tlk_hlth_prof_o, influence_dcsn_cont_tlk_gp_o,
+                                      influence_dcsn_cont_tlk_oth_pts_o, influence_dcsn_cont_other_o,
+                                      other_cont),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Breast Cancer Treatment Choices - surgery vs no chemo
+              full_join(.,
+                        dplyr::select(master$breast_cancer_treatment_choices_chemo_no_chemo,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      inc_long_term, not_visit_people,
+                                      hair_never_regrows, herceptin,
+                                      chemo_vein, chemo_infect,
+                                      feel_tired_unwell, over_3m_6m,
+                                      no_meds_nausea, pills_radio_not_chemo,
+                                      know_enough, aware,
+                                      option_pref, decision,
+                                      moment_think, influence_dcsn_int_no_dec_o,
+                                      influence_dcsn_int_tlk_fam_o, influence_dcsn_int_rd_bklt_o,
+                                      influence_dcsn_int_rd_oth_o, influence_dcsn_int_opt_grd_o,
+                                      influence_dcsn_int_tlk_hlth_prof_o, influence_dcsn_int_tlk_gp_o,
+                                      influence_dcsn_int_tlk_oth_pts_o, influence_dcsn_int_other_o,
+                                      other_int, influence_dcsn_cont_no_dec_o,
+                                      influence_dcsn_cont_tlk_fam_o, influence_dcsn_cont_rd_oth_o,
+                                      influence_dcsn_cont_tlk_hlth_prof_o, influence_dcsn_cont_tlk_gp_o,
+                                      influence_dcsn_cont_tlk_oth_pts_o, influence_dcsn_cont_other_o,
+                                      other_cont),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Spielberger State Trait Anxiety
+              full_join(.,
+                        dplyr::select(master$spielberger_state_trait_anxiety,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      calm, tense, upset, relaxed, content, worried),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Brief COPE
+              full_join(.,
+                        dplyr::select(master$brief_cope,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      do_something, isnt_real, support_from_others, giving_up_dealing,
+                                      taking_action, refuse_to_believe, help_from_others,
+                                      different_light, strategy_to_do, comfort_someone,
+                                      giving_up_coping, steps_to_take, accepting_reality,
+                                      advice_from_others, live_with_it, looking_for_good),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Brief Illness Percetion Questionnaire
+              full_join(.,
+                        dplyr::select(master$brief_illness_perception_questionnaire,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      ill_affect, ill_continue, ill_control, ill_treatment,
+                                      ill_symptoms, ill_concern, ill_understand, ill_emotion),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Discussing Treatment Options
+              full_join(.,
+                        dplyr::select(master$discussing_treatment_options,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      spoke_trt_option_hosp_dr_o, spoke_trt_option_hosp_nurse_o,
+                                      spoke_trt_option_helpline_dr_o, spoke_trt_option_practice_gp_o,
+                                      spoke_trt_option_oth_o, spoke_trt_option_oth, booklet_provided,
+                                      booklet_yes_int_risk_info_o, booklet_yes_int_grid_o,
+                                      booklet_yes_int_booklet_o, booklet_yes_int_oth_o,
+                                      booklet_yes_int_oth, booklet_yes_cont, info_taken_read_all_o,
+                                      info_taken_read_some_o, info_taken_not_read_o,
+                                      info_taken_showed_fam_o, info_taken_blank_sec_o,
+                                      info_taken_oth_o, info_taken_oth, info_useful, risk_info,
+                                      option_grid, booklet_info, booklet_my_decision, info_thoughts),
+                        by = c('individual_id', 'site', 'event_name')) %>%
+## Decision Regret Scale
+              full_join(.,
+                        dplyr::select(master$decision_regret_scale,
+                                      individual_id, site, event_name, event_date, ## database_id,
+                                      right_decision, regret_choice, same_if_do_over, choice_did_harm,
+                                      wise_decision, calc_score),
                         by = c('individual_id', 'site', 'event_name'))
 
 ###################################################################################
@@ -684,8 +779,8 @@ age_gap <- age_gap %>%
                                      yes = 2.54 * ((height_ft * 12) + height_in),
                                      no  = height_cm)) %>%
 ## Derive BMI
-           mutate(bmi = weight_kg / (height_cm /100)^2) %>%
-## Age based on Date of Birth
+           mutate(bmi = weight_kg / (height_cm /100)^2) %>%#
+# Age based on Date of Birth
            mutate(age_exact = consent_dt - dob) %>%
 ## Elapsed time from consent/randomisation to noted event
            group_by(individual_id) %>%
