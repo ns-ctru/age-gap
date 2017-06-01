@@ -418,7 +418,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             dplyr::select(master$decision_making_preferences,
                                           individual_id, site, event_name, event_date, ## database_id,
                                           ideal_situation, actual_situation),
-                            by = c('individual_id', 'site', 'event_name')) %>%
+                            by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
 ## Abridged Patient Assessment
                   full_join(.,
                             dplyr::select(master$abridged_patient_assessment,
@@ -455,7 +455,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
 ## Modified CHarlson Co-Morbidity
                    full_join(.,
                              dplyr::select(master$modified_charlson_comorbidity,
-                                           individual_id, site, event_name, event_date, ## database_id,
+                                           individual_id, site, event_name, ## event_date, database_id,
                                            age, aids, cerebrovascular, pulmonary, heart_failure,
                                            connective_tissue, dementia, hemiplegia, leukemia,
                                            lymphoma, myocardial, perpheral_vascular, diabetes,
@@ -471,7 +471,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
 ## ECOG Performance
                   full_join(.,
                             dplyr::select(master$ecog_performance_status_score,
-                                          individual_id, site, event_name, event_date, ## database_id,
+                                          individual_id, site, event_name, ## event_date, database_id,
                                           ecog_grade),
                             by = c('individual_id', 'site', 'event_name'))
 ## ## TEMPLATE
@@ -485,7 +485,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
 ###################################################################################
 ## EORTC-QLQ-C30 and EORTC-QLQ-BR23
 master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
-                                              individual_id, site, event_name, event_date, database_id,
+                                              individual_id, site, event_name, event_date, ## database_id,
                                               c30_q1,  c30_q2,  c30_q3,  c30_q4,  c30_q5,
                                               c30_q6,  c30_q7,  c30_q8,  c30_q9,  c30_q10,
                                               c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
@@ -498,7 +498,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                                               nv_scale, pa_raw, pa_scale, dy_scale, sl_scale, ap_scale,
                                               co_scale, di_scale, fi_scale),
                                 dplyr::select(master$eortc_qlq_br23,
-                                              individual_id, site, event_name, event_date, database_id,
+                                              individual_id, site, event_name, event_date, ## database_id,
                                               br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
                                               br23_q36, br23_q37, br23_q38, br23_q39, br23_q40, br23_q41,
                                               br23_q42, br23_q43, br23_q44, br23_q45, br23_q46, br23_q47,
@@ -746,6 +746,9 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
 ###################################################################################
 age_gap <- full_join(master$therapy_qol,
                      master$baseline,
+                     by = c('individual_id', 'site', 'event_name')) %>%
+           full_join(.,
+                     master$rct,
                      by = c('individual_id', 'site', 'event_name'))
 
 ###################################################################################
@@ -798,7 +801,7 @@ names(master$README) <- c('data_frame')
 ###################################################################################
 ## Save and Export                                                               ##
 ###################################################################################
-save(master,
+save(master, age_gap,
      file = '../data/age-gap.RData',
      compression_level = 9)
 ## write_dta(age_gap, version = 14, path = 'stata/age_gap.dta')
