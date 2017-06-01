@@ -1,0 +1,36 @@
+---
+site: blogdown:::blogdown_site
+---
+
+Bridging the Age-Gap in Breast Cancer seels tp improve outcomes for older women diagnosed with breast cancer.
+
+# Outcome Measures
+
+The primary outcome is the EORTC-QLQ-C30 generic Quality of Life questionnaire measured at 6 months post-intervention.  There are multiple secondary outcomes, which are listed along with the primary in the table below
+
+| Questionnaire   | Description                                         | Assesed at... | Citation            |
+|-----------------|-----------------------------------------------------|---------------|---------------------|
+| EORTC-QLQ-C30   | General quality of life survey for clinical trials. | 6 months      | @aaronson1993       |
+| EORTC-QLQ-BR23  | Breast Cancer specific quality of life survey.      | 6 months      | @sprangers1996      |
+| EORTC-QLQ-ELD15 | Older person specific quality of life survey.       | 6 months      | @johnson2010        |
+| Decision Regret Scale | Assessing regret of decisions                 | 6 weeks / 6 months | @brehaut2003   |
+| CollaboRATE     | Shared decision making assessment                   | Baseline      | @barr2014           |
+| Spielberger State Anxiety Inventory | Assesses patienty anxsieety levels| 6 weeks / 6 months | @marteau1992 |
+| Non-validated   | Assessment of knowledge, readiness to decide and treatment preference | baseline | NA     |
+| Brief Illness Perceptions | Assess patients view of their illness     | 6 weeks / 6 months | @broadbent2006 |
+| Brief COPE      | Coping assessment                                   | 6 weeks / 6 months | @carver1997    |
+| Survival        | Survival outcomes from breast cancer                | 6 months      | @bradburn2003b      |
+
+# Subrgoup Analysis
+
+A number of subgroup analyses have been pre-specified, despite the reduced power such groups will have for detecting the specified minimal clinical effect, and are detailed in the table below.
+
+| Subgroup           | Outcome                  |
+|--------------------|--------------------------|
+| Age 75-79          | EORTC-QLQ-C30 @ 6 months |
+| Age 80-84          | EORTC-QLQ-C30 @ 6 months |
+| Age 85-89          | EORTC-QLQ-C30 @ 6 months |
+| Age 90+            | EORTC-QLQ-C30 @ 6 months |
+| Charlson Score     | EORTC-QLQ-C30 @ 6 months |
+| Barthel Index      | EORTC-QLQ-C30 @ 6 months |
+| Degree of Dementia | EORTC-QLQ-C30 @ 6 months |
