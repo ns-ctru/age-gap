@@ -2,7 +2,8 @@
 site: blogdown:::blogdown_site
 ---
 
-Bridging the Age-Gap in Breast Cancer seels tp improve outcomes for older women diagnosed with breast cancer.
+Bridging the Age-Gap in Breast Cancer seeks to improve outcomes for older women diagnosed with breast cancer.  It is registered with the [ISCRTN](http://www.isrctn.com/) under study [ISRCTN46099296 (DOI 10.1186/ISRCTN46099296)](http://www.isrctn.com/ISRCTN46099296) and is a collaboration between researchers at [The University of Sheffield](https://www.sheffield.ac.uk/oncology-metabolism/research/surgicaloncology/research/agegap), [Sheffield Hallam University](https://www.shu.ac.uk/research/specialisms/centre-for-health-and-social-care-research/what-we-do/our-expertise/health-care-and-service-delivery-research/case-studies/bridging-the-age-gap-in-breast-cancer-research-improving-outcomes-for-older-women) and the participating NHS Trusts.  The study is co-ordinated, run and managed by the [Sheffield Clinical Trials Research Unit (CTRU)](https://www.sheffield.ac.uk/scharr/sections/dts/ctru), who provide study management, data capture and management and statistical analysis.
+
 
 # Outcome Measures
 
