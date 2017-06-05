@@ -144,6 +144,7 @@ master$collaborate <- read_prospect(file = 'CollaboRATE.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+names(master$collaborate) <- gsub('calc_score', 'collaborate_calc_score', names(master$collaborate))
 ## File : Consent Form.csv
 master$consent_form <- read_prospect(file = 'Consent Form.csv',
                          header              = TRUE,
@@ -168,6 +169,7 @@ master$decision_regret_scale <- read_prospect(file = 'Decision Regret Scale (DRS
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+names(master$collaborate) <- gsub('calc_score', 'decision_regret_scale_calc_score', names(master$decision_regret_scale))
 ## File : Discussing treatment options.csv
 master$discussing_treatment_options <- read_prospect(file = 'Discussing treatment options.csv',
                          header              = TRUE,
@@ -295,7 +297,7 @@ master$surgery_and_post_operative_pathology <- read_prospect(file = 'Surgery and
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
 ## File : The Brief Illness Perception Questionnaire (BIPQ).csv
-master$brief_illness_perception_questionnaire <- read_prospect(file = 'The Brief Illness Perception Questionnaire (BIPQ).csv',
+master$the_brief_illness_perception_questionnaire <- read_prospect(file = 'The Brief Illness Perception Questionnaire (BIPQ).csv',
                          header              = TRUE,
                          sep                 = ',',
                          convert.dates       = TRUE,
@@ -378,6 +380,22 @@ master$individuals <- read_prospect(file = 'Individuals.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+## File : db_spec_forms.csv
+master$db_spec_forms <- read.csv(file = 'db_spec_forms.csv',
+                                 header = TRUE,
+                                 sep    = ',') %>%
+                        mutate(data_frame = tolower(Form),
+                               data_frame = gsub(' ', '_', data_frame))
+names(master$db_spec_forms) <- names(master$db_spec_forms) %>% tolower()
+names(master$db_spec_forms) <- gsub('\\.', '_', names(master$db_spec_forms))
+## Remove acronyms from data_frame
+master$db_spec_forms <- master$db_spec_forms %>%
+                        mutate(data_frame = gsub('(non-pet)', 'non_pet', data_frame),
+                               data_frame = gsub('(pet)',     'pet', data_frame),
+                               data_frame = gsub('(stai)',    '', data_frame),
+                               data_frame = gsub('(drs)',    '', data_frame),
+                               data_frame = gsub('(bipq)',    '', data_frame),
+                               data_frame = gsub('x',    'cohort_', data_frame))
 
 ###################################################################################
 ## Scoring                                                                       ##
@@ -650,7 +668,7 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
               full_join(.,
                         dplyr::select(master$collaborate,
                                       individual_id, site, event_name, event_date, ## database_id,
-                                      understand_issues, listen_to_issues, matters_most, calc_score),
+                                      understand_issues, listen_to_issues, matters_most, collaborate_calc_score),
                         by = c('individual_id', 'site', 'event_name')) %>%
 ## Breast Cancer Treatment Choices - surgery vs pills
               full_join(.,
@@ -698,13 +716,13 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
 ## Spielberger State Trait Anxiety
               full_join(.,
                         dplyr::select(master$spielberger_state_trait_anxiety,
-                                      individual_id, site, event_name, event_date, ## database_id,
+                                      individual_id, site, event_name, ## event_date, database_id,
                                       calm, tense, upset, relaxed, content, worried),
                         by = c('individual_id', 'site', 'event_name')) %>%
 ## Brief COPE
               full_join(.,
                         dplyr::select(master$brief_cope,
-                                      individual_id, site, event_name, event_date, ## database_id,
+                                      individual_id, site, event_name, ## event_date, database_id,
                                       do_something, isnt_real, support_from_others, giving_up_dealing,
                                       taking_action, refuse_to_believe, help_from_others,
                                       different_light, strategy_to_do, comfort_someone,
@@ -713,15 +731,15 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
                         by = c('individual_id', 'site', 'event_name')) %>%
 ## Brief Illness Percetion Questionnaire
               full_join(.,
-                        dplyr::select(master$brief_illness_perception_questionnaire,
-                                      individual_id, site, event_name, event_date, ## database_id,
+                        dplyr::select(master$the_brief_illness_perception_questionnaire,
+                                      individual_id, site, event_name, ## event_date, database_id,
                                       ill_affect, ill_continue, ill_control, ill_treatment,
                                       ill_symptoms, ill_concern, ill_understand, ill_emotion),
                         by = c('individual_id', 'site', 'event_name')) %>%
 ## Discussing Treatment Options
               full_join(.,
                         dplyr::select(master$discussing_treatment_options,
-                                      individual_id, site, event_name, event_date, ## database_id,
+                                      individual_id, site, event_name, ## event_date, database_id,
                                       spoke_trt_option_hosp_dr_o, spoke_trt_option_hosp_nurse_o,
                                       spoke_trt_option_helpline_dr_o, spoke_trt_option_practice_gp_o,
                                       spoke_trt_option_oth_o, spoke_trt_option_oth, booklet_provided,
@@ -736,9 +754,9 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
 ## Decision Regret Scale
               full_join(.,
                         dplyr::select(master$decision_regret_scale,
-                                      individual_id, site, event_name, event_date, ## database_id,
+                                      individual_id, site, event_name, ## event_date, database_id,
                                       right_decision, regret_choice, same_if_do_over, choice_did_harm,
-                                      wise_decision, calc_score),
+                                      wise_decision, decision_regret_scale_calc_score),
                         by = c('individual_id', 'site', 'event_name'))
 
 ###################################################################################
@@ -782,7 +800,7 @@ age_gap <- age_gap %>%
                                      yes = 2.54 * ((height_ft * 12) + height_in),
                                      no  = height_cm)) %>%
 ## Derive BMI
-           mutate(bmi = weight_kg / (height_cm /100)^2) %>%#
+           mutate(bmi = weight_kg / (height_cm /100)^2) %>%
 # Age based on Date of Birth
            mutate(age_exact = consent_dt - dob) %>%
 ## Elapsed time from consent/randomisation to noted event
@@ -797,6 +815,9 @@ age_gap <- age_gap %>%
 ###################################################################################
 master$README <- names(master)
 names(master$README) <- c('data_frame')
+master$README <- left_join(master$README,
+                           dplyr::select(master$db_spec_forms,
+                                         data_frame, form))
 
 ###################################################################################
 ## Save and Export                                                               ##
