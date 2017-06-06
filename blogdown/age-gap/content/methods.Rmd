@@ -2,7 +2,7 @@
 site: blogdown:::blogdown_site
 ---
 
-```{r methods-load, echo = FALSE, results = hide, cache = FALSE, eval = TRUE}
+```{r methods_load, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
 
 ```
 
