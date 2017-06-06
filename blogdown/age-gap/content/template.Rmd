@@ -1,0 +1,7 @@
+---
+site: blogdown:::blogdown_site
+---
+
+```{r [NAME], echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```
