@@ -18,18 +18,18 @@ master$lookups <- read_prospect(file = 'Lookups.csv',
                          dictionary          = NULL)
 ## File   : Age Gap database specification - Forms.csv
 ## Source : https://goo.gl/oFBs4j
-master$lookups.form <- read.csv(file = 'Age Gap database specification - Forms.csv',
+master$lookups_form <- read.csv(file = 'Age Gap database specification - Forms.csv',
                                 header = TRUE)
-master$lookups.form <- master$lookups.form %>%
+master$lookups_form <- master$lookups_form %>%
                        dplyr::select(Name, Identifier, Subforms)
-names(master$lookups.form) <- names(master$lookups.form) %>% tolower()
+names(master$lookups_form) <- names(master$lookups_form) %>% tolower()
 ## File   : Age Gap database specification - Forms.csv
 ## Source : https://goo.gl/oFBs4j
-master$lookups.fields <- read.csv(file = 'Age Gap database specification - Fields.csv',
+master$lookups_fields <- read.csv(file = 'Age Gap database specification - Fields.csv',
                                   header = TRUE)
-master$lookups.fields <- master$lookups.fields %>%
+master$lookups_fields <- master$lookups_fields %>%
                          dplyr::select(Form, Subform, Identifier, Label)
-names(master$lookups.fields) <- names(master$lookups.fields) %>% tolower()
+names(master$lookups_fields) <- names(master$lookups_fields) %>% tolower()
 ## File : Abridged Patient Generated Assessment.csv
 master$abridged_patient_assessment <- read_prospect(file = 'Abridged Patient Generated Assessment.csv',
                          header              = TRUE,
@@ -169,7 +169,7 @@ master$decision_regret_scale <- read_prospect(file = 'Decision Regret Scale (DRS
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
-names(master$collaborate) <- gsub('calc_score', 'decision_regret_scale_calc_score', names(master$decision_regret_scale))
+names(master$decision_regret_scale) <- gsub('calc_score', 'decision_regret_scale_calc_score', names(master$decision_regret_scale))
 ## File : Discussing treatment options.csv
 master$discussing_treatment_options <- read_prospect(file = 'Discussing treatment options.csv',
                          header              = TRUE,
@@ -380,6 +380,7 @@ master$individuals <- read_prospect(file = 'Individuals.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+
 ## File : db_spec_forms.csv
 master$db_spec_forms <- read.csv(file = 'db_spec_forms.csv',
                                  header = TRUE,
@@ -388,14 +389,26 @@ master$db_spec_forms <- read.csv(file = 'db_spec_forms.csv',
                                data_frame = gsub(' ', '_', data_frame))
 names(master$db_spec_forms) <- names(master$db_spec_forms) %>% tolower()
 names(master$db_spec_forms) <- gsub('\\.', '_', names(master$db_spec_forms))
-## Remove acronyms from data_frame
+## Remove acronyms from data_frame and tidy to improve matching
 master$db_spec_forms <- master$db_spec_forms %>%
-                        mutate(data_frame = gsub('(non-pet)', 'non_pet', data_frame),
-                               data_frame = gsub('(pet)',     'pet', data_frame),
-                               data_frame = gsub('(stai)',    '', data_frame),
-                               data_frame = gsub('(drs)',    '', data_frame),
-                               data_frame = gsub('(bipq)',    '', data_frame),
-                               data_frame = gsub('x',    'cohort_', data_frame))
+                        mutate(data_frame = gsub('\\(non-pet\\)', 'non_pet', data_frame),
+                               data_frame = gsub('\\(pet\\)',     'pet',     data_frame),
+                               data_frame = gsub('_\\(stai\\)',   '',        data_frame),
+                               data_frame = gsub('_\\(drs\\)',    '',        data_frame),
+                               data_frame = gsub('_\\(bipq\\)',   '',        data_frame),
+                               ## data_frame = gsub('x',             'cohort_', data_frame),
+                               data_frame = gsub('&',             'and',     data_frame),
+                               data_frame = gsub('-',             '_',       data_frame),
+                               data_frame = gsub('_/_',           '_',       data_frame),
+                               data_frame = gsub('_generated_',   '_',       data_frame),
+                               data_frame = gsub('_of_',          '_',       data_frame),
+                               data_frame = gsub('_level_',       '_',       data_frame),
+                               data_frame = gsub('_\\(\\)',       '',        data_frame),
+                               data_frame = gsub('___',           '_',       data_frame),
+                               data_frame = gsub('_-_',           '_',       data_frame),
+                               data_frame = gsub('co_',           'co',       data_frame),
+                               data_frame = gsub('_vs_',          '_',       data_frame)
+                               )
 
 ###################################################################################
 ## Scoring                                                                       ##
@@ -813,11 +826,70 @@ age_gap <- age_gap %>%
 ###################################################################################
 ## README files describing all variables                                         ##
 ###################################################################################
-master$README <- names(master)
+master$README <- names(master) %>%
+                 as.data.frame()
 names(master$README) <- c('data_frame')
 master$README <- left_join(master$README,
                            dplyr::select(master$db_spec_forms,
                                          data_frame, form))
+## Describe other data_frame within master
+## Purposefully done as a series of individual ifelse() since using case_when()
+## would require _everything_ to be defined (something I'm trying to avoid)
+master$README <- master$README %>%
+                 mutate(form = ifelse(data_frame == 'lookups',
+                                      yes        = 'Lookups',
+                                      no         = form),
+                        form = ifelse(data_frame == 'lookups_form',
+                                      yes        = 'Form Lookups (from Database Specifiation)',
+                                      no         = form),
+                        form = ifelse(data_frame == 'lookups_fields',
+                                      yes        = 'Field Lookups (from Database Specification).',
+                                      no         = form),
+                        form = ifelse(data_frame == 'adverse_events_ae',
+                                      yes        = 'Adverse Events - AeEvent.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'baseline_medications_med',
+                                      yes        = 'Baseline Medications - Med.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'chemotherapy_chemotherapy',
+                                      yes        = 'Chemotherapy Details.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'transfers',
+                                      yes        = 'Transfers of participants between sites.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'sites',
+                                      yes        = 'Study Site Details.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'discrepancies',
+                                      yes        = 'Discrepancies identified by Data Management.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'unavailable_forms',
+                                      yes        = 'Unavailable Froms.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'forms',
+                                      yes        = 'Available Forms.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'annotations',
+                                      yes        = 'Annotations.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'individuals',
+                                      yes        = 'Individuals.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'db_spec_forms',
+                                      yes        = 'Database Specification Forms.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'baseline',
+                                      yes        = 'Derived Baseline data frame.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'therapy_qol',
+                                      yes        = 'Derived Therapy and Quality of Life data frame.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'rct',
+                                      yes        = 'Derived RCT data frame.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'duplicates',
+                                      yes        = 'Data Frame indicating duplicates.',
+                                      no         = form))
 
 ###################################################################################
 ## Save and Export                                                               ##
