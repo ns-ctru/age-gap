@@ -1,0 +1,11 @@
+---
+site: blogdown:::blogdown_site
+---
+
+```{r qc_start, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```
+
+# Quality Control
+
+This section details checking (i.e. 'quality control')of the Case-Control component of the Bridging The Age Gap study.  Because there are a lot of components the work and presentation of the results are spread over a number of pages.
