@@ -3,21 +3,43 @@ site: blogdown:::blogdown_site
 ---
 
 ```{r qc_start, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
-## Screening and Recruitment
+## Replace blank with missing in enrollment
+master$screening_form <- master$screening_form %>%
+    mutate(enrolment_no = ifelse(enrolment_no == '',
+                                 yes = NA,
+                                 no  = enrolment_no))
+## Screening
 screen_all <-  master$screening_form %>%
                 group_by(event_date) %>%
                 summarise(n = n()) %>%
                 mutate(cumsum = cumsum(n),
                        site = 'All') %>%
                 as.data.frame()
-screen_site <- master$screening_form %>%
+screen_site <- master$screening %>%
                 group_by(site, event_date) %>%
                 summarise(n = n()) %>%
                 mutate(cumsum = cumsum(n)) %>%
                 ungroup() %>%
                 mutate(site   = gsub(' Hospital', '', site)) %>%
                 as.data.frame()
-screen <- rbind(screen_all, screen_site)
+screened <- rbind(screen_all, screen_site)
+## Recruitment
+recruit_all <-  master$screening_form %>%
+                dplyr::filter(!is.na(enrolment_no)) %>%
+                group_by(event_date) %>%
+                summarise(n = n()) %>%
+                mutate(cumsum = cumsum(n),
+                       site = 'All') %>%
+                as.data.frame()
+recruit_site <- master$screening %>%
+                dplyr::filter(!is.na(enrolment_no)) %>%
+                group_by(site, event_date) %>%
+                summarise(n = n()) %>%
+                mutate(cumsum = cumsum(n)) %>%
+                ungroup() %>%
+                mutate(site   = gsub(' Hospital', '', site)) %>%
+                as.data.frame()
+recruited <- rbind(recruit_all, recruit_site)
 
 screen_all_plot <- ggplot(screen_all, aes(x = event_date, y = cumsum)) +
                     geom_line() +
