@@ -1,3 +1,31 @@
+## 2017-06-08 Development of a recruitment() function in the CTRU package
+build()
+install()
+test <- recruitment(df = screening_form,
+                    screening = screening_no,
+                    enrollnment = enrollment_no,
+                    facet       = NULL,
+                    plotly      = FALSE)
+
+## 2017-06-07 Simple regression for checking output formats to aid development of
+##            (hopefully generic) label() function that takes the concatenated
+##            variable + factor as output by regression models and provides more
+##            human readable output.
+##
+## Test a dummy model
+tidy_model <- dplyr::filter(age_gap, event_name == 'Baseline') %>%
+              glm(formula = bmi ~ age + height_cm + weight_current_kg + c30_q1 + c30_q3,
+                  family  = 'gaussian') %>%
+              tidy()
+
+## Now test labelling it
+build()
+install()
+ctru::label(fields  = master$lookups_fields,
+            lookups = master$lookups,
+            df      = tidy_model)
+
+
 ## 2017-05-23 Working out what data we (should) have since multiple merges are required
 ##            to combine data (which was stored in a database!) into a coherent dataset.
 ## Table the event_name in each data frame that has been read
