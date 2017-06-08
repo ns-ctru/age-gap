@@ -3,6 +3,45 @@ site: blogdown:::blogdown_site
 ---
 
 ```{r qc_start, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Screening and Recruitment
+screen_all <-  master$screening_form %>%
+                group_by(event_date) %>%
+                summarise(n = n()) %>%
+                mutate(cumsum = cumsum(n),
+                       site = 'All') %>%
+                as.data.frame()
+screen_site <- master$screening_form %>%
+                group_by(site, event_date) %>%
+                summarise(n = n()) %>%
+                mutate(cumsum = cumsum(n)) %>%
+                ungroup() %>%
+                mutate(site   = gsub(' Hospital', '', site)) %>%
+                as.data.frame()
+screen <- rbind(screen_all, screen_site)
+
+screen_all_plot <- ggplot(screen_all, aes(x = event_date, y = cumsum)) +
+                    geom_line() +
+                    xlab('Date') + ylab('N') + ggtitle('Screenment across all Sites') +
+                    theme_bw()
+ggplotly(screen_all_plot)
+
+screen_site_plot <- ggplot(screen_site,
+                            aes(x = event_date,
+                                y = cumsum,
+                                colour = site)) +
+                     geom_line() +
+                     xlab('Date') + ylab('N') + ggtitle('Screenment by Site') +
+                     guides(color = guide_legend(ncol = 2)) +
+                     theme_bw()
+## Optionally facet the plots and remove the legend
+screen_site_plot <-  screen_site_plot +
+                      facet_wrap(~site, ncol = 3) +
+                      guides(colour = FALSE) +
+                      theme(axis.text.x = element_text(angle = 90))
+
+ggplotly(screen_site_plot)
+
+rm(screen_all, screen_site)
 
 ```
 
