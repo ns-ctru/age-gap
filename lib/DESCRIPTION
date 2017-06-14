@@ -1,31 +1,23 @@
 Package: agegap
 Title: Package for Bridging The Age Gap Randomised Control Trial
-Version: 0.20170607
+Version: 0.20170614
 Authors@R: person("Neil", "Shephard", email = "n.shephard@sheffield.ac.uk", role = c("aut", "cre"))
 Description:
 Depends:
     R (>= 3.3.4),
     blogdown (>= 0.0.40),
-    broom (>= 0.4.2),
     ctru (>= 0.0.0.20170517),
     DT (>= 0.2),
-    forcats (>= 0.2.0),
     formattable (>= 0.2.0.1),
     gee (>= 4.13-19),
     geepack (>= 1.2-1),
     ggfortify (>= 0.4.1),
-    ggplot2 (>= 2.2.1),
     haven (>= 1.0.0),
     Hmisc (>= 4.0-3),
-    knitr (>= 1.11),
-    lazyeval (>= 0.2.0),
-    magrittr (>= 1.5),
     plotly (>= 4.7.0),
     QoLR (>= 1.0.3),
     rms (>= 5.1-1),
     shiny(>= 1.0.3),
-    stringr (>= 1.2.0),
-    tidyr (>= 0.6.2),
     tidyverse (>= 1.1.1),
     xtable (>= 1.8-2)
 License: GPL-3
