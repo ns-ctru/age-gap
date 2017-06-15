@@ -30,6 +30,9 @@ master$lookups_fields <- read.csv(file = 'Age Gap database specification - Field
 master$lookups_fields <- master$lookups_fields %>%
                          dplyr::select(Form, Subform, Identifier, Label)
 names(master$lookups_fields) <- names(master$lookups_fields) %>% tolower()
+## Replace '[calculated] ' in all identifier
+master$lookups_fields <- master$lookups_fields %>%
+                         mutate(identifier = gsub('\\[calculated] ', '', identifier))
 ## File : Abridged Patient Generated Assessment.csv
 master$abridged_patient_assessment <- read_prospect(file = 'Abridged Patient Generated Assessment.csv',
                          header              = TRUE,
@@ -992,7 +995,8 @@ age_gap <- age_gap %>%
 ###################################################################################
 master$lookups_fields <- rbind(master$lookups_fields,
                                c('', '', 'weight_kg', 'Weight (kg)'),
-                               c('', '', 'bmi', 'Body Mass Index'))
+                               c('', '', 'bmi', 'Body Mass Index'),
+                               c('', '', 'elapsed', 'Time from consent/randomisation to stated event.'))
 
 ###################################################################################
 ## README files describing all variables                                         ##
