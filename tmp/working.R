@@ -1,3 +1,91 @@
+## 2017-06-15 On-going development, why isn't data plotted correctly?
+build()
+install()
+age_gap <- age_gap %>%
+           mutate(group = ifelse(runif(n = nrow(.)) > 0.5,
+                                       yes = 'Case',
+                                       no  = 'Control'))
+test <- plot_summary(df         = age_gap,
+                     id         = individual_id,
+                     select     = c(weight_kg, age_exact, bmi, collaborate_calc_score, fs_scale, worried, tense, upset, content, relaxed),
+                     lookup     = master$lookups_field,
+                     theme      = theme_bw(),
+                     group      = group,
+                     position   = 'dodge',
+                     individual = TRUE,
+                     plotly     = FALSE)
+
+test$continuous
+test$bmi
+
+test$continuous$data %>%
+    ggplot(aes(x = value, fill = group)) +
+    geom_histogram(position = 'dodge', alpha = 0.5) +
+    facet_wrap(~label,
+               scales = 'free',
+               strip.position = 'bottom') +
+    xlab('') + ylab('N') +
+    theme_bw() +
+    theme(strip.background = element_blank(),
+          strip.placement  = 'outside')
+
+test$bmi$data %>%
+    ggplot(aes(x = value, fill = group)) +
+    geom_histogram(position = 'dodge', alpha = 0.5) +
+    facet_wrap(~label,
+               scales = 'free',
+               strip.position = 'bottom') +
+    xlab('') + ylab('N') +
+    theme_bw() +
+    theme(strip.background = element_blank(),
+          strip.placement  = 'outside')
+
+test$df_numeric %>%
+    dplyr::filter(!is.na(site)) %>% dim()
+
+ggplot(test$df_numeric, aes(x = value, fill = site)) + geom_histogram(stat = 'count')
+
+
+## 2017-06-14 Development of a plot_summary() function in the CTRU package
+##
+## How to assess what variables in a data frame are numeric/continuous
+## and therefore need distributions plotting.
+sapply(age_gap, class) == "numeric"
+
+## Can we use this to subset a data frame?
+## Yes....
+test <- age_gap[, sapply(age_gap, class) == "numeric"]
+## ...but need to have the grouping variables that are specified so need
+## to solve it with dplyr::select(), this works...
+test <- age_gap %>% dplyr::select(which(sapply(., class) == 'numeric'), surgery)
+
+## Now lets start testing the filtering, gathering labelling etc.
+build()
+install()
+test <- plot_summary(df         = age_gap,
+                     id         = individual_id,
+                     select     = c(weight_kg, age_exact, bmi, collaborate_calc_score, fs_scale),
+                     lookup     = master$lookups_field,
+                     theme      = theme_bw(),
+                     group      = 'surgery',
+                     individual = TRUE,
+                     plotly     = FALSE)
+
+test$continuous
+
+## Checking left_join with master$lookups_field
+test <- left_join(test$df_numeric,
+                  master$lookups_field,
+                  by = c('variable' = 'identifier'))
+
+## Test plotting
+test %>%
+    ggplot(aes(value, fill = surgery)) +
+    geom_density() +
+    facet_wrap(~ variable)
+
+gather(test, key = variable, value = value )
+
 ## 2017-06-08 Development of a recruitment() function in the CTRU package
 build()
 install()
