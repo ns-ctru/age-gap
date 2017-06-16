@@ -1,3 +1,33 @@
+## 2017-06-16 Testing facet_grid() by event_name
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
+
+build()
+install()
+age_gap <- age_gap %>%
+           mutate(group = ifelse(runif(n = nrow(.)) > 0.5,
+                                       yes = 'Case',
+                                       no  = 'Control'))
+test <- plot_summary(df         = age_gap,
+                     id         = individual_id,
+                     select     = c(weight_kg,
+                                    age_exact,
+                                    bmi,
+                                    collaborate_calc_score,
+                                    fs_scale,
+                                    worried,
+                                    tense,
+                                    upset,
+                                    content,
+                                    relaxed),
+                     lookup     = master$lookups_field,
+                     theme      = theme_bw(),
+                     group      = group,
+                     events     = event_name,
+                     position   = 'dodge',
+                     individual = TRUE,
+                     plotly     = FALSE,
+                     title.continuous = 'Some Random title instad of the default')
+
 ## 2017-06-15 On-going development, why isn't data plotted correctly?
 build()
 install()
@@ -13,7 +43,8 @@ test <- plot_summary(df         = age_gap,
                      group      = group,
                      position   = 'dodge',
                      individual = TRUE,
-                     plotly     = FALSE)
+                     plotly     = FALSE,
+                     title.continuous = 'Some Random title instad of the default')
 
 test$continuous
 test$bmi
