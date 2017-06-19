@@ -771,7 +771,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                                               r_num_tumours, r_cancer_palpable, r_size_clin_assess,
                                               r_method_assess, r_size_ultrasound,r_size_mammo,
                                               r_axillary_present, r_axillary_nodes, r_axillary_axis,
-                                              l_focal, l_num_tumours, l_cancer_palpable
+                                              l_focal, l_num_tumours, l_cancer_palpable,
                                               l_size_clin_assess, l_method_assess, l_size_ultrasound,
                                               l_size_mammo, l_axillary_present, l_axillary_nodes,
                                               l_axillary_axis, metastatic, metastatic_where_bone_o,
@@ -1014,7 +1014,16 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('', '', 'weight_kg', 'Weight (kg)'),
                                c('', '', 'bmi', 'Body Mass Index'),
                                c('', '', 'elapsed', 'Time from consent/randomisation to stated event.'),
-                               c('', '', 'collaborate_calc_score', 'Collaborate Score'))
+                               c('', '', 'collaborate_calc_score', 'Collaborate Score'),
+                               c('', '', 'cf_raw', 'CF Raw'),
+                               c('', '', 'ef_raw', 'EF Raw'),
+                               c('', '', 'fa_raw', 'FA Raw'),
+                               c('', '', 'nv_raw', 'NV Raw'),
+                               c('', '', 'pa_raw', 'PA Raw'),
+                               c('', '', 'pf_raw', 'PF Raw'),
+                               c('', '', 'ql_raw', 'QL Raw'),
+                               c('', '', 'rf_raw', 'RF Raw'),
+                               c('', '', 'sf_raw', 'SF Raw'))
 
 
 ###################################################################################
