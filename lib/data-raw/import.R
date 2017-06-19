@@ -763,6 +763,23 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                                               plan_routine_radio_o, plan_routine_endocrine_o, plan_routine_chemo_o,
                                               plan_routine_trast_o, plan_routine_oth_o, plan_routine_spcfy),
                                 by = c('individual_id', 'site', 'event_name')) %>%
+## Clinical Assessment Pet
+                      full_join(.,
+                                dplyr::select(master$clinical_assessment_pet,
+                                              individual_id, site, event_name, ## event_date, database_id,
+                                              uni_bilateral, primary_tumour, r_focal,
+                                              r_num_tumours, r_cancer_palpable, r_size_clin_assess,
+                                              r_method_assess, r_size_ultrasound,r_size_mammo,
+                                              r_axillary_present, r_axillary_nodes, r_axillary_axis,
+                                              l_focal, l_num_tumours, l_cancer_palpable
+                                              l_size_clin_assess, l_method_assess, l_size_ultrasound,
+                                              l_size_mammo, l_axillary_present, l_axillary_nodes,
+                                              l_axillary_axis, metastatic, metastatic_where_bone_o,
+                                              metastatic_where_lung_o, metastatic_where_cervical_node_o, metastatic_where_other_o,
+                                              metastatic_where_liver_o, metastatic_where_brain_o, proposed_treat,
+                                              clinical_plan2, plan_change_surgery_o, plan_change_radio_o,
+                                              plan_change_antioestrogen_o, plan_change_oth_o,plan_change_spcfy),
+                                by = c('individual_id', 'site', 'event_name')) %>%
 ## Trastuzumab
                       full_join(.,
                                 dplyr::select(master$trastuzumab,
@@ -996,7 +1013,9 @@ age_gap <- age_gap %>%
 master$lookups_fields <- rbind(master$lookups_fields,
                                c('', '', 'weight_kg', 'Weight (kg)'),
                                c('', '', 'bmi', 'Body Mass Index'),
-                               c('', '', 'elapsed', 'Time from consent/randomisation to stated event.'))
+                               c('', '', 'elapsed', 'Time from consent/randomisation to stated event.'),
+                               c('', '', 'collaborate_calc_score', 'Collaborate Score'))
+
 
 ###################################################################################
 ## README files describing all variables                                         ##
