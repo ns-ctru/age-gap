@@ -3,6 +3,15 @@ site: blogdown:::blogdown_site
 ---
 
 ```{r qc_start, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+screening_recruitment <- recruitment(df = master$screening_form,
+                                     screening = 'screening_no',
+                                     enrolment = 'enrolment_no',
+                                     plot.by   = 'both',
+                                     facet.col = 3,
+                                     theme     = theme_bw(),
+                                     plotly    = TRUE)
+
 ## Replace blank with missing in enrollment
 master$screening_form <- master$screening_form %>%
     mutate(enrolment_no = ifelse(enrolment_no == '',
