@@ -21,4 +21,4 @@ Detailed guidelines of the work required for both studies is provided in two Sta
 
 ## QC of Cohort Study
 
-Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for demographic data and the responses to each of the surveys by treatment arm and overall will be provided for each time point assessments were made.  The Statistical Analysis Plan (SAP) is not prescriptive about what exactly is to be checked.
+Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for demographic data and the responses to each of the surveys by treatment arm and overall will be provided for each time point assessments were made.  The Statistical Analysis Plan (SAP) is not prescriptive about what exactly is to be checked so an *ad hoc* approach is taken whereby the author checks what they think is important and then updates this as and when defficiencies are highlighted.
