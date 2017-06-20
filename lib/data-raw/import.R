@@ -499,6 +499,14 @@ master$sites <- read_prospect(file = 'Sites.csv',
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
 names(master$sites) <- gsub('site_group', 'group', names(master$sites))
+names(master$sites) <- gsub('name',       'site', names(master$sites))
+## Some sites were not randomised to the RCT so have '' (rather than truely missing)
+## correct that now
+master$sites <- master$sites %>%
+                mutate(group = ifelse(group == '',
+                                      no  = group,
+                                      yes = NA))
+
 ## File : Discrepancies.csv
 master$discrepancies <- read_prospect(file = 'Discrepancies.csv',
                          header              = TRUE,
@@ -972,12 +980,7 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
                                       individual_id, site, event_name, ## event_date, database_id,
                                       right_decision, regret_choice, same_if_do_over, choice_did_harm,
                                       wise_decision, decision_regret_scale_calc_score),
-                        by = c('individual_id', 'site', 'event_name')) %>%
-## Finally the site allocation so that RCT component can be confudcted
-              left_join(.,
-                        dplyr::select(master$sites,
-                                      site, group),
-                        by = c('site'))
+                        by = c('individual_id', 'site', 'event_name'))
 
 ###################################################################################
 ## Combine baseline and multiple timepoints into one coherent data frame         ##
@@ -987,7 +990,12 @@ age_gap <- full_join(master$therapy_qol,
                      by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
            full_join(.,
                      master$rct,
-                     by = c('individual_id', 'site', 'event_name', 'event_date'))
+                     by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Finally the site allocation so that RCT component can be confudcted
+           left_join(.,
+                     dplyr::select(master$sites,
+                                   site, group),
+                        by = c('site'))
 
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
