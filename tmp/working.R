@@ -13,7 +13,8 @@ test <- plot_summary(df         = age_gap,
                      group      = group,
                      position   = 'dodge',
                      individual = TRUE,
-                     plotly     = FALSE)
+                     plotly     = FALSE,
+                     title.continuous = 'Some Random title instad of the default')
 
 test$continuous
 test$bmi
