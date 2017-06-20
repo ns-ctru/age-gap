@@ -4,75 +4,185 @@ site: blogdown:::blogdown_site
 
 ```{r qc_start, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
 
-screening_recruitment <- recruitment(df = master$screening_form,
-                                     screening = 'screening_no',
-                                     enrolment = 'enrolment_no',
-                                     plot.by   = 'both',
-                                     facet.col = 3,
-                                     theme     = theme_bw(),
-                                     plotly    = TRUE)
+## Screening and Recruitment summary
+screening_recruitment <- recruitment(df           = master$screening_form,
+                                     screening    = 'screening_no',
+                                     enrolment    = 'enrolment_no',
+                                     plot.by      = 'both',
+                                     facet.col    = 4,
+                                     facet.scales = 'free_y',
+                                     theme        = theme_bw(),
+                                     plotly       = TRUE)
 
-## Replace blank with missing in enrollment
-master$screening_form <- master$screening_form %>%
-    mutate(enrolment_no = ifelse(enrolment_no == '',
-                                 yes = NA,
-                                 no  = enrolment_no))
-## Screening
-screen_all <-  master$screening_form %>%
-                group_by(event_date) %>%
-                summarise(n = n()) %>%
-                mutate(cumsum = cumsum(n),
-                       site = 'All') %>%
-                as.data.frame()
-screen_site <- master$screening %>%
-                group_by(site, event_date) %>%
-                summarise(n = n()) %>%
-                mutate(cumsum = cumsum(n)) %>%
-                ungroup() %>%
-                mutate(site   = gsub(' Hospital', '', site)) %>%
-                as.data.frame()
-screened <- rbind(screen_all, screen_site)
-## Recruitment
-recruit_all <-  master$screening_form %>%
-                dplyr::filter(!is.na(enrolment_no)) %>%
-                group_by(event_date) %>%
-                summarise(n = n()) %>%
-                mutate(cumsum = cumsum(n),
-                       site = 'All') %>%
-                as.data.frame()
-recruit_site <- master$screening %>%
-                dplyr::filter(!is.na(enrolment_no)) %>%
-                group_by(site, event_date) %>%
-                summarise(n = n()) %>%
-                mutate(cumsum = cumsum(n)) %>%
-                ungroup() %>%
-                mutate(site   = gsub(' Hospital', '', site)) %>%
-                as.data.frame()
-recruited <- rbind(recruit_all, recruit_site)
+## Tables of summary statistics for different groups of response
+summary_tables <- list()
+summary_tables$eortc_c30                   <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$eortc_c30),
+                                                            event_name)
+summary_tables$eortc_br23                  <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$eortc_c30),
+                                                            event_name)
+summary_tables$eortc_eld15                 <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$eortc_eld15),
+                                                            event_name)
+summary_tables$eq5d                        <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$eq5d),
+                                                            event_name)
+## summary_tables$therapy_assessment          <- table_summary(df = age_gap,
+##                                                             id = individual_id,
+##                                                             select = c(!!!continuous_vars$therapy_assessment),
+##                                                             event_name)
+summary_tables$endocrine_therapy           <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$endocrine_therapy),
+                                                            event_name)
+summary_tables$radiotherapy                <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$radiotherapy),
+                                                            event_name)
+summary_tables$chemotherapy                <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$chemotherapy),
+                                                            event_name)
+summary_tables$trastuzumab                 <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$trastuzumab),
+                                                            event_name)
+summary_tables$clinical_assessment_non_pet <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$clinical_assessment_non_pet),
+                                                            event_name)
+summary_tables$clinical_assessment_pet     <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$clinical_assessment_pet),
+                                                            event_name)
 
-screen_all_plot <- ggplot(screen_all, aes(x = event_date, y = cumsum)) +
-                    geom_line() +
-                    xlab('Date') + ylab('N') + ggtitle('Screenment across all Sites') +
-                    theme_bw()
-ggplotly(screen_all_plot)
-
-screen_site_plot <- ggplot(screen_site,
-                            aes(x = event_date,
-                                y = cumsum,
-                                colour = site)) +
-                     geom_line() +
-                     xlab('Date') + ylab('N') + ggtitle('Screenment by Site') +
-                     guides(color = guide_legend(ncol = 2)) +
-                     theme_bw()
-## Optionally facet the plots and remove the legend
-screen_site_plot <-  screen_site_plot +
-                      facet_wrap(~site, ncol = 3) +
-                      guides(colour = FALSE) +
-                      theme(axis.text.x = element_text(angle = 90))
-
-ggplotly(screen_site_plot)
-
-rm(screen_all, screen_site)
+## Plots of outcomes
+summary_plots <- list()
+summary_plots$eortc_c30                   <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$eortc_c30),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'EORTC Quality of Life Questionnaire : C30')
+summary_plots$eortc_br23                  <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$eortc_br23),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'EORTC Quality of Life Questionnaire : BR23')
+summary_plots$eortc_eld15                 <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$eortc_eld15),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'EORTC Quality of Life Questionnaire : ELD15')
+summary_plots$eq5d                        <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$eq5d),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'EQ-5D-5L Quality of Life Questionnaire')
+summary_plots$therapy_assessment          <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$therapy_assessment),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'Therapy Assessemnt Questionnaire')
+summary_plots$endocrine_therapy           <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$endocrine_therapy),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'Endocrine Therapy')
+summary_plots$radiotherapy                <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$radiotherapy),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'Radiotherapy')
+summary_plots$chemotherapy                <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$chemotherapy),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'Chemotherapy')
+summary_plots$trastuzumab                 <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$trastuzumab),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'Trastuzumab')
+summary_plots$clinical_assessment_non_pet <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$clinical_assessment_non_pet),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'Clinical Assessment : Non-PET')
+summary_plots$clinical_assessment_pet     <- plot_summary(df = age_gap,
+                                                          id         = individual_id,
+                                                          select     = c(!!!all_var$clinical_assessment_pet),
+                                                          lookup     = master$lookups_field,
+                                                          theme      = theme_bw(),
+                                                          group      = event_name,
+                                                          position   = 'dodge',
+                                                          individual = TRUE,
+                                                          plotly     = FALSE,
+                                                          title.continuous = 'Clinical Assessment : PET')
 
 ```
 
