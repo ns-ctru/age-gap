@@ -65,18 +65,18 @@ all_var$clinical_assessment_non_pet <- quos(recurrence, recurrence_dt, recurrenc
                                            plan_met_oth_o, plan_met_spcfy, plan_routine_surgery_o,
                                            plan_routine_radio_o, plan_routine_endocrine_o, plan_routine_chemo_o,
                                            plan_routine_trast_o, plan_routine_oth_o, plan_routine_spcfy)
-all_var$clinical_assessment_pet <- quos(uni_bilateral, primary_tumour, r_focal,
-                                       r_num_tumours, r_cancer_palpable, r_size_clin_assess,
-                                       r_method_assess, r_size_ultrasound,r_size_mammo,
-                                       r_axillary_present, r_axillary_nodes, r_axillary_axis,
-                                       l_focal, l_num_tumours, l_cancer_palpable,
-                                       l_size_clin_assess, l_method_assess, l_size_ultrasound,
-                                       l_size_mammo, l_axillary_present, l_axillary_nodes,
-                                       l_axillary_axis, metastatic, metastatic_where_bone_o,
-                                       metastatic_where_lung_o, metastatic_where_cervical_node_o, metastatic_where_other_o,
-                                       metastatic_where_liver_o, metastatic_where_brain_o, proposed_treat,
-                                       clinical_plan2, plan_change_surgery_o, plan_change_radio_o,
-                                       plan_change_antioestrogen_o, plan_change_oth_o,plan_change_spcfy)
+all_var$clinical_assessment_pet <- quos(uni_bilateral_pet, primary_tumour_pet, r_focal_pet,
+                                        r_num_tumours_pet, r_cancer_palpable_pet, r_size_clin_assess_pet,
+                                        r_method_assess_pet, r_size_ultrasound_pet,r_size_mammo_pet,
+                                        r_axillary_present_pet, r_axillary_nodes_pet, r_axillary_axis_pet,
+                                        l_focal_pet, l_num_tumours_pet, l_cancer_palpable_pet,
+                                        l_size_clin_assess_pet, l_method_assess_pet, l_size_ultrasound_pet,
+                                        l_size_mammo_pet, l_axillary_present_pet, l_axillary_nodes_pet,
+                                        l_axillary_axis_pet, metastatic, metastatic_where_bone_o,
+                                        metastatic_where_lung_o, metastatic_where_cervical_node_o, metastatic_where_other_o,
+                                        metastatic_where_liver_o, metastatic_where_brain_o, proposed_treat,
+                                        clinical_plan2, plan_change_surgery_o, plan_change_radio_o,
+                                        plan_change_antioestrogen_o, plan_change_oth_o,plan_change_spcfy)
 
 ## Survey responses (i.e. categorical factor_vars)
 ## Sets up some key components
