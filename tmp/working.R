@@ -1,3 +1,43 @@
+## 2017-06-16 ggmosaic() for plotting likert responses
+test$df_factor %>%
+    dplyr::filter(!is.na(value)) %>%
+    ## group_by(group, variable, value) %>%
+    ## summarise(n = n()) %>%
+    ggplot(aes(x = label, fill = value)) +
+    geom_bar(position = 'fill') + coord_flip()
+
+## 2017-06-16 Testing facet_grid() by event_name
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
+
+build()
+install()
+age_gap <- age_gap %>%
+           mutate(group = ifelse(runif(n = nrow(.)) > 0.5,
+                                       yes = 'Case',
+                                       no  = 'Control'))
+test <- plot_summary(df         = age_gap,
+                     id         = individual_id,
+                     select     = c(weight_kg,
+                                    age_exact,
+                                    bmi,
+                                    collaborate_calc_score,
+                                    fs_scale,
+                                    worried,
+                                    tense,
+                                    upset,
+                                    content,
+                                    relaxed),
+                     lookup     = master$lookups_field,
+                     theme      = theme_bw(),
+                     group      = group,
+                     events     = NULL,
+                     position   = 'dodge',
+                     individual = TRUE,
+                     plotly     = FALSE,
+                     title.continuous = 'Some Random title instad of the default',
+                     title.factor     = 'Summaries of one of the surveys')
+test$relaxed
+
 ## 2017-06-15 On-going development, why isn't data plotted correctly?
 build()
 install()
