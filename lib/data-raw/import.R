@@ -77,13 +77,60 @@ master$baseline_medications_med <- read_prospect(file = 'Baseline Medications - 
                          dictionary          = master$lookups)
 ## TODO - This file is in long format as there are multiple medications, convert to wide and derive
 ##        binary indicators for specific medications that are of interest.
-## File : Baseline Tumour Assessment.csv
+## File : Baseline Tumor Assessment.csv
 master$baseline_tumour_assessment <- read_prospect(file = 'Baseline Tumour Assessment.csv',
                          header              = TRUE,
                          sep                 = ',',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+## Duplicated variable names (used in PET) data table need resolving...
+##
+## Neat trick from StackOverflow (https://stackoverflow.com/a/10669726/1444043)
+duplicated_var_names <- c('uni_bilateral',
+                          'primary_tumour',
+                          'r_focal',
+                          'r_num_tumours',
+                          'r_cancer_palpable',
+                          'r_size_clin_assess',
+                          'r_method_assess',
+                          'r_size_ultrasound',
+                          'r_size_mammo',
+                          'r_axillary_present',
+                          'r_axillary_nodes',
+                          'r_axillary_axis',
+                          'r_biopsy_type',
+                          'r_confirm_present',
+                          'r_histo_grade',
+                          'r_histo_subtype',
+                          'r_histo_spcfy',
+                          'r_allred',
+                          'r_h_score',
+                          'r_pgr_score',
+                          'r_her_2_score',
+                          'l_focal',
+                          'l_num_tumours',
+                          'l_cancer_palpable',
+                          'l_size_clin_assess',
+                          'l_method_assess',
+                          'l_size_ultrasound',
+                          'l_size_mammo',
+                          'l_axillary_present',
+                          'l_axillary_nodes',
+                          'l_axillary_axis',
+                          'l_biopsy_type',
+                          'l_confirm_present',
+                          'l_histo_grade',
+                          'l_histo_subtype',
+                          'l_histo_spcfy',
+                          'l_allred',
+                          'l_h_score',
+                          'l_pgr_score',
+                          'l_her_2_score',
+                          'taking_meds')
+names(master$baseline_tumour_assessment) <- ifelse(names(master$baseline_tumour_assessment) %in% duplicated_var_names,
+                                                   no  = names(master$baseline_tumour_assessment),
+                                                   yes = paste0(names(master$baseline_tumour_assessment), '_baseline'))
 ## File : Breast Cancer Treatment Choices - chemo vs no chemo.csv
 master$breast_cancer_treatment_choices_chemo_no_chemo <- read_prospect(file = 'Breast Cancer Treatment Choices - chemo vs no chemo.csv',
                          header              = TRUE,
@@ -92,75 +139,33 @@ master$breast_cancer_treatment_choices_chemo_no_chemo <- read_prospect(file = 'B
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
 ## Variable names duplicate/conflict with Breast Cancer Treatment Choices - chemo vs no chemo.csv
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('know_enough',
-                                                                    'know_enough_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('aware',
-                                                                    'aware_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('option_pref',
-                                                                    'option_pref_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('decision',
-                                                                    'decision_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('moment_think',
-                                                                    'moment_think_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_no_dec_o',
-                                                                    'influence_dcsn_int_no_dec_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_tlk_fam_o',
-                                                                    'influence_dcsn_int_tlk_fam_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_rd_bklt_o',
-                                                                    'influence_dcsn_int_rd_bklt_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_rd_oth_o',
-                                                                    'influence_dcsn_int_rd_oth_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_opt_grd_o',
-                                                                    'influence_dcsn_int_opt_grd_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_tlk_hlth_prof_o',
-                                                                    'influence_dcsn_int_tlk_hlth_prof_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_tlk_gp_o',
-                                                                    'influence_dcsn_int_tlk_gp_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_tlk_oth_pts_o',
-                                                                    'influence_dcsn_int_tlk_oth_pts_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_int_other_o',
-                                                                    'influence_dcsn_int_other_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('other_int',
-                                                                    'other_int_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_cont_no_dec_o',
-                                                                    'influence_dcsn_cont_no_dec_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_cont_tlk_fam_o',
-                                                                    'influence_dcsn_cont_tlk_fam_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_cont_rd_oth_o',
-                                                                    'influence_dcsn_cont_rd_oth_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_cont_tlk_hlth_prof_o',
-                                                                    'influence_dcsn_cont_tlk_hlth_prof_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_cont_tlk_gp_o',
-                                                                    'influence_dcsn_cont_tlk_gp_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_cont_tlk_oth_pts_o',
-                                                                    'influence_dcsn_cont_tlk_oth_pts_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('influence_dcsn_cont_other_o',
-                                                                    'influence_dcsn_cont_other_o_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
-names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- gsub('other_cont',
-                                                                    'other_cont_chemo_no_chemo',
-                                                                    names(master$breast_cancer_treatment_choices_chemo_no_chemo))
+duplicated_var_names <- c('know_enough',
+                          'aware',
+                          'option_pref',
+                          'decision',
+                          'moment_think',
+                          'influence_dcsn_int_no_dec_o',
+                          'influence_dcsn_int_tlk_fam_o',
+                          'influence_dcsn_int_rd_bklt_o',
+                          'influence_dcsn_int_rd_oth_o',
+                          'influence_dcsn_int_opt_grd_o',
+                          'influence_dcsn_int_tlk_hlth_prof_o',
+                          'influence_dcsn_int_tlk_gp_o',
+                          'influence_dcsn_int_tlk_oth_pts_o',
+                          'influence_dcsn_int_other_o',
+                          'other_int',
+                          'influence_dcsn_cont_no_dec_o',
+                          'influence_dcsn_cont_tlk_fam_o',
+                          'influence_dcsn_cont_rd_oth_o',
+                          'influence_dcsn_cont_tlk_hlth_prof_o',
+                          'influence_dcsn_cont_tlk_gp_o',
+                          'influence_dcsn_cont_tlk_oth_pts_o',
+                          'influence_dcsn_cont_other_o',
+                          'other_cont')
+names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- ifelse(names(master$breast_cancer_treatment_choices_chemo_no_chemo) %in% duplicated_var_names,
+                                                   no  = names(master$breast_cancer_treatment_choices_chemo_no_chemo),
+                                                   yes = paste0(names(master$breast_cancer_treatment_choices_chemo_no_chemo), '_chemo_no_chemo'))
+
 ## File : Breast Cancer Treatment Choices - surgery vs pills.csv
 master$breast_cancer_treatment_choices_surgery_pills <- read_prospect(file = 'Breast Cancer Treatment Choices - surgery vs pills.csv',
                          header          = TRUE,
@@ -169,75 +174,32 @@ master$breast_cancer_treatment_choices_surgery_pills <- read_prospect(file = 'Br
                          convert.underscores = TRUE,
                          dictionary      = master$lookups)
 ## Variable names duplicate/conflict with Breast Cancer Treatment Choices - chemo vs no chemo.csv
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('know_enough',
-                                                                    'know_enough_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('aware',
-                                                                    'aware_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('option_pref',
-                                                                    'option_pref_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('decision',
-                                                                    'decision_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('moment_think',
-                                                                    'moment_think_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_no_dec_o',
-                                                                    'influence_dcsn_int_no_dec_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_tlk_fam_o',
-                                                                    'influence_dcsn_int_tlk_fam_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_rd_bklt_o',
-                                                                    'influence_dcsn_int_rd_bklt_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_rd_oth_o',
-                                                                    'influence_dcsn_int_rd_oth_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_opt_grd_o',
-                                                                    'influence_dcsn_int_opt_grd_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_tlk_hlth_prof_o',
-                                                                    'influence_dcsn_int_tlk_hlth_prof_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_tlk_gp_o',
-                                                                    'influence_dcsn_int_tlk_gp_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_tlk_oth_pts_o',
-                                                                    'influence_dcsn_int_tlk_oth_pts_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_int_other_o',
-                                                                    'influence_dcsn_int_other_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('other_int',
-                                                                    'other_int_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_cont_no_dec_o',
-                                                                    'influence_dcsn_cont_no_dec_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_cont_tlk_fam_o',
-                                                                    'influence_dcsn_cont_tlk_fam_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_cont_rd_oth_o',
-                                                                    'influence_dcsn_cont_rd_oth_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_cont_tlk_hlth_prof_o',
-                                                                    'influence_dcsn_cont_tlk_hlth_prof_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_cont_tlk_gp_o',
-                                                                    'influence_dcsn_cont_tlk_gp_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_cont_tlk_oth_pts_o',
-                                                                    'influence_dcsn_cont_tlk_oth_pts_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('influence_dcsn_cont_other_o',
-                                                                    'influence_dcsn_cont_other_o_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
-names(master$breast_cancer_treatment_choices_surgery_pills) <- gsub('other_cont',
-                                                                    'other_cont_surgery_pills',
-                                                                    names(master$breast_cancer_treatment_choices_surgery_pills))
+duplicated_var_names <- c('know_enough',
+                          'aware',
+                          'option_pref',
+                          'decision',
+                          'moment_think',
+                          'influence_dcsn_int_no_dec_o',
+                          'influence_dcsn_int_tlk_fam_o',
+                          'influence_dcsn_int_rd_bklt_o',
+                          'influence_dcsn_int_rd_oth_o',
+                          'influence_dcsn_int_opt_grd_o',
+                          'influence_dcsn_int_tlk_hlth_prof_o',
+                          'influence_dcsn_int_tlk_gp_o',
+                          'influence_dcsn_int_tlk_oth_pts_o',
+                          'influence_dcsn_int_other_o',
+                          'other_int',
+                          'influence_dcsn_cont_no_dec_o',
+                          'influence_dcsn_cont_tlk_fam_o',
+                          'influence_dcsn_cont_rd_oth_o',
+                          'influence_dcsn_cont_tlk_hlth_prof_o',
+                          'influence_dcsn_cont_tlk_gp_o',
+                          'influence_dcsn_cont_tlk_oth_pts_o',
+                          'influence_dcsn_cont_other_o',
+                          'other_cont')
+names(master$breast_cancer_treatment_choices_surgery_pills) <- ifelse(names(master$breast_cancer_treatment_choices_surgery_pills) %in% duplicated_var_names,
+                                                   no  = names(master$breast_cancer_treatment_choices_surgery_pills),
+                                                   yes = paste0(names(master$breast_cancer_treatment_choices_surgery_pills), '_surgery_pills'))
 ## File : Brief COPE.csv
 master$brief_cope <- read_prospect(file = 'Brief COPE.csv',
                          header              = TRUE,
