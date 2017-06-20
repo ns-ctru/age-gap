@@ -506,7 +506,6 @@ master$sites <- master$sites %>%
                 mutate(group = ifelse(group == '',
                                       no  = group,
                                       yes = NA))
-
 ## File : Discrepancies.csv
 master$discrepancies <- read_prospect(file = 'Discrepancies.csv',
                          header              = TRUE,
