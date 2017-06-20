@@ -158,7 +158,7 @@ continuous_vars$clinical_assessment_non_pet <- quos(recurrence_dt, recurrence_wh
                                                    plan_met_endocrine_o, plan_met_chemo_o, plan_met_trast_o,
                                                    plan_met_oth_o, plan_met_spcfy, plan_routine_surgery_o,
                                                    plan_routine_radio_o, plan_routine_endocrine_o, plan_routine_chemo_o,
-                                                   routine_trast_o, plan_routine_oth_o, plan_routine_spcfy)
+                                                   plan_routine_trast_o, plan_routine_oth_o, plan_routine_spcfy)
 continuous_vars$clinical_assessment_pet <- quos(r_num_tumours_pet, r_cancer_palpable_pet, r_size_clin_assess_pet,
                                                r_size_ultrasound_pet,r_size_mammo_pet,
                                                r_axillary_present_pet, r_axillary_nodes_pet, r_axillary_axis_pet,
