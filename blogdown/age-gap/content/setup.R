@@ -34,18 +34,18 @@ all_var$endocrine_therapy <- quos(primary_adjuvant, reason_pet, reason_pet_risk,
                                  et_joint_pain, et_vaginal_dryness, et_hair_thinning, et_rash,
                                  et_nausea, et_diarrhoea, et_headache, et_vaginal_bleeding,
                                  et_vomiting, et_somnolence)
-all_var$radiotherapy <- quos(which_breast_right_o, which_breast_left_o, r_site_breast_o,
-                            r_site_axilla_o, r_site_supraclavicular_o, r_site_chest_wall_o,
-                            r_site_other_o, r_breast_fractions, r_axilla_fractions,
-                            r_supra_fractions, r_chest_fractions, r_other_fractions,
-                            r_radiotherapy_aes,
-                            l_site_breast_o, l_site_axilla_o, l_site_supraclavicular_o,
-                            l_site_chest_wall_o, l_site_other_o, l_breast_fractions,
-                            l_axilla_fractions, l_supra_fractions, l_chest_fractions,
-                            l_other_fractions, l_radiotherapy_aes,
-                            r_skin_erythema, r_pain, r_breast_oedema, r_breast_shrink,
-                            r_breast_pain, l_skin_erythema, l_pain, l_breast_oedema,
-                            l_breast_shrink, l_breast_pain)
+all_var$radiotherapy <- quos(which_breast_right_o, r_site_breast_o,
+                             r_site_axilla_o, r_site_supraclavicular_o, r_site_chest_wall_o,
+                             r_site_other_o, r_breast_fractions, r_axilla_fractions,
+                             r_supra_fractions, r_chest_fractions, r_other_fractions,
+                             r_radiotherapy_aes, r_skin_erythema, r_pain, r_breast_oedema,
+                             r_breast_shrink, r_breast_pain,
+                             which_breast_left_o, l_site_breast_o,
+                             l_site_axilla_o, l_site_supraclavicular_o, l_site_chest_wall_o,
+                             l_site_other_o, l_breast_fractions, l_axilla_fractions,
+                             l_supra_fractions, l_chest_fractions, l_other_fractions,
+                             l_radiotherapy_aes, l_skin_erythema, l_pain, l_breast_oedema,
+                             l_breast_shrink, l_breast_pain)
 all_var$chemotherapy <- quos(chemo_received, chemo_aes,
                             c_fatigue, c_anaemia, c_low_wc_count, c_thrombocytopenia, c_allergic,
                             c_hair_thinning, c_nausea, c_infection)
@@ -103,10 +103,14 @@ factor_vars$endocrine_therapy <- quos(primary_adjuvant, reason_pet, endocrine_ty
                                      et_vaginal_dryness, et_hair_thinning, et_rash,
                                      et_nausea, et_diarrhoea, et_headache, et_vaginal_bleeding,
                                      et_vomiting, et_somnolence)
-factor_vars$radiotherapy <- quos(l_radiotherapy_aes,
-                                r_skin_erythema, r_pain, r_breast_oedema, r_breast_shrink,
-                                r_breast_pain, l_skin_erythema, l_pain, l_breast_oedema,
-                                l_breast_shrink, l_breast_pain)
+factor_vars$radiotherapy <- quos(which_breast_right_o, r_site_breast_o,
+                                 r_site_axilla_o, r_site_supraclavicular_o, r_site_chest_wall_o,
+                                 r_site_other_o, r_radiotherapy_aes, r_skin_erythema, r_pain,
+                                 r_breast_oedema, r_breast_shrink, r_breast_pain,
+                                 which_breast_left_o, l_site_breast_o,
+                                 l_site_axilla_o, l_site_supraclaviculal_o, l_site_chest_wall_o,
+                                 l_site_othel_o, l_radiotherapy_aes, l_skin_erythema, l_pain,
+                                 l_breast_oedema, l_breast_shrink, l_breast_pain)
 factor_vars$chemotherapy <- quos(chemo_received, chemo_aes,
                                 c_fatigue, c_anaemia, c_low_wc_count, c_thrombocytopenia, c_allergic,
                                 c_hair_thinning, c_nausea, c_infection)
@@ -135,15 +139,10 @@ continuous_vars$eortc_eld15 <- quos(mo_raw, mo_scale,
 continuous_vars$eq5d <- quos(eq5d_number, eq5d_score)
 continuous_vars$therapy_assessment <- quos()
 continuous_vars$endocrine_therapy <- quos()
-continuous_vars$radiotherapy <- quos(which_breast_right_o, which_breast_left_o, r_site_breast_o,
-                                    r_site_axilla_o, r_site_supraclavicular_o, r_site_chest_wall_o,
-                                    r_site_other_o, r_breast_fractions, r_axilla_fractions,
-                                    r_supra_fractions, r_chest_fractions, r_other_fractions,
-                                    r_radiotherapy_aes,
-                                    l_site_breast_o, l_site_axilla_o, l_site_supraclavicular_o,
-                                    l_site_chest_wall_o, l_site_other_o, l_breast_fractions,
-                                    l_axilla_fractions, l_supra_fractions, l_chest_fractions,
-                                    l_other_fractions)
+continuous_vars$radiotherapy <- quos(r_breast_fractions, r_axilla_fractions,
+                                     r_supra_fractions, r_chest_fractions, r_other_fractions
+                                     l_breast_fractions, l_axilla_fractions,
+                                     l_supra_fractions, l_chest_fractions, l_other_fractions)
 continuous_vars$chemotherapy <- quos()
 continuous_vars$trastuzumab <- quos(infusion_no)
 continuous_vars$clinical_assessment_non_pet <- quos(recurrence_dt, recurrence_where_breast_o,
