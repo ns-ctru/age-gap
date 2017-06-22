@@ -1,3 +1,51 @@
+## 2017-06-22 Checking revised import and conversion of boolean factors works
+check <- read.csv('~/work/scharr/age-gap/lib/data-raw/Treatment decision.csv')
+table(check$odt_taken_home_no_oth_o, useNA = 'ifany')
+table(master$treatment_decision$odt_taken_home_no_other, useNA = 'ifany')
+table(check$odt_taken_home_no_decided, useNA = 'ifany')
+table(master$treatment_decision$odt_taken_home_no_decided, useNA = 'ifany')
+
+being_checked <- c('odt_taken_home_no_decided', 'odt_taken_home_no_other')
+dplyr::filter(master$lookups, form == 'Treatment decision') %>% dplyr::select(field, code, label)
+dplyr::filter(master$lookups, form == 'Treatment decision' & field %in% being_checked)
+
+## 2017-06-21 Checking _o variables are read in as 0/1
+check <- read.csv(file = '~/work/scharr/age-gap/lib/data-raw/Radiotherapy.csv')
+names(check)
+table(check$r_site_breast_o, useNA = 'ifany')
+table(check$r_site_axilla_o, useNA = 'ifany')
+table(check$r_site_supraclavicular_o, useNA = 'ifany')
+
+## 2017-06-21 debugging why summary_table() doesn't work
+continuous_vars$radiotherapy <- quos(##  r_site_breast_o,
+                                     ## r_site_axilla_o, r_site_supraclavicular_o, r_site_chest_wall_o,
+                                     ## r_site_other_o, r_breast_fractions, r_axilla_fractions,
+                                     ## r_supra_fractions, r_chest_fractions, r_other_fractions,
+                                     ## r_radiotherapy_aes)
+                                     ## l_site_breast_o, l_site_axilla_o, l_site_supraclavicular_o,
+                                     ## l_site_chest_wall_o, l_site_other_o, l_breast_fractions,
+                                     ## l_axilla_fractions, l_supra_fractions, l_chest_fractions,
+                                     l_other_fractions)
+summary_tables$radiotherapy                <- table_summary(df = age_gap,
+                                                            lookup = master$lookups_fields,
+                                                            id = individual_id,
+                                                            select = c(!!!continuous_vars$radiotherapy),
+                                                            site)
+
+sink('~/work/scharr/age-gap/tmp/check.txt')
+which(sapply(master$radiotherapy, class) == "integer")
+sapply(master$radiotherapy, table)
+sink()
+## Ok, looks like there are a lot of factor variables mistakenly included.
+sink('~/work/scharr/age-gap/tmp/check_non_pet.txt')
+which(sapply(master$clinical_assessment_non_pet, class) == "integer")
+sapply(master$radiotherapy, table)
+sink()
+sink('~/work/scharr/age-gap/tmp/check_pet.txt')
+which(sapply(master$clinical_assessment_pet, class) == "integer")
+sapply(master$radiotherapy, table)
+sink()
+
 ## 2017-06-16 ggmosaic() for plotting likert responses
 test$df_factor %>%
     dplyr::filter(!is.na(value)) %>%
