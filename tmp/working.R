@@ -1,13 +1,43 @@
 ## 2017-06-22 Checking revised import and conversion of boolean factors works
+## File : Treatment decision.csv
+master$treatment_decision <- read_prospect(file = '~/work/scharr/age-gap/lib/data-raw/Treatment decision.csv',
+                         header              = TRUE,
+                         sep                 = ',',
+                         convert.dates       = TRUE,
+                         convert.underscores = TRUE,
+                         dictionary          = master$lookups)
 check <- read.csv('~/work/scharr/age-gap/lib/data-raw/Treatment decision.csv')
+print('Check')
 table(check$odt_taken_home_no_oth_o, useNA = 'ifany')
-table(master$treatment_decision$odt_taken_home_no_other, useNA = 'ifany')
-table(check$odt_taken_home_no_decided, useNA = 'ifany')
+table(check$odt_taken_home_no_decided_o, useNA = 'ifany')
+table(check$b_taken_home_no_oth_o, useNA = 'ifany')
+print('Master')
 table(master$treatment_decision$odt_taken_home_no_decided, useNA = 'ifany')
+table(master$treatment_decision$odt_taken_home_no_other, useNA = 'ifany')
+table(master$treatment_decision$b_taken_home_no_other, useNA = 'ifany')
 
-being_checked <- c('odt_taken_home_no_decided', 'odt_taken_home_no_other')
+being_checked <- c('odt_taken_home_no_other')
 dplyr::filter(master$lookups, form == 'Treatment decision') %>% dplyr::select(field, code, label)
 dplyr::filter(master$lookups, form == 'Treatment decision' & field %in% being_checked)
+factor(check$odt_taken_home_no_decided_o,
+       levels = c(subset(master$lookups, field == 'odt_taken_home_no_decided')$code),
+       labels = c(subset(master$lookups, field == 'odt_taken_home_no_decided')$label)) %>% table()
+factor(check$odt_taken_home_no_oth_o,
+       levels = c(subset(master$lookups, field == 'odt_taken_home_no_other')$code),
+       labels = c(subset(master$lookups, field == 'odt_taken_home_no_other')$label)) %>% table()
+
+## Lets check the lookups file
+subset(master$lookups, field == 'odt_taken_home_no_decided')
+subset(master$lookups, field == 'b_taken_home_no_decided')
+
+## OK SOLVED IT!!!  It was using 'dt' to identify date variables that need converting to internal
+## elapsed dates, the 'odt_taken_home_no_*' group of variables were first being converted to dates
+## hence all being NA since they were not date strings.  Corrected read_prospect() to look for '_dt'
+## in variable names.  PHEW!  I guess this is the sort of thing that could be avoided if databases
+## (i.e. Prospect) could be queried directly as data types would not be lost when exporting to CSV
+## files, but hey, thats never going to change because it was decided to out-source database
+## development and maintenance and Access Control is done at the WebUI level rather than the database
+## level.
 
 ## 2017-06-21 Checking _o variables are read in as 0/1
 check <- read.csv(file = '~/work/scharr/age-gap/lib/data-raw/Radiotherapy.csv')
@@ -17,7 +47,7 @@ table(check$r_site_axilla_o, useNA = 'ifany')
 table(check$r_site_supraclavicular_o, useNA = 'ifany')
 
 ## 2017-06-21 debugging why summary_table() doesn't work
-continuous_vars$radiotherapy <- quos(##  r_site_breast_o,
+continuous_vars$radiotherapy <- quos(## r_site_breast_o,
                                      ## r_site_axilla_o, r_site_supraclavicular_o, r_site_chest_wall_o,
                                      ## r_site_other_o, r_breast_fractions, r_axilla_fractions,
                                      ## r_supra_fractions, r_chest_fractions, r_other_fractions,
