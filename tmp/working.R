@@ -1,3 +1,16 @@
+## 2017-06-26 Checking if/how pixiedust functions can be integrated into table_summary()
+check <- dplyr::select(age_gap, individual_id, site, event_name, age_exact, height_cm, weight_current_kg, bmi)
+dust(check)
+table_summary(df = check,
+              lookup = master$lookups_fields,
+              id     = individual_id,
+              select = c(age_exact, height_cm, weight_current_kg, bmi),
+              event_name) %>%
+    dplyr::filter(n != missing) %>%
+    dust()
+## Looks like using table_summary() and then passing to dust() and subsequent augmentation is the way
+## forward.
+
 ## 2017-06-22 Checking revised import and conversion of boolean factors works
 ## File : Treatment decision.csv
 master$treatment_decision <- read_prospect(file = '~/work/scharr/age-gap/lib/data-raw/Treatment decision.csv',
