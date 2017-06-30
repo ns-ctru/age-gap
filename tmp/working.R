@@ -1,15 +1,34 @@
 ## 2017-06-29 Developing plots and tables
 ## Lets try all of the responses for EQ5d
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
 event <- list()
 survey_vars <- list()
 event$eq5d <- c('Baseline', '6 weeks', '6 months', '12 months', '18 months', '24 months')
 survey_vars$eq5d <- c(mobility, self_care, usual_activity, pain_discomfort, anxiety_depression)
-ctru::plot_summary(df = age_gap,
-                   id = individual_id,
-                   select = c(mobility, self_care, usual_activity, pain_discomfort, anxiety_depression),
-                   lookup = master$lookups_fields,
-                   group  = site,
-                   events = event$eq5d)
+
+build()
+install()
+test <- ctru::plot_summary(df           = age_gap,
+                           id           = individual_id,
+                           select       = c(mobility, self_care, usual_activity, pain_discomfort, anxiety_depression, bmi),
+                           lookup       = master$lookups_fields,
+                           group        = site,
+                           events       = event_name,
+                           theme        = theme_bw(),
+                           position     = 'identity',
+                           histogram    = TRUE,
+                           boxplot      = TRUE,
+                           individual   = TRUE,
+                           plotly       = FALSE,
+                           remove.na    = TRUE,
+                           title.factor = 'Factor outcomes by treatment group')
+test$histogram
+
+test$boxplot
+
+## What age gap requires...
+ggplot(test$df_factor, aes(x = event_name,  fill = value)) + geom_bar(position = 'fill') + coord_flip() + facet_wrap(~label, ncol = 1)
+## THink of a way of using a formula description for how factors are plotted.
 
 ## 2017-06-26 Checking if/how pixiedust functions can be integrated into table_summary()
 check <- dplyr::select(age_gap, individual_id, site, event_name, age_exact, height_cm, weight_current_kg, bmi)
