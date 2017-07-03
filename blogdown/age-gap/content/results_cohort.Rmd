@@ -48,5 +48,24 @@ cohort_plot$therapy_assessment$df_factor %>%
     xlab('Event') + ylab('Proportion') +
     theme_bw()
 ## cohort_plot$therapy_assessment$factor_therapy_assessment
+## Endocrine Therapy
+cohort_plot$endocrine_therapy$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$endocrine_therapy$factor_endocrine_therapy
+## Endocrine Therapy
+cohort_plot$radiotherapy$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$radiotherapy$factor_radiotherapy
+
 
 ```
