@@ -1,0 +1,44 @@
+---
+site: blogdown:::blogdown_site
+---
+
+```{r results_cohort_summary_eq5d, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Plot : EQ5d
+cohort_plot$eq5d$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$eq5d$factor_eq5d
+## Plot : EORTC QLQ C30
+cohort_plot$eortc_qlq_c30$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$eortc_qlq_c30$factor_eortc_qlq_c30
+## Plot : EORTC QLQ BR23
+cohort_plot$eortc_qlq_br23$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$eortc_qlq_br23$factor_eortc_qlq_br23
+## Plot : EORTC QLQ ELD15
+cohort_plot$eortc_qlq_eld15$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$eortc_qlq_eld15$factor_eortc_qlq_eld15
+
+
+```
