@@ -3,6 +3,7 @@ site: blogdown:::blogdown_site
 ---
 
 ```{r methods_load, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
 
 ```
 
@@ -29,6 +30,7 @@ Summary tables of the number of missing observations, mean, standard deviation (
 ##        returned data frame is for now being used to plot, once thats corrected
 ##        the returned plot will be printable directly (code is in place for when
 ##        working)
+
 ## Initialise a list
 cohort_plot <- list()
 ## EQ5D
@@ -51,14 +53,21 @@ cohort_plot$eq5d <- ctru::plot_summary(df            = age_gap,
 ## EORTC-QLQ-C30
 cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
                                        id            = individual_id,
-                                       select        = c(),
+                                       select        = c(c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
+                                                         c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
+                                                         c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                                                         c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                                                         c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                                                         c30_q26, c30_q27, c30_q28), ## , c30_q29, c30_q30,
+                                                         ## ql_raw, ql_scale, pf_raw, pf_scale, rf_raw, rf_scale,
+                                                         ## ef_raw,ef_scale, cf_raw,cf_scale, sf_raw, sf_scale,
+                                                         ## fa_raw,fa_scale, nv_raw,nv_scale, pa_raw, pa_scale,
+                                                         ## dy_scale, sl_scale, ap_scale, co_scale, di_scale, fi_scale),
                                        lookup_fields = master$lookups_fields,
-                                       levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       levels_factor = c('Not at All', 'A Little', 'Quite a Bit', 'Very Much'),
                                        group         = site,
                                        events        = event_name,
-                                       theme         = theme_bw(c30_1, c30_2, c30_3, c30_4, c30_5,
-                                                                c30_, c30_2, c30_3, c30_4, c30_5,
-                                                                ),
+                                       theme         = theme_bw(),
                                        position      = 'identity',
                                        histogram     = TRUE,
                                        boxplot       = TRUE,
@@ -68,11 +77,18 @@ cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
                                        title_factor  = 'Summary of EORTC Quality of Life Questionnaires (C30) scores over time',
                                        title_continuous = NULL)
 ## EORTC-QLQ-BR23
-cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
+cohort_plot$eortc_qlq_br23 <- ctru::plot_summary(df            = age_gap,
                                        id            = individual_id,
-                                       select        = c(),
+                                       select        = c(br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
+                                                         br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
+                                                         br23_q41, br23_q42, br23_q43, br23_q44, br23_q45,
+                                                         br23_q46, br23_q47, br23_q48, br23_q49, br23_q50,
+                                                         br23_q51, br23_q52, br23_q53), ## ,
+                                                         ## brbi_raw, brbi_scale, brsef_raw, brsef_scale,
+                                                         ## brsee_scale, brfu_scale, brst_raw, brst_scale,
+                                                         ## brbs_raw, brbs_scale, bras_raw, bras_scale, brhl_scale),
                                        lookup_fields = master$lookups_fields,
-                                       levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       levels_factor = c('Not at All', 'A Little', 'Quite a Bit', 'Very Much'),
                                        group         = site,
                                        events        = event_name,
                                        theme         = theme_bw(),
@@ -85,11 +101,16 @@ cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
                                        title_factor  = 'Summary of EORTC Quality of Life Questionnaires (BR23) scores over time',
                                        title_continuous = NULL)
 ## EORTC-QLQ-ELD15
-cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
+cohort_plot$eortc_qlq_eld15 <- ctru::plot_summary(df            = age_gap,
                                        id            = individual_id,
-                                       select        = c(),
+                                       select        = c(eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
+                                                         eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
+                                                         eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68),
+                                                         ## , mo_raw, mo_scale,
+                                                         ## wao_raw, wao_scale, wo_raw, wo_scale, mp_raw, mp_scale,
+                                                         ## boi_raw, boi_scale, js_scale, fs_scale),
                                        lookup_fields = master$lookups_fields,
-                                       levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       levels_factor = c('Not at All', 'A Little', 'Quite a Bit', 'Very Much'),
                                        group         = site,
                                        events        = event_name,
                                        theme         = theme_bw(),
