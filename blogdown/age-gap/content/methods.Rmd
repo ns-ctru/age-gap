@@ -22,3 +22,102 @@ Detailed guidelines of the work required for both studies is provided in two Sta
 ## QC of Cohort Study
 
 Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for demographic data and the responses to each of the surveys by treatment arm and overall will be provided for each time point assessments were made.  The Statistical Analysis Plan (SAP) is not prescriptive about what exactly is to be checked so an *ad hoc* approach is taken whereby the author checks what they think is important and then updates this as and when defficiencies are highlighted.
+
+```{r methods_cohort_plot, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Create a list of plots, each item being a particular form
+## ToDo - Not perfect, currently the interal plotting isn't quite right so the
+##        returned data frame is for now being used to plot, once thats corrected
+##        the returned plot will be printable directly (code is in place for when
+##        working)
+## Initialise a list
+cohort_plot <- list()
+## EQ5D
+cohort_plot$eq5d <- ctru::plot_summary(df            = age_gap,
+                                       id            = individual_id,
+                                       select        = c(mobility, self_care, usual_activity, pain_discomfort, anxiety_depression),
+                                       lookup_fields = master$lookups_fields,
+                                       levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       group         = site,
+                                       events        = event_name,
+                                       theme         = theme_bw(),
+                                       position      = 'identity',
+                                       histogram     = TRUE,
+                                       boxplot       = TRUE,
+                                       individual    = TRUE,
+                                       plotly        = FALSE,
+                                       remove_na     = TRUE,
+                                       title_factor  = 'Summary of EQ-5D-5L scores over time',
+                                       title_continuous = NULL)
+## EORTC-QLQ-C30
+cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
+                                       id            = individual_id,
+                                       select        = c(),
+                                       lookup_fields = master$lookups_fields,
+                                       levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       group         = site,
+                                       events        = event_name,
+                                       theme         = theme_bw(c30_1, c30_2, c30_3, c30_4, c30_5,
+                                                                c30_, c30_2, c30_3, c30_4, c30_5,
+                                                                ),
+                                       position      = 'identity',
+                                       histogram     = TRUE,
+                                       boxplot       = TRUE,
+                                       individual    = TRUE,
+                                       plotly        = FALSE,
+                                       remove_na     = TRUE,
+                                       title_factor  = 'Summary of EORTC Quality of Life Questionnaires (C30) scores over time',
+                                       title_continuous = NULL)
+## EORTC-QLQ-BR23
+cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
+                                       id            = individual_id,
+                                       select        = c(),
+                                       lookup_fields = master$lookups_fields,
+                                       levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       group         = site,
+                                       events        = event_name,
+                                       theme         = theme_bw(),
+                                       position      = 'identity',
+                                       histogram     = TRUE,
+                                       boxplot       = TRUE,
+                                       individual    = TRUE,
+                                       plotly        = FALSE,
+                                       remove_na     = TRUE,
+                                       title_factor  = 'Summary of EORTC Quality of Life Questionnaires (BR23) scores over time',
+                                       title_continuous = NULL)
+## EORTC-QLQ-ELD15
+cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
+                                       id            = individual_id,
+                                       select        = c(),
+                                       lookup_fields = master$lookups_fields,
+                                       levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       group         = site,
+                                       events        = event_name,
+                                       theme         = theme_bw(),
+                                       position      = 'identity',
+                                       histogram     = TRUE,
+                                       boxplot       = TRUE,
+                                       individual    = TRUE,
+                                       plotly        = FALSE,
+                                       remove_na     = TRUE,
+                                       title_factor  = 'Summary of EORTC Quality of Life Questionnaires (ELD15) scores over time',
+                                       title_continuous = NULL)
+
+## All continuous variables
+cohort_plot$continuous <- ctru::plot_summary(df            = age_gap,
+                                             id            = individual_id,
+                                             select        = c(bmi, age_exact, weight_kg, height_cm),
+                                             lookup_fields = master$lookups_fields,
+                                             levels_factor = NULL,
+                                             group         = site,
+                                             events        = event_name,
+                                             theme         = theme_bw(),
+                                             position      = 'identity',
+                                             histogram     = TRUE,
+                                             boxplot       = TRUE,
+                                             individual    = TRUE,
+                                             plotly        = FALSE,
+                                             remove_na     = TRUE,
+                                             title_factor  = NULL,
+                                             title_continuous = NULL)
+
+```
