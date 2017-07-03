@@ -57,7 +57,7 @@ cohort_plot$endocrine_therapy$df_factor %>%
     xlab('Event') + ylab('Proportion') +
     theme_bw()
 ## cohort_plot$endocrine_therapy$factor_endocrine_therapy
-## Endocrine Therapy
+## Radiotherapy
 cohort_plot$radiotherapy$df_factor %>%
     ggplot(aes(x = event_name, fill = value)) +
     geom_bar(position = 'fill') +
@@ -66,6 +66,24 @@ cohort_plot$radiotherapy$df_factor %>%
     xlab('Event') + ylab('Proportion') +
     theme_bw()
 ## cohort_plot$radiotherapy$factor_radiotherapy
+## Chemotherapy
+cohort_plot$chemotherapy$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$chemotherapy$factor_chemotherapy
+## Trastuzumab
+cohort_plot$trastuzumab$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$trastuzumab$factor_trastuzumab
 
 
 ```
