@@ -39,6 +39,14 @@ cohort_plot$eortc_qlq_eld15$df_factor %>%
     xlab('Event') + ylab('Proportion') +
     theme_bw()
 ## cohort_plot$eortc_qlq_eld15$factor_eortc_qlq_eld15
-
+## Therapy Assessment
+cohort_plot$therapy_assessment$df_factor %>%
+    ggplot(aes(x = event_name, fill = value)) +
+    geom_bar(position = 'fill') +
+    coord_flip() + scale_y_continuous(trans = 'reverse') +
+    facet_wrap(~label, ncol = 1) +
+    xlab('Event') + ylab('Proportion') +
+    theme_bw()
+## cohort_plot$therapy_assessment$factor_therapy_assessment
 
 ```
