@@ -1188,6 +1188,19 @@ age_gap <- full_join(master$therapy_qol,
            full_join(.,
                      master$rct,
                      by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+## Convert event_name to a factor so that it will plot in the correct order in all
+## subsequent uses
+           mutate(event_name = factor(event_name,
+                                      levels = c('Baseline',
+                                                 'RCT baseline',
+                                                 'RCT treatment',
+                                                 '6 weeks',
+                                                 'RCT 6 weeks',
+                                                 '6 months',
+                                                 'RCT 6 months',
+                                                 '12 months',
+                                                 '18 months',
+                                                 '24 months'))) %>%
 ## Finally the site allocation so that RCT component can be confudcted
            left_join(.,
                      dplyr::select(master$sites,
@@ -1227,7 +1240,8 @@ age_gap <- age_gap %>%
 ## Derive BMI
            mutate(bmi = weight_kg / (height_cm /100)^2) %>%
 # Age based on Date of Birth
-           mutate(age_exact = consent_dt - dob) %>%
+           mutate(age_exact = new_interval(start = dob,
+                                           end = consent_dt) / duration(num = 1, units = 'years')) %>%
 ## Elapsed time from consent/randomisation to noted event
            group_by(individual_id) %>%
            mutate(start_date = min(consent_dt, na.rm = TRUE),
