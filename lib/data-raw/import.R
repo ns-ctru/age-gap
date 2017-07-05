@@ -30,6 +30,35 @@ master$lookups_fields <- read.csv(file = 'Age Gap database specification - Field
 master$lookups_fields <- master$lookups_fields %>%
                          dplyr::select(Form, Subform, Identifier, Label)
 names(master$lookups_fields) <- names(master$lookups_fields) %>% tolower()
+## Bulk out labels for numbered responses
+master$lookups_fields <- master$lookups_fields %>%
+                         mutate(label = ifelse(label == '1. Do you have any trouble doing strenuous activities?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '2. Do you have any trouble taking a long walk?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '3. Do you have any trouble taking a short walk outside of the house?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '4. Do you need to stay in bed or a chair during the day?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '5. Do you need help with eating, dressing, washing yourself or using the toilet?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '6. Were you limited in doing either your work or other daily activities?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '7. Were you limited in pursuing your hobbies or other leisure activities?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '8. Were you short of breath?',
+                                               yes   = paste0('0', label),
+                                               no    = label),
+                                label = ifelse(label == '9. Have you had pain?',
+                                               yes   = paste0('0', label),
+                                               no    = label))
 ## Another short-coming of Prospect, or perhaps more accurately its documentation
 ## is that fields that are 'Flags' are not fully documented, as they results in
 ## multiple variables suffixed with '[option]_o'.  This has two implicaitons...
