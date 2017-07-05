@@ -1262,6 +1262,14 @@ age_gap <- age_gap %>%
            mutate(weight_kg = case_when(!is.na(.$weight_current_kg) ~ .$weight_current_kg,
                                         is.na(.$weight_current_kg) & !is.na(.$weight_1m_kg) ~ .$weight_1m_kg,
                                         is.na(.$weight_current_kg) & is.na(.$weight_1m_kg) & !is.na(.$weight_6m_kg) ~ .$weight_6m_kg)) %>%
+## Remove 'University Hospital of' / 'University Hospital' / 'Hospital' etc.
+## to make plotting/tabulation neater
+           mutate(site = gsub('^University Hospital of ', '', site),
+                  site = gsub('^University Hospital ', '', site),
+                  site = gsub(' Teaching Hospital$', '', site),
+                  site = gsub(' Teaching Hospitals$', '', site))
+                  site = gsub(' Hospital$', '', site),
+                  site = gsub(' Hospitals$', '', site))
 ## Convert all heights to same units (cm)
            mutate(height_cm = ifelse(is.na(height_cm),
                                      yes = 2.54 * ((height_ft * 12) + height_in),
