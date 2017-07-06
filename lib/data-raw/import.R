@@ -1267,15 +1267,57 @@ age_gap <- age_gap %>%
            mutate(site = gsub('^University Hospital of ', '', site),
                   site = gsub('^University Hospital ', '', site),
                   site = gsub(' Teaching Hospital$', '', site),
-                  site = gsub(' Teaching Hospitals$', '', site))
+                  site = gsub(' Teaching Hospitals$', '', site),
                   site = gsub(' Hospital$', '', site),
-                  site = gsub(' Hospitals$', '', site))
+                  site = gsub(' Hospitals$', '', site)) %>%
 ## Convert all heights to same units (cm)
            mutate(height_cm = ifelse(is.na(height_cm),
                                      yes = 2.54 * ((height_ft * 12) + height_in),
                                      no  = height_cm)) %>%
 ## Derive BMI
            mutate(bmi = weight_kg / (height_cm /100)^2) %>%
+## Derive an indicator of all of the possible combinations of treatment
+           mutate(endocrine_therapy_t = ifelse(endocrine_therapy == 'Yes',
+                                               yes = 'Endocrine + ',
+                                               no  = ''),
+                  radiotherapy_t = ifelse(radiotherapy == 'Yes',
+                                                  yes = 'Radiotherapy + ',
+                                                  no  = ''),
+                  chemotherapy_t = ifelse(chemotherapy == 'Yes',
+                                                  yes = 'Chemotherapy + ',
+                                                  no  = ''),
+                  trastuzumab_t = ifelse(trastuzumab == 'Yes',
+                                                 yes = 'Trastuzumab + ',
+                                                 no  = ''),
+                  surgery_t = ifelse(surgery == 'Yes',
+                                             yes = 'Surgery',
+                                             no  = ''),
+                  treatment_profile = paste0(endocrine_therapy_t,
+                                             radiotherapy_t,
+                                             chemotherapy_t,
+                                             trastuzumab_t,
+                                             surgery_t),
+                  ## NB - Treated 'NA' for any treatment as 'No' otherwise 5550 observations
+                  ##      could not be included (mostly 5513 are all 'No'
+                  treatment_profile = gsub('NA', '', treatment_profile),
+                  treatment_profile = gsub(' \\+ $', '', treatment_profile),
+                  treatment_profile = ifelse(treatment_profile == '',
+                                             yes = 'None',
+                                             no  = treatment_profile),
+                  ## Convert to factor and set reference level to be 'None'
+                  treatment_profile = factor(treatment_profile),
+                  treatment_profile = relevel(treatment_profile, ref = 'None'),
+                  ## Binary indicator of whether there is missing data on treatment
+                  treatment_missing = case_when(!is.na(endocrine_therapy) &
+                                                !is.na(radiotherapy) &
+                                                !is.na(chemotherapy) &
+                                                !is.na(trastuzumab) &
+                                                !is.na(surgery) ~ 'No missing treatment',
+                                                is.na(endocrine_therapy) |
+                                                is.na(radiotherapy) |
+                                                is.na(chemotherapy) |
+                                                is.na(trastuzumab) |
+                                                is.na(surgery) ~ 'One or more missing treatment'))
 # Age based on Date of Birth
            mutate(age_exact = new_interval(start = dob,
                                            end = consent_dt) / duration(num = 1, units = 'years')) %>%
