@@ -47,7 +47,7 @@ cohort_plot$eq5d <- ctru::plot_summary(df            = age_gap,
                                                             eq5d_score),
                                        lookup_fields    = master$lookups_fields,
                                        levels_factor    = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
-                                       group            = treatment_profile,
+                                       group            = site,
                                        events           = event_name,
                                        theme            = theme_bw(),
                                        position         = 'identity',
@@ -58,7 +58,8 @@ cohort_plot$eq5d <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of EQ-5D-5L scores over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 
 ## EORTC-QLQ-C30
 cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
@@ -97,7 +98,8 @@ cohort_plot$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of EORTC Quality of Life Questionnaires (C30) scores over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## EORTC-QLQ-BR23
 cohort_plot$eortc_qlq_br23 <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -126,7 +128,8 @@ cohort_plot$eortc_qlq_br23 <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of EORTC Quality of Life Questionnaires (BR23) scores over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## EORTC-QLQ-ELD15
 cohort_plot$eortc_qlq_eld15 <- ctru::plot_summary(df    = age_gap,
                                        id               = individual_id,
@@ -153,7 +156,8 @@ cohort_plot$eortc_qlq_eld15 <- ctru::plot_summary(df    = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of EORTC Quality of Life Questionnaires (ELD15) scores over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## Therapy Assessment
 cohort_plot$therapy_assessment <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -177,7 +181,8 @@ cohort_plot$therapy_assessment <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of Therapy Assessment over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## Endocrine Therapy
 cohort_plot$endocrine_therapy <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -206,7 +211,8 @@ cohort_plot$endocrine_therapy <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of Endocrine Therapy over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## Radiotherapy
 cohort_plot$radiotherapy <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -257,7 +263,8 @@ cohort_plot$radiotherapy <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of Radiotherapy over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## Chemotherapy
 cohort_plot$chemotherapy <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -284,7 +291,8 @@ cohort_plot$chemotherapy <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of Chemotherapy over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## Trastuzumab
 cohort_plot$trastuzumab <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -308,7 +316,8 @@ cohort_plot$trastuzumab <- ctru::plot_summary(df            = age_gap,
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of Trastuzumab over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## Clinical Assessment PET
 cohort_plot$clinical_assessment_pet <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -361,7 +370,8 @@ cohort_plot$clinical_assessment_pet <- ctru::plot_summary(df            = age_ga
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of Clinical Assessment (PET) over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 ## Clinical Assessment Non PET
 cohort_plot$clinical_assessment_non_pet <- ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
@@ -412,7 +422,8 @@ cohort_plot$clinical_assessment_non_pet <- ctru::plot_summary(df            = ag
                                        remove_na        = TRUE,
                                        title_factor     = 'Summary of Clinical Assessment (Non-PET) over time',
                                        title_continuous = NULL,
-                                       legend           = TRUE)
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
 
 ## All continuous variables
 numeric_vars <- which(sapply(age_gap, is.numeric)) %>% names()
@@ -432,7 +443,8 @@ cohort_plot$continuous <- ctru::plot_summary(df            = age_gap,
                                              remove_na        = TRUE,
                                              title_factor     = NULL,
                                              title_continuous = NULL,
-                                             legend           = FALSE)
+                                             legend_continuous = FALSE,
+                                             legend_factor    = TRUE)
 
 ###################################################################################
 ## Tabular summaries                                                             ##
@@ -682,4 +694,6 @@ cohort_table$clinical_assessment_non_pet <- ctru::table_summary(df            = 
                                                        ## plan_routine_spcfy),
                                          nomissing = TRUE,
                                          event_name)
+
+
 ```
