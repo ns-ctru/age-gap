@@ -1318,6 +1318,7 @@ age_gap <- age_gap %>%
                                                 is.na(chemotherapy) |
                                                 is.na(trastuzumab) |
                                                 is.na(surgery) ~ 'One or more missing treatment')) %>%
+           dplyr::select(-endocrine_therapy_t, -radiotherapy_t, -chemotherapy_t, -trastuzumab_t, -surgery_t) %>%
 # Age based on Date of Birth
            mutate(age_exact = new_interval(start = dob,
                                            end = consent_dt) / duration(num = 1, units = 'years')) %>%
@@ -1345,7 +1346,9 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('', '', 'pf_raw', 'PF Raw'),
                                c('', '', 'ql_raw', 'QL Raw'),
                                c('', '', 'rf_raw', 'RF Raw'),
-                               c('', '', 'sf_raw', 'SF Raw'))
+                               c('', '', 'sf_raw', 'SF Raw'),
+                               c('', '', 'treatment_profile', 'Treatments Received'),
+                               c('', '', 'treatment_missing', 'Indicator of whether there is missing data for any given treatment.'))
 
 
 ###################################################################################
