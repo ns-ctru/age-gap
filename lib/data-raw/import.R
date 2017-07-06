@@ -1317,7 +1317,7 @@ age_gap <- age_gap %>%
                                                 is.na(radiotherapy) |
                                                 is.na(chemotherapy) |
                                                 is.na(trastuzumab) |
-                                                is.na(surgery) ~ 'One or more missing treatment'))
+                                                is.na(surgery) ~ 'One or more missing treatment')) %>%
 # Age based on Date of Birth
            mutate(age_exact = new_interval(start = dob,
                                            end = consent_dt) / duration(num = 1, units = 'years')) %>%
