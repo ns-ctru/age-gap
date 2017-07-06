@@ -25,6 +25,17 @@ master$lookups_form <- master$lookups_form %>%
 names(master$lookups_form) <- names(master$lookups_form) %>% tolower()
 ## File   : Age Gap database specification - Forms.csv
 ## Source : https://goo.gl/oFBs4j
+##
+## NB : Not actually required due to Prospect exporting 'Sites.csv'
+## master$sites <- read.csv(file = 'Age Gap database specification - Sites.csv',
+##                          header = TRUE)
+## master$sites <- master$sites %>%
+##                 dplyr::select(Name, Site.group, RCT.date, PE.site)
+## names(master$sites) <- names(master$sites) %>% tolower()
+## names(master$sites) <- gsub('\\.', '_', names(master$sites))
+## names(master$sites) <- gsub('name', 'site', names(master$sites))
+## File   : Age Gap database specification - Forms.csv
+## Source : https://goo.gl/oFBs4j
 master$lookups_fields <- read.csv(file = 'Age Gap database specification - Fields.csv',
                                   header = TRUE)
 master$lookups_fields <- master$lookups_fields %>%
@@ -257,7 +268,6 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('Treatment decision', '', 'b_taken_home_no_fam_reluctant', 'Booklet (not taken home) : Family reluctant'),
                                c('Treatment decision', '', 'b_taken_home_nother', 'Booklet (not taken home) : Other')
                                )
-
 ## Replace '[calculated] ' in all identifiers since this is NOT used in the actual
 ## identifier!!
 master$lookups_fields <- master$lookups_fields %>%
@@ -516,7 +526,6 @@ master$clinical_assessment_pet <- read_prospect(file = 'Clinical Assessment (PET
 names(master$clinical_assessment_pet) <- ifelse(names(master$clinical_assessment_pet) %in% duplicated_var_names$clinical_assessment_pet,
                                                    no  = names(master$clinical_assessment_pet),
                                                    yes = paste0(names(master$clinical_assessment_pet), '_pet'))
-
 ## File : CollaboRATE.csv
 master$collaborate <- read_prospect(file = 'CollaboRATE.csv',
                          header              = TRUE,
@@ -801,6 +810,9 @@ master$db_spec_forms <- master$db_spec_forms %>%
 ###################################################################################
 ## Scoring                                                                       ##
 ###################################################################################
+## This may not be required, its possible all scores have been derived within    ##
+## Prospect                                                                      ##
+###################################################################################
 ## EQ5D
 ## TODO - Need to get eq5d_score() function in CTRU package working with Non-Standard
 ##        Evaluation/Scoping
@@ -880,7 +892,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                           telephone, shopping, food_prep, housekeeping,
                                           laundry, transport, medication, finances, iadl_score),
                             by = c('individual_id', 'site', 'event_name')) %>%
-## Modified CHarlson Co-Morbidity
+## Modified Charlson Co-Morbidity
                    full_join(.,
                              dplyr::select(master$modified_charlson_comorbidity,
                                            individual_id, site, event_name, ## event_date, database_id,
@@ -901,7 +913,12 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             dplyr::select(master$ecog_performance_status_score,
                                           individual_id, site, event_name, ## event_date, database_id,
                                           ecog_grade),
-                            by = c('individual_id', 'site', 'event_name'))
+                            by = c('individual_id', 'site', 'event_name')) ## %>%
+## Site Randomisation
+                  ## full_join(.,
+                  ##           dplyr::select(master$sites,
+                  ##                         site, group, pe_site, qol_sub_study),
+                  ##           by = c('site'))
 ## ## TEMPLATE
 ##            full_join(.,
 ##                      dplyr::select(master$TEMPLATE,
@@ -1038,8 +1055,12 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                                               individual_id, site, event_name, ## event_date, database_id,
                                               trast_received, infusion_no, trast_aes, t_cardiac_fail,
                                               t_flu_like, t_nausea, t_diarrhoea, t_headache, t_allergy),
-                                by = c('individual_id', 'site', 'event_name'))
-
+                                by = c('individual_id', 'site', 'event_name')) ## %>%
+## Site Randomisation
+                      ## full_join(.,
+                      ##           dplyr::select(master$sites,
+                      ##                         site, group, pe_site, qol_sub_study),
+                      ##           by = c('site'))
 
 ###################################################################################
 ## Combine the RCT components                                                    ##
@@ -1206,8 +1227,12 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
                                       individual_id, site, event_name, ## event_date, database_id,
                                       right_decision, regret_choice, same_if_do_over, choice_did_harm,
                                       wise_decision, decision_regret_scale_calc_score),
-                        by = c('individual_id', 'site', 'event_name'))
-
+                        by = c('individual_id', 'site', 'event_name')) ## %>%
+## Site Randomisation
+              ## full_join(.,
+              ##           dplyr::select(master$sites,
+              ##                         site, group, pe_site, qol_sub_study),
+              ##           by = c('site'))
 ###################################################################################
 ## Combine baseline and multiple timepoints into one coherent data frame         ##
 ###################################################################################
@@ -1233,7 +1258,7 @@ age_gap <- full_join(master$therapy_qol,
 ## Finally the site allocation so that RCT component can be confudcted
            left_join(.,
                      dplyr::select(master$sites,
-                                   site, group),
+                                   site, group, rct_date, pe_site, qol_sub_study),
                         by = c('site'))
 
 ###################################################################################
@@ -1333,11 +1358,21 @@ age_gap <- age_gap %>%
 ## Add in derived variables to the fields lookup                                 ##
 ###################################################################################
 master$lookups_fields <- rbind(master$lookups_fields,
+                               ## c('', '', '', ''),
                                c('', '', 'weight_kg', 'Weight (kg)'),
                                c('', '', 'bmi', 'Body Mass Index'),
                                c('', '', 'age_exact', 'Age (years)'),
                                c('', '', 'elapsed', 'Time from consent/randomisation to stated event.'),
                                c('', '', 'collaborate_calc_score', 'Collaborate Score'),
+                               c('Sites', '', 'database_id', 'Database ID for Site'),
+                               c('Sites', '', 'code', 'Numeric Site Code'),
+                               c('Sites', '', 'site', 'Site Name'),
+                               c('Sites', '', 'long_site', 'Long-form Site name'),
+                               c('Sites', '', 'rct_site', 'Site involved in RCT component'),
+                               c('Sites', '', 'group', 'Site RCT allocation'),
+                               c('Sites', '', 'rct_date', 'Date of Randomisation'),
+                               c('Sites', '', 'pe_site', 'Site included in PE'),
+                               c('Sites', '', 'qol_sub_study', 'Site included in Qualit of Life Sub-Study'),
                                c('', '', 'cf_raw', 'CF Raw'),
                                c('', '', 'ef_raw', 'EF Raw'),
                                c('', '', 'fa_raw', 'FA Raw'),
