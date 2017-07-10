@@ -16,13 +16,27 @@ Detailed guidelines of the work required for both studies is provided in two Sta
 * Bridging The Age Gap Cohort Statistical Analysis Plan v1.1 2017-02-02
 * Bridging The Age Gap cRCT Statistical Analysis Plan v4 2017-02-02
 
+## Recruitment
+
+Screening and recruitment rates are summarised by time/month in tabular and graphical format across all centers and by individual centers.
+
+```{r methods_recruitment, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+screening_recruitment <- ctru::recruitment(df            = master$screening_form,
+                                           screening     = screening_no,
+                                           enrolment     = enrolment_no,
+                                           plot.by       = both,
+                                           facet.col     = NULL,
+                                           facet.scales  = free,
+                                           theme         = theme_bw(),
+                                           plotly        = TRUE)
+```
 
 ## Cluster Randomised Control Trial
 
 
-## QC of Cohort Study
+## Cohort Study
 
-Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for demographic data and the responses to each of the surveys by treatment arm and overall will be provided for each time point assessments were made.  The Statistical Analysis Plan (SAP) is not prescriptive about what exactly is to be checked so an *ad hoc* approach is taken whereby the author checks what they think is important and then updates this as and when defficiencies are highlighted.
+Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for continuous and number and proportion for categorical variables are provided.
 
 ```{r methods_cohort_plot, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
 ###################################################################################
