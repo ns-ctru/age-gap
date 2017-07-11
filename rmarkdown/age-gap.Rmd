@@ -1,0 +1,94 @@
+---
+title: Bridging the Age Gap in Breas Cancer
+runtime: shiny
+output: html_document
+bibliography: sections/bibliography.bib
+---
+
+```{r setup, echo = FALSE, eval = TRUE}
+library(dipep)
+##opts_chunk$set(dev = 'pdf')
+opts_chunk$set(cache.path = 'cache/',
+               width    = 200,
+               fig.height = 8,
+               fig.width  = 8,
+               warning = FALSE,
+               message = FALSE)
+options(digits = 3)
+## Ensure anchors are assessed first
+## opts_knit$set(eval.after = 'echo')
+## Hooks
+## knit_hooks$set(anchor = hook_anchor)
+## Set a seed
+set.seed(69027181)
+## Set sensible defaults
+ggplot2.opts <- list()
+ggplot2.opts$binwidth <- 30
+## Exclusions
+##
+## The following 'non-recruited' need excluding from all analyses
+## exclusions <- c()
+
+```
+
+```{r backup, echo = FALSE, eval = TRUE}
+## Make a backup of current output based on time stamp by obtaining the
+## modified time of the existing file and constructing a command to
+## copy this to the sub-directory 'arch/' modifying the filename to include
+## the timestamp.  This is done on a daily basis (otherwise './arch/'
+## directory can become very large!)
+##
+## Get the current date
+mtime <- file.info('age-gap.html')$mtime %>% as.Date()
+## Remove existing archives  from today
+cmd <- paste0('rm arch/age-gap-', mtime, '.html.bz2')
+system(cmd)
+## Copy the existing .html to arch, adding todays date and compress
+cmd <- paste0('cp age-gap.html arch/age-gap-', mtime, '.html && bzip2 arch/age-gap-', mtime, '.html')
+system(cmd)
+
+```
+
+```{r covariate_specification, echo = FALSE, cache = FALSE, results = 'hide', eval = TRUE}
+
+```
+
+```{r notifications, echo = FALSE, eval = TRUE}
+
+```
+
+# {.tabset .tabset-fade .tabset-pills}
+## Overview
+
+```{r child = 'sections/overview.Rmd', eval = TRUE}
+```
+
+## Methods {.tabset .tabset-fade .tabset-pills}
+
+```{r child = 'sections/methods.Rmd', eval = TRUE}
+```
+
+<!--- Run all analyses --->
+```{r child = 'sections/analysis.Rmd', eval = TRUE}
+```
+
+## Results {.tabset .tabset-fade .tabset-pills}
+```{r child = 'sections/results_cohort.Rmd', eval = TRUE}
+```
+
+## Results {.tabset .tabset-fade .tabset-pills}
+```{r child = 'sections/results_rct.Rmd', eval = TRUE}
+```
+
+<!-- ## Playground {.tabset .tabset-fade .tabset-pills} -->
+<!-- ```{r child = 'sections/playground.Rmd', eval = FALSE} -->
+<!-- ``` -->
+
+
+## Appendix   {.tabset .tabset-fade .tabset-pills}
+```{r child = 'sections/appendix.Rmd', eval = TRUE}
+```
+
+## References
+
+<!-- # References -->
