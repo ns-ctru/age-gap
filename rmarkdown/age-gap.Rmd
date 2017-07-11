@@ -69,11 +69,11 @@ system(cmd)
 ```
 
 <!--- Run all analyses --->
-```{r child = 'sections/analysis.Rmd', eval = FALSE}
+```{r child = 'sections/analysis.Rmd', eval = TRUE}
 ```
 
 ## Results - Cohort {.tabset .tabset-fade .tabset-pills}
-```{r child = 'sections/results_cohort.Rmd', eval = FALSE}
+```{r child = 'sections/results_cohort.Rmd', eval = TRUE}
 ```
 
 ## Results - RCT {.tabset .tabset-fade .tabset-pills}
