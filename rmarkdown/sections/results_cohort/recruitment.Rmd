@@ -1,0 +1,11 @@
+```{r results_cohort_recruitment, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_height = 20, fig_width = 10, eval = TRUE}
+screening_recruitment$plot_screened_recruited_all
+screening_recruitment$table_screened_recruited_month %>%
+    dplyr::filter(Site == 'All') %>%
+    kable(caption = 'Screening and Recruitment across all sites by m1onth')
+screening_recruitment$plot_screened_recruited_site
+screening_recruitment$table_screened_recruited_month %>%
+    dplyr::filter(Site != 'All') %>%
+    kable(caption = 'Screening and Recruitment by site and month')
+
+```
