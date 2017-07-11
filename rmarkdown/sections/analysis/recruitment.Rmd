@@ -1,0 +1,12 @@
+```{r analysis_recruitment, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+screening_recruitment <- ctru::recruitment(df             = master$screening_form,
+                                           screening      = 'screening_no',
+                                           enrolment      = 'enrolment_no',
+                                           plot.by        = 'both',
+                                           facet.col      = 'site',
+                                           facet.scales   = 'free_y',
+                                           strip.position = 'left',
+                                           theme          = theme_bw(),
+                                           plotly         = TRUE)
+
+```

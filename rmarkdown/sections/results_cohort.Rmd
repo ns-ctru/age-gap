@@ -1,0 +1,39 @@
+---
+site: blogdown:::blogdown_site
+---
+
+```{r child='results_cohort/recruitment.Rmd', eval = TRUE}
+```
+
+```{r child='results_cohort/eq5d.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/eortc_qlq_c30.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/eortc_qlq_br23.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/eortc_qlq_eld15.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/therapy_assessment.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/endocrine_therapy.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/radiotherapy.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/chemotherapy.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/trastuzumab.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/surgery.Rmd', eval = FALSE}
+```
+
+```{r child='results_cohort/clinical_assessment_pet.Rmd', eval = FALSE}
+```

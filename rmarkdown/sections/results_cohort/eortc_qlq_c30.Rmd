@@ -1,0 +1,5 @@
+```{r results_cohort_eortc_qlq_c30, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Plot : EORTC QLQ C30
+cohort_plot$eortc_qlq_c30$factor_eortc_qlq_c30
+
+```

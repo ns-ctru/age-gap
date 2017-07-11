@@ -1,0 +1,5 @@
+```{r results_cohort_clinical_assessment_pet, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Clinical Assessment PET
+cohort_plot$clinical_assessment_pet$factor_clinical_assessment_pet
+
+```

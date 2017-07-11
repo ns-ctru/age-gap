@@ -1,0 +1,5 @@
+```{r results_cohort_therapy_assessment, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Therapy Assessment
+cohort_plot$therapy_assessment$factor_therapy_assessment
+
+```

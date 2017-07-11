@@ -1,0 +1,5 @@
+```{r results_cohort_eortc_qlq_eld15, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Plot : EORTC QLQ ELD15
+cohort_plot$eortc_qlq_eld15$factor_eortc_qlq_eld15
+
+```

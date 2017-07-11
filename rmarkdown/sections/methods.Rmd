@@ -1,0 +1,29 @@
+---
+site: blogdown:::blogdown_site
+---
+
+```{r methods_load, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
+
+```
+
+# Overview
+
+The Cluster Randomised Control Trial (cRCT) component of the study is the main focus of the work and results presented here.  The Cohort study is analysed seperately by another statistician (originally assigned to Oscar Bortolami, but he has since left the CTRU and its unclear who is conducting these analyses), however as the Quality Control (QC) statistician assigned to check the analyses of the Cohort study a portion of that QC process is presented within.
+
+Detailed guidelines of the work required for both studies is provided in two Statistical Analysis Plans written by Oscar Bortolami and approved by the senior statistician [Stephen Walters](mailto:s.j.walters@sheffield.ac.uk) and chief investigator [Lynda Wyld](mailto:l.wyld@sheffield.ac.uk).  These are not (yet) available online...
+
+* Bridging The Age Gap Cohort Statistical Analysis Plan v1.1 2017-02-02
+* Bridging The Age Gap cRCT Statistical Analysis Plan v4 2017-02-02
+
+## Recruitment
+
+Screening and recruitment rates are summarised by time/month in tabular and graphical format across all centers and by individual centers.
+
+
+## Cluster Randomised Control Trial
+
+
+## Cohort Study
+
+Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for continuous and number and proportion for categorical variables are provided.
