@@ -1,12 +1,12 @@
 ---
-title: Bridging the Age Gap in Breas Cancer
+title: Bridging the Age Gap in Elderly Women with Breast Cancer
 runtime: shiny
 output: html_document
 bibliography: sections/bibliography.bib
 ---
 
 ```{r setup, echo = FALSE, eval = TRUE}
-library(dipep)
+library(agegap)
 ##opts_chunk$set(dev = 'pdf')
 opts_chunk$set(cache.path = 'cache/',
                width    = 200,
@@ -69,15 +69,15 @@ system(cmd)
 ```
 
 <!--- Run all analyses --->
-```{r child = 'sections/analysis.Rmd', eval = TRUE}
+```{r child = 'sections/analysis.Rmd', eval = FALSE}
 ```
 
-## Results {.tabset .tabset-fade .tabset-pills}
-```{r child = 'sections/results_cohort.Rmd', eval = TRUE}
+## Results - Cohort {.tabset .tabset-fade .tabset-pills}
+```{r child = 'sections/results_cohort.Rmd', eval = FALSE}
 ```
 
-## Results {.tabset .tabset-fade .tabset-pills}
-```{r child = 'sections/results_rct.Rmd', eval = TRUE}
+## Results - RCT {.tabset .tabset-fade .tabset-pills}
+```{r child = 'sections/results_rct.Rmd', eval = FALSE}
 ```
 
 <!-- ## Playground {.tabset .tabset-fade .tabset-pills} -->
