@@ -1,0 +1,234 @@
+A [CONSORT flowchart](http://www.consort-statement.org/consort-statement/flow-diagram), of sorts, is provided below.  This component of the study is a cohort study, rather than a randomised control trial, and as such treatments are not mutually exclusive (i.e. someone who has undergone Endocrine therapy can also have received chemotherapy, surgery, radiotherapy or a combination thereof) and the timing of treatments is in light of this highly variable.  As such the decision was made to summarise the available data in terms of the outcomes that are being assessed, which are various components of the different quality of life measures recorded at the follow-up time-points.
+
+**NB** - This is a work in progress and not final.
+
+```{r results_consort, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Generate CONSORT flow diagram
+## ToDo - Space boxes further apart so arrows can be seen.
+## ToDo - Align 'text()' to the side for labelling of follow-up time points
+###############################################################################
+## Obtain the numbers for each time-point/outcome                            ##
+###############################################################################
+consort <- list()
+## Number screened
+consort$screened  <- nrow(master$screening_form)
+## Approached
+consort$approached <- master$screening_form %>%
+                      dplyr::filter(approached == 'Yes') %>%
+                      nrow()
+## Number eligible
+consort$eligible   <- master$eligibility_checklist %>%
+                      dplyr::filter(eligible == 'Yes') %>%
+                      nrow()
+## Number recruited
+consort$enrolled   <- master$screening_form %>%
+                      dplyr::filter(enrolment_no != '') %>%
+                      nrow()
+## Since the EORTC surveys were conducted at all follow-up time points for the Cohort
+## study count the number of available data points for these
+consort$eortc_qlq_c30   <- table(master$eortc_qlq_c30$event_name)
+consort$eortc_qlq_br23  <- table(master$eortc_qlq_br23$event_name)
+consort$eortc_qlq_eld15 <- table(master$eortc_qlq_eld15$event_name)
+consort$eq5d            <- table(master$eq5d$event_name)
+consort$follow_up <- cbind(consort$eortc_qlq_c30,
+                           consort$eortc_qlq_br23,
+                           consort$eortc_qlq_eld15,
+                           consort$eq5d) %>%
+                     as.data.frame() %>%
+                     mutate(event_name = rownames(.),
+                            event_name = factor(event_name,
+                                                levels = c('Baseline',
+                                                           '6 weeks',
+                                                           '6 months',
+                                                           '12 months',
+                                                           '18 months',
+                                                           '24 months'))) %>%
+                     arrange(event_name)
+names(consort$follow_up) <- c('C30', 'BR23', 'ELD15', 'EQ5D', 'Event')
+
+## Initialise a plot matrix
+consort$flow_chart <- openplotmat(box.size = 0.5,
+                                  main = 'CONSORT Flowchart')
+rx <- 0.05
+ry <- 0.05
+## Vector of the number of boxes on each row
+positions <- coordinates(c(1, 1, 1, 1, 4, 4, 4, 4, 4, 4))
+## Pre-Baseline
+textround(mid = positions[1,],
+          radx = rx,
+          rady = ry,
+          lab = c('Screened', paste0('N = ', consort$screened)))
+textround(mid = positions[2,],
+          radx = rx,
+          rady = ry,
+          lab = c('Approached', paste0('N = ', consort$approached)))
+textround(mid = positions[3,],
+          radx = rx,
+          rady = ry,
+          lab = c('Eligible', paste0('N = ', consort$eligible)))
+textround(mid = positions[4,],
+          radx = rx,
+          rady = ry,
+          lab = c('Enrolled', paste0('N = ', consort$enrolled)))
+## Baseline
+textround(mid = positions[5,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ C30', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                                           dplyr::select(C30))))
+textround(mid = positions[6,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ BR23', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                                           dplyr::select(BR23))))
+textround(mid = positions[7,],
+          radx = rx,
+          rady = ry,
+          lab = c('ELD15', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                                           dplyr::select(ELD15))))
+textround(mid = positions[8,],
+          radx = rx,
+          rady = ry,
+          lab = c('EQ5D', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                                           dplyr::select(EQ5D))))
+## 6 weeks
+textround(mid = positions[9,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ C30', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                                           dplyr::select(C30))))
+textround(mid = positions[10,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ BR23', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                                           dplyr::select(BR23))))
+textround(mid = positions[11,],
+          radx = rx,
+          rady = ry,
+          lab = c('ELD15', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                                           dplyr::select(ELD15))))
+textround(mid = positions[12,],
+          radx = rx,
+          rady = ry,
+          lab = c('EQ5D', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                                           dplyr::select(EQ5D))))
+## 6 months
+textround(mid = positions[13,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ C30', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                                           dplyr::select(C30))))
+textround(mid = positions[14,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ BR23', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                                           dplyr::select(BR23))))
+textround(mid = positions[15,],
+          radx = rx,
+          rady = ry,
+          lab = c('ELD15', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                                           dplyr::select(ELD15))))
+textround(mid = positions[16,],
+          radx = rx,
+          rady = ry,
+          lab = c('EQ5D', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                                           dplyr::select(EQ5D))))
+## 12 months
+textround(mid = positions[17,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ C30', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                                           dplyr::select(C30))))
+textround(mid = positions[18,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ BR23', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                                           dplyr::select(BR23))))
+textround(mid = positions[19,],
+          radx = rx,
+          rady = ry,
+          lab = c('ELD15', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                                           dplyr::select(ELD15))))
+textround(mid = positions[20,],
+          radx = rx,
+          rady = ry,
+          lab = c('EQ5D', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                                           dplyr::select(EQ5D))))
+## 18 months
+textround(mid = positions[21,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ C30', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                                           dplyr::select(C30))))
+textround(mid = positions[22,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ BR23', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                                           dplyr::select(BR23))))
+textround(mid = positions[23,],
+          radx = rx,
+          rady = ry,
+          lab = c('ELD15', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                                           dplyr::select(ELD15))))
+textround(mid = positions[24,],
+          radx = rx,
+          rady = ry,
+          lab = c('EQ5D', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                                           dplyr::select(EQ5D))))
+## 24 months
+textround(mid = positions[25,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ C30', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                                           dplyr::select(C30))))
+textround(mid = positions[26,],
+          radx = rx,
+          rady = ry,
+          lab = c('EORTC QLQ BR23', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                                           dplyr::select(BR23))))
+textround(mid = positions[27,],
+          radx = rx,
+          rady = ry,
+          lab = c('ELD15', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                                           dplyr::select(ELD15))))
+textround(mid = positions[28,],
+          radx = rx,
+          rady = ry,
+          lab = c('EQ5D', paste0('N = ',
+                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                                           dplyr::select(EQ5D))))
+## Arrows Level 1 to Level 2
+straightarrow(from = positions[1,1],
+              to   = positions[2,1])
+
+## text(x = positions[, 1],
+##      y = positions[, 2],
+##      labels = c('', '', '', '', 'Baseline', '6 Weeks', '6 Months', '12 Months', '18 Months', '24 Months',
+##                 '', '', '', '', 'Baseline', '6 Weeks', '6 Months', '12 Months', '18 Months', '24 Months'))
+
+
+
+```
