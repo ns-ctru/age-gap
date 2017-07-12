@@ -1,9 +1,11 @@
+Recruitment is plotted and tabulated across all sites below, followed by summaries by site.  Note that the facetted plot showing screening and recruitment by site has a 'free' y-axis so that the plots are ledgible (if they were forced to all be the same sites that recruited very few participants would not be easy to read).
+
 ```{r results_cohort_recruitment, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_height = 20, fig_width = 10, eval = TRUE}
-screening_recruitment$plot_screened_recruited_all
+screening_recruitment$plotly_screened_recruited_all
 screening_recruitment$table_screened_recruited_month %>%
     dplyr::filter(Site == 'All') %>%
     kable(caption = 'Screening and Recruitment across all sites by m1onth')
-screening_recruitment$plot_screened_recruited_site
+screening_recruitment$plotly_screened_recruited_site
 screening_recruitment$table_screened_recruited_month %>%
     dplyr::filter(Site != 'All') %>%
     kable(caption = 'Screening and Recruitment by site and month')
