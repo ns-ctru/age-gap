@@ -1348,12 +1348,13 @@ age_gap <- age_gap %>%
 # Age based on Date of Birth
            mutate(age_exact = new_interval(start = dob,
                                            end = consent_dt) / duration(num = 1, units = 'years'),
-                  age_cat = case_when(age_exact >= 70 & age_exact < 75, '70-74',
-                                      age_exact >= 75 & age_exact < 80, '75-80',
-                                      age_exact >= 80 & age_exact < 85, '80-74',
-                                      age_exact >= 85 & age_exact < 90, '85-89',
-                                      age_exact >= 90,                  '>=90'),
-                  age_cat = factor(age_cat)) %>%
+                  age_cat = case_when(age_exact >= 70 & age_exact < 75 ~ '70-74',
+                                      age_exact >= 75 & age_exact < 80 ~ '75-79',
+                                      age_exact >= 80 & age_exact < 85 ~ '80-84',
+                                      age_exact >= 85 & age_exact < 90 ~ '85-89',
+                                      age_exact >= 90                  ~ '>=90'),
+                  age_cat = factor(age_cat,
+                                   levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
 ## Elapsed time from consent/randomisation to noted event
            group_by(individual_id) %>%
            mutate(start_date = min(consent_dt, na.rm = TRUE),
