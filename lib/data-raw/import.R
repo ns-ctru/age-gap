@@ -1355,6 +1355,15 @@ age_gap <- age_gap %>%
                                       age_exact >= 90                  ~ '>=90'),
                   age_cat = factor(age_cat,
                                    levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
+## ToDo - Categorisation of other baseline scores, awaiting SAP to be completed
+## Categorise Charlson
+##            mutate() %>%
+## Categorise IADL
+##            mutate() %>%
+## Categorise MMSE
+##            mutate() %>%
+## Categorise Barthel ADL
+##            mutate() %>%
 ## Elapsed time from consent/randomisation to noted event
            group_by(individual_id) %>%
            mutate(start_date = min(consent_dt, na.rm = TRUE),
