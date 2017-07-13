@@ -1294,7 +1294,8 @@ age_gap <- age_gap %>%
                   site = gsub(' Teaching Hospital$', '', site),
                   site = gsub(' Teaching Hospitals$', '', site),
                   site = gsub(' Hospital$', '', site),
-                  site = gsub(' Hospitals$', '', site)) %>%
+                  site = gsub(' Hospitals$', '', site),
+                  site = gsub(' $', '', site)) %>%
 ## Convert all heights to same units (cm)
            mutate(height_cm = ifelse(is.na(height_cm),
                                      yes = 2.54 * ((height_ft * 12) + height_in),
