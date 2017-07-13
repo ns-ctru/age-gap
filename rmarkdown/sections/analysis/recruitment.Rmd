@@ -8,5 +8,9 @@ screening_recruitment <- ctru::recruitment(df             = master$screening_for
                                            strip.position = 'left',
                                            theme          = theme_bw(),
                                            plotly         = TRUE)
+## Save the results
+save(screening_recruitment,
+     file = 'data/screening_recruitment.RData')
+
 
 ```
