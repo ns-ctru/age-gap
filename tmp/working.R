@@ -1,3 +1,33 @@
+## 2017-07-14 Why doesn't summary_plot() work surgery/chemotherpay/radiotherapy/etc.?
+
+cohort_plot <- list()
+## EQ5D
+cohort_plot$eq5d <- ctru::plot_summary(df            = age_gap,
+                                       id               = individual_id,
+                                       select           = c(mobility,
+                                                            self_care,
+                                                            usual_activity,
+                                                            pain_discomfort,
+                                                            anxiety_depression,
+                                                            eq5d_score),
+                                       lookup_fields    = master$lookups_fields,
+                                       levels_factor    = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       group            = endocrine_therapy,
+                                       events           = event_name,
+                                       theme            = theme_bw(),
+                                       position         = 'identity',
+                                       histogram        = TRUE,
+                                       boxplot          = TRUE,
+                                       individual       = TRUE,
+                                       plotly           = FALSE,
+                                       remove_na        = TRUE,
+                                       title_factor     = 'Summary of EQ-5D-5L scores over time',
+                                       title_continuous = NULL,
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
+## Solved! Problem was with how factor variables are selected and the data subsequently
+## reshaped.  Had solved this in table_summary() but hadn't copied over to plot_summary()
+
 ## 2017-06-29 Developing plots and tables
 ## Lets try all of the responses for EQ5d
 load('~/work/scharr/age-gap/lib/data/age-gap.RData')
@@ -8,26 +38,30 @@ survey_vars$eq5d <- c(mobility, self_care, usual_activity, pain_discomfort, anxi
 
 build()
 install()
-test <- ctru::plot_summary(df           = age_gap,
-                           id           = individual_id,
-                           select       = c(mobility, self_care, usual_activity, pain_discomfort, anxiety_depression, bmi),
-                           lookup       = master$lookups_fields,
-                           group        = site,
-                           events       = event_name,
-                           theme        = theme_bw(),
-                           position     = 'identity',
-                           histogram    = TRUE,
-                           boxplot      = TRUE,
-                           individual   = TRUE,
-                           plotly       = FALSE,
-                           remove.na    = TRUE,
-                           title.factor = 'Factor outcomes by treatment group')
-test$histogram
+test <- ctru::plot_summary(df            = age_gap,
+                           id            = individual_id,
+                           select        = c(mobility, self_care, usual_activity, pain_discomfort, anxiety_depression, bmi),
+                           lookup_fields = master$lookups_fields,
+                           levels_factor = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                           group         = site,
+                           events        = event_name,
+                           theme         = theme_bw(),
+                           position      = 'identity',
+                           histogram     = TRUE,
+                           boxplot       = TRUE,
+                           individual    = TRUE,
+                           plotly        = FALSE,
+                           remove_na     = TRUE,
+                           title_factor  = 'Factor outcomes by treatment group',
+                           title_continuous = 'Continuous outcomes by treatment group')
+test$factor_eq5d
 
+test$histogram
 test$boxplot
 
 ## What age gap requires...
-ggplot(test$df_factor, aes(x = event_name,  fill = value)) + geom_bar(position = 'fill') + coord_flip() + facet_wrap(~label, ncol = 1)
+ggplot(test$df_factor, aes(x = event_name,  fill = value)) + geom_bar(position = 'fill') + coord_flip() + facet_wrap(~label, ncol = 1) + scale_y_continuous(trans = 'reverse')
+
 ## THink of a way of using a formula description for how factors are plotted.
 
 ## 2017-06-26 Checking if/how pixiedust functions can be integrated into table_summary()
