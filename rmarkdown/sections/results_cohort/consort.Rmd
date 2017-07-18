@@ -1,8 +1,8 @@
 A [CONSORT flowchart](http://www.consort-statement.org/consort-statement/flow-diagram), of sorts, is provided below.  This component of the study is a cohort study, rather than a randomised control trial, and as such treatments are not mutually exclusive (i.e. someone who has undergone Endocrine therapy can also have received chemotherapy, surgery, radiotherapy or a combination thereof) and the timing of treatments is in light of this highly variable.  As such the decision was made to summarise the available data in terms of the outcomes that are being assessed, which are various components of the different quality of life measures recorded at the follow-up time-points.
 
-**NB** - This is a work in progress and not final.
+**NB** - This is a work in progress and not final, tweaking box or text sizes is purely aestehtic and does not hinder the interpretation of the information being presented.  Labels for events subsequent to Enrollment are a pending `ToDo` item.
 
-```{r results_consort, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+```{r results_consort, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, fig_height = 20, fig_width = 10, eval = TRUE}
 ## Generate CONSORT flow diagram
 ## ToDo - Space boxes further apart so arrows can be seen.
 ## ToDo - Align 'text()' to the side for labelling of follow-up time points
@@ -46,189 +46,413 @@ consort$follow_up <- cbind(consort$eortc_qlq_c30,
                      arrange(event_name)
 names(consort$follow_up) <- c('C30', 'BR23', 'ELD15', 'EQ5D', 'Event')
 
-## Initialise a plot matrix
-consort$flow_chart <- openplotmat(box.size = 0.5,
+###############################################################################
+## Initialise a plot matrix and set parameters                               ##
+###############################################################################
+consort$flow_chart <- openplotmat(box.size = 1,
                                   main = 'CONSORT Flowchart')
 rx <- 0.05
-ry <- 0.05
+ry <- 0.03
+## Set colours for different sections
+box_col_legend <- 'white'
+box_col_c30    <- 'aquamarine'
+box_col_br23   <- 'darkolivegreen1'
+box_col_eld15  <- 'lightpink'
+box_col_eq5d   <- 'lightskyblue1'
 ## Vector of the number of boxes on each row
-positions <- coordinates(c(1, 1, 1, 1, 4, 4, 4, 4, 4, 4))
+positions <- coordinates(c(1, 1, 1, 1, 5, 5, 5, 5, 5, 5, 5))
+###############################################################################
+## Plot the boxes                                                            ##
+###############################################################################
 ## Pre-Baseline
-textround(mid = positions[1,],
+textround(mid  = positions[1,],
           radx = rx,
           rady = ry,
-          lab = c('Screened', paste0('N = ', consort$screened)))
-textround(mid = positions[2,],
+          lab  = c('Screened', paste0('N = ', consort$screened)))
+textround(mid  = positions[2,],
           radx = rx,
           rady = ry,
-          lab = c('Approached', paste0('N = ', consort$approached)))
-textround(mid = positions[3,],
+          lab  = c('Approached', paste0('N = ', consort$approached)))
+textround(mid  = positions[3,],
           radx = rx,
           rady = ry,
-          lab = c('Eligible', paste0('N = ', consort$eligible)))
-textround(mid = positions[4,],
+          lab  = c('Eligible', paste0('N = ', consort$eligible)))
+textround(mid  = positions[4,],
           radx = rx,
           rady = ry,
-          lab = c('Enrolled', paste0('N = ', consort$enrolled)))
+          lab  = c('Enrolled', paste0('N = ', consort$enrolled)))
+## Questionnaire Type
+textround(mid      = positions[5,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('Event'),
+          box.col  = box_col_legend)
+textround(mid      = positions[6,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('EORTC QLQ C30'),
+          box.col  = box_col_c30)
+textround(mid      = positions[7,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('EORTC QLQ BR23'),
+          box.col  = box_col_br23)
+textround(mid      = positions[8,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('ELD15'),
+          box.col  = box_col_eld15)
+textround(mid      = positions[9,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('EQ5D'),
+          box.col  = box_col_eq5d)
 ## Baseline
-textround(mid = positions[5,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ C30', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
-                                           dplyr::select(C30))))
-textround(mid = positions[6,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ BR23', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
-                                           dplyr::select(BR23))))
-textround(mid = positions[7,],
-          radx = rx,
-          rady = ry,
-          lab = c('ELD15', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
-                                           dplyr::select(ELD15))))
-textround(mid = positions[8,],
-          radx = rx,
-          rady = ry,
-          lab = c('EQ5D', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
-                                           dplyr::select(EQ5D))))
+textround(mid      = positions[10,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('Baseline'),
+          box.col  = box_col_legend)
+textround(mid      = positions[11,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                            dplyr::select(C30)),
+          box.col  = box_col_c30)
+textround(mid      = positions[12,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                            dplyr::select(BR23)),
+          box.col  = box_col_br23)
+textround(mid      = positions[13,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                            dplyr::select(ELD15)),
+          box.col  = box_col_eld15)
+textround(mid      = positions[14,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == 'Baseline') %>%
+                            dplyr::select(EQ5D)),
+          box.col  = box_col_eq5d)
 ## 6 weeks
-textround(mid = positions[9,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ C30', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
-                                           dplyr::select(C30))))
-textround(mid = positions[10,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ BR23', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
-                                           dplyr::select(BR23))))
-textround(mid = positions[11,],
-          radx = rx,
-          rady = ry,
-          lab = c('ELD15', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
-                                           dplyr::select(ELD15))))
-textround(mid = positions[12,],
-          radx = rx,
-          rady = ry,
-          lab = c('EQ5D', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
-                                           dplyr::select(EQ5D))))
+textround(mid      = positions[15,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('6 Weeks'),
+          box.col  = box_col_legend)
+textround(mid      = positions[16,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                            dplyr::select(C30)),
+          box.col  = box_col_c30)
+textround(mid      = positions[17,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                            dplyr::select(BR23)),
+          box.col  = box_col_br23)
+textround(mid      = positions[18,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                            dplyr::select(ELD15)),
+          box.col  = box_col_eld15)
+textround(mid      = positions[19,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 weeks') %>%
+                            dplyr::select(EQ5D)),
+          box.col  = box_col_eq5d)
 ## 6 months
-textround(mid = positions[13,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ C30', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
-                                           dplyr::select(C30))))
-textround(mid = positions[14,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ BR23', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
-                                           dplyr::select(BR23))))
-textround(mid = positions[15,],
-          radx = rx,
-          rady = ry,
-          lab = c('ELD15', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
-                                           dplyr::select(ELD15))))
-textround(mid = positions[16,],
-          radx = rx,
-          rady = ry,
-          lab = c('EQ5D', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '6 months') %>%
-                                           dplyr::select(EQ5D))))
+textround(mid      = positions[20,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('6 Months'),
+          box.col  = box_col_legend)
+textround(mid      = positions[21,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                            dplyr::select(C30)),
+          box.col  = box_col_c30)
+textround(mid      = positions[22,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                            dplyr::select(BR23)),
+          box.col  = box_col_br23)
+textround(mid      = positions[23,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                            dplyr::select(ELD15)),
+          box.col  = box_col_eld15)
+textround(mid      = positions[24,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '6 months') %>%
+                            dplyr::select(EQ5D)),
+          box.col  = box_col_eq5d)
 ## 12 months
-textround(mid = positions[17,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ C30', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
-                                           dplyr::select(C30))))
-textround(mid = positions[18,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ BR23', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
-                                           dplyr::select(BR23))))
-textround(mid = positions[19,],
-          radx = rx,
-          rady = ry,
-          lab = c('ELD15', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
-                                           dplyr::select(ELD15))))
-textround(mid = positions[20,],
-          radx = rx,
-          rady = ry,
-          lab = c('EQ5D', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '12 months') %>%
-                                           dplyr::select(EQ5D))))
+textround(mid      = positions[25,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('12 Months'),
+          box.col  = box_col_legend)
+textround(mid      = positions[26,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                            dplyr::select(C30)),
+          box.col  = box_col_c30)
+textround(mid      = positions[27,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                            dplyr::select(BR23)),
+          box.col  = box_col_br23)
+textround(mid      = positions[28,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                            dplyr::select(ELD15)),
+          box.col  = box_col_eld15)
+textround(mid      = positions[29,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '12 months') %>%
+                            dplyr::select(EQ5D)),
+          box.col  = box_col_eq5d)
 ## 18 months
-textround(mid = positions[21,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ C30', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
-                                           dplyr::select(C30))))
-textround(mid = positions[22,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ BR23', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
-                                           dplyr::select(BR23))))
-textround(mid = positions[23,],
-          radx = rx,
-          rady = ry,
-          lab = c('ELD15', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
-                                           dplyr::select(ELD15))))
-textround(mid = positions[24,],
-          radx = rx,
-          rady = ry,
-          lab = c('EQ5D', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '18 months') %>%
-                                           dplyr::select(EQ5D))))
+textround(mid      = positions[30,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('18 Months'),
+          box.col  = box_col_legend)
+textround(mid      = positions[31,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                            dplyr::select(C30)),
+          box.col  = box_col_c30)
+textround(mid      = positions[32,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                            dplyr::select(BR23)),
+          box.col  = box_col_br23)
+textround(mid      = positions[33,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                            dplyr::select(ELD15)),
+          box.col  = box_col_eld15)
+textround(mid      = positions[34,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '18 months') %>%
+                            dplyr::select(EQ5D)),
+          box.col  = box_col_eq5d)
 ## 24 months
-textround(mid = positions[25,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ C30', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
-                                           dplyr::select(C30))))
-textround(mid = positions[26,],
-          radx = rx,
-          rady = ry,
-          lab = c('EORTC QLQ BR23', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
-                                           dplyr::select(BR23))))
-textround(mid = positions[27,],
-          radx = rx,
-          rady = ry,
-          lab = c('ELD15', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
-                                           dplyr::select(ELD15))))
-textround(mid = positions[28,],
-          radx = rx,
-          rady = ry,
-          lab = c('EQ5D', paste0('N = ',
-                                           dplyr::filter(consort$follow_up, Event == '24 months') %>%
-                                           dplyr::select(EQ5D))))
+textround(mid      = positions[35,],
+          radx     = rx,
+          rady     = ry,
+          lab      = c('24 Months'),
+          box.col  = box_col_legend)
+textround(mid      = positions[36,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                            dplyr::select(C30)),
+          box.col  = box_col_c30)
+textround(mid      = positions[37,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                            dplyr::select(BR23)),
+          box.col  = box_col_br23)
+textround(mid      = positions[38,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                            dplyr::select(ELD15)),
+          box.col  = box_col_eld15)
+textround(mid      = positions[39,],
+          radx     = rx,
+          rady     = ry,
+          lab      = paste0('N = ',
+                            dplyr::filter(consort$follow_up, Event == '24 months') %>%
+                            dplyr::select(EQ5D)),
+          box.col  = box_col_eq5d)
+###############################################################################
+## Join the boxes with arrows                                                ##
+###############################################################################
+arr_pos <- 0.60
+segment <- c(0.34, arr_pos)
 ## Arrows Level 1 to Level 2
-straightarrow(from = positions[1,1],
-              to   = positions[2,1])
-
-## text(x = positions[, 1],
-##      y = positions[, 2],
-##      labels = c('', '', '', '', 'Baseline', '6 Weeks', '6 Months', '12 Months', '18 Months', '24 Months',
-##                 '', '', '', '', 'Baseline', '6 Weeks', '6 Months', '12 Months', '18 Months', '24 Months'))
-
+straightarrow(from     = positions[1,],
+              to       = positions[2,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 2 to Level 3
+straightarrow(from     = positions[2,],
+              to       = positions[3,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 3 to Level 4
+straightarrow(from     = positions[3,],
+              to       = positions[4,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 3 to Level 4 (split)
+## ToDo : Suss out how to get this splitting correctly
+## splitarrow(from        = positions[4,],
+##            to          = positions[5:8,])
+straightarrow(from = positions[4,],
+              to   = positions[6,],
+              arr.pos = 0.65,
+              segment = c(0.31, 0.65))
+straightarrow(from = positions[4,],
+              to   = positions[7,],
+              arr.pos = arr_pos,
+              segment = segment)
+straightarrow(from = positions[4,],
+              to   = positions[8,],
+              arr.pos = 0.65,
+              segment = c(0.31, 0.65))
+straightarrow(from = positions[4,],
+              to   = positions[9,],
+              arr.pos = 0.785,
+              segment = c(0.19, 0.785))
+## Arrows Level 4 to Level 5 (multiple)
+straightarrow(from     = positions[6,],
+              to       = positions[11,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[7,],
+              to       = positions[12,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[8,],
+              to       = positions[13,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[9,],
+              to       = positions[14,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 5 to Level 6 (multiple))
+straightarrow(from     = positions[11,],
+              to       = positions[16,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[12,],
+              to       = positions[17,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[13,],
+              to       = positions[18,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[14,],
+              to       = positions[19,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 6 to Level 7 (multiple))
+straightarrow(from     = positions[16,],
+              to       = positions[21,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[17,],
+              to       = positions[22,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[18,],
+              to       = positions[23,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[19,],
+              to       = positions[24,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 7 to Level 8 (multiple))
+straightarrow(from     = positions[21,],
+              to       = positions[26,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[22,],
+              to       = positions[27,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[23,],
+              to       = positions[28,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[24,],
+              to       = positions[29,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 8 to Level 9 (multiple))
+straightarrow(from     = positions[26,],
+              to       = positions[31,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[27,],
+              to       = positions[32,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[28,],
+              to       = positions[33,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[29,],
+              to       = positions[34,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+## Arrows Level 9 to Level 10 (multiple))
+straightarrow(from     = positions[31,],
+              to       = positions[36,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[32,],
+              to       = positions[37,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[33,],
+              to       = positions[38,],
+              arr.pos  = arr_pos,
+              segment  = segment)
+straightarrow(from     = positions[34,],
+              to       = positions[39,],
+              arr.pos  = arr_pos,
+              segment  = segment)
 
 
 ```
