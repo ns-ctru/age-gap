@@ -2,38 +2,59 @@
 site: blogdown:::blogdown_site
 ---
 
+### Recruitment {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/recruitment.Rmd', eval = TRUE}
 ```
 
-```{r child='results_cohort/eq5d.Rmd', eval = FALSE}
+### CONSORT {.tabset .tabset-fade .tabset-pills}
+```{r child='results_cohort/consort.Rmd', eval = TRUE}
 ```
 
+### EQ5D {.tabset .tabset-fade .tabset-pills}
+
+```{r child='results_cohort/eq5d.Rmd', eval = TRUE}
+```
+
+### EORTC QLC C30 {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/eortc_qlq_c30.Rmd', eval = FALSE}
 ```
 
+### EORTC QLC BR23 {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/eortc_qlq_br23.Rmd', eval = FALSE}
 ```
 
+### EORTC QLC ELD15 {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/eortc_qlq_eld15.Rmd', eval = FALSE}
 ```
 
+### Therapy Assessment {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/therapy_assessment.Rmd', eval = FALSE}
 ```
 
+### Encdocrine Therapy {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/endocrine_therapy.Rmd', eval = FALSE}
 ```
 
+### Radiotherapy {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/radiotherapy.Rmd', eval = FALSE}
 ```
 
+### Chemotherapy {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/chemotherapy.Rmd', eval = FALSE}
 ```
 
+### Trastuzumab {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/trastuzumab.Rmd', eval = FALSE}
 ```
 
+### Surgery {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/surgery.Rmd', eval = FALSE}
 ```
 
+### Clinical Assessment - PET {.tabset .tabset-fade .tabset-pills}
+```{r child='results_cohort/clinical_assessment_pet.Rmd', eval = FALSE}
+```
+
+### Clinical Assessment - Non-PET {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/clinical_assessment_pet.Rmd', eval = FALSE}
 ```
