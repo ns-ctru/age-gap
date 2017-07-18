@@ -19,9 +19,11 @@ cohort_table_endocrine_therapy$eq5d <- dplyr::filter(age_gap, !is.na(event_name)
                                                        usual_activity,
                                                        pain_discomfort,
                                                        anxiety_depression),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -47,10 +49,11 @@ cohort_table_endocrine_therapy$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(ev
                                                        co_scale,
                                                        di_scale,
                                                        fi_scale),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -67,10 +70,11 @@ cohort_table_endocrine_therapy$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(e
                                                        brbs_raw, brbs_scale,
                                                        bras_raw, bras_scale,
                                                        brhl_scale),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$eortc_qlq_eld15 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -85,24 +89,27 @@ cohort_table_endocrine_therapy$eortc_qlq_eld15 <- dplyr::filter(age_gap, !is.na(
                                                        boi_raw, boi_scale,
                                                        js_scale,
                                                        fs_scale),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$therapy_assessment <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(any_treatment,
-                                                       endocrine_therapy,
+                                                       ## endocrine_therapy,
                                                        radiotherapy,
-                                                       endocrine_therapy,
+                                                       chemotherapy,
                                                        trastuzumab,
                                                        surgery,
                                                        treatment_profile),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
+                                         reshape   = NULL,
                                          event_name)
 cohort_table_endocrine_therapy$endocrine_therapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
@@ -120,10 +127,11 @@ cohort_table_endocrine_therapy$endocrine_therapy <- dplyr::filter(age_gap, !is.n
                                                        et_vaginal_bleeding,
                                                        et_vomiting,
                                                        et_somnolence),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -162,11 +170,12 @@ cohort_table_endocrine_therapy$radiotherapy <- dplyr::filter(age_gap, !is.na(eve
                                                        l_breast_oedema,
                                                        l_breast_shrink,
                                                        l_breast_pain),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
-cohort_table_endocrine_therapy$endocrine_therapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                                         reshape   = NULL)
+cohort_table_endocrine_therapy$chemotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
@@ -180,10 +189,11 @@ cohort_table_endocrine_therapy$endocrine_therapy <- dplyr::filter(age_gap, !is.n
                                                        c_hair_thinning,
                                                        c_nausea,
                                                        c_infection),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -195,10 +205,11 @@ cohort_table_endocrine_therapy$trastuzumab <- dplyr::filter(age_gap, !is.na(even
                                                        t_diarrhoea,
                                                        t_headache,
                                                        t_allergy),
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$clinical_assessment_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -238,11 +249,12 @@ cohort_table_endocrine_therapy$clinical_assessment_pet <- dplyr::filter(age_gap,
                                                        plan_change_radio,
                                                        plan_change_antioestrogen,
                                                        plan_change_other), ##,
-                                                       ## plan_change_spcfy),
+                                                       ## plan_change_spcfy,
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 cohort_table_endocrine_therapy$clinical_assessment_non_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -280,15 +292,17 @@ cohort_table_endocrine_therapy$clinical_assessment_non_pet <- dplyr::filter(age_
                                                        plan_routine_chemo,
                                                        plan_routine_trast,
                                                        plan_routine_other), ## ,
-                                                       ## plan_routine_spcfy),
+                                                       ## plan_routine_spcfy,
+                                         time      = event_name,
+                                         group     = endocrine_therapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, endocrine_therapy)
+                                         reshape   = NULL)
 
 ## Radiotherapy
 cohort_table_radiotherapy <- list()
-cohort_table_radiotherapy$eq5d <- ctru::table_summary(df        = age_gap,
+cohort_table_radiotherapy$eq5d <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eq5d_score,
@@ -297,10 +311,11 @@ cohort_table_radiotherapy$eq5d <- ctru::table_summary(df        = age_gap,
                                                        usual_activity,
                                                        pain_discomfort,
                                                        anxiety_depression),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 cohort_table_radiotherapy$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -326,10 +341,11 @@ cohort_table_radiotherapy$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_n
                                                        co_scale,
                                                        di_scale,
                                                        fi_scale),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 cohort_table_radiotherapy$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -346,11 +362,13 @@ cohort_table_radiotherapy$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_
                                                        brbs_raw, brbs_scale,
                                                        bras_raw, bras_scale,
                                                        brhl_scale),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
-cohort_table_radiotherapy$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap,
+                                         reshape   = NULL)
+cohort_table_radiotherapy$eortc_qlq_eld15 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
@@ -363,24 +381,27 @@ cohort_table_radiotherapy$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap
                                                        boi_raw, boi_scale,
                                                        js_scale,
                                                        fs_scale),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 cohort_table_radiotherapy$therapy_assessment <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(any_treatment,
                                                        endocrine_therapy,
-                                                       radiotherapy,
-                                                       radiotherapy,
+                                                       ## radiotherapy,
+                                                       chemotherapy,
                                                        trastuzumab,
                                                        surgery,
                                                        treatment_profile),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
+                                         reshape   = NULL,
                                          event_name)
 cohort_table_radiotherapy$endocrine_therapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
@@ -398,10 +419,11 @@ cohort_table_radiotherapy$endocrine_therapy <- dplyr::filter(age_gap, !is.na(eve
                                                        et_vaginal_bleeding,
                                                        et_vomiting,
                                                        et_somnolence),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 cohort_table_radiotherapy$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -440,11 +462,12 @@ cohort_table_radiotherapy$radiotherapy <- dplyr::filter(age_gap, !is.na(event_na
                                                        l_breast_oedema,
                                                        l_breast_shrink,
                                                        l_breast_pain),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
-cohort_table_radiotherapy$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                                         reshape   = NULL)
+cohort_table_radiotherapy$chemotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
@@ -458,10 +481,11 @@ cohort_table_radiotherapy$radiotherapy <- dplyr::filter(age_gap, !is.na(event_na
                                                        c_hair_thinning,
                                                        c_nausea,
                                                        c_infection),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 cohort_table_radiotherapy$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -473,10 +497,11 @@ cohort_table_radiotherapy$trastuzumab <- dplyr::filter(age_gap, !is.na(event_nam
                                                        t_diarrhoea,
                                                        t_headache,
                                                        t_allergy),
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 cohort_table_radiotherapy$clinical_assessment_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -516,11 +541,12 @@ cohort_table_radiotherapy$clinical_assessment_pet <- dplyr::filter(age_gap, !is.
                                                        plan_change_radio,
                                                        plan_change_antioestrogen,
                                                        plan_change_other), ##,
-                                                       ## plan_change_spcfy),
+                                                       ## plan_change_spcfy,
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 cohort_table_radiotherapy$clinical_assessment_non_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -558,15 +584,17 @@ cohort_table_radiotherapy$clinical_assessment_non_pet <- dplyr::filter(age_gap, 
                                                        plan_routine_chemo,
                                                        plan_routine_trast,
                                                        plan_routine_other), ## ,
-                                                       ## plan_routine_spcfy),
+                                                       ## plan_routine_spcfy,
+                                         time      = event_name,
+                                         group     = radiotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, radiotherapy)
+                                         reshape   = NULL)
 
 ## Chemotherapy
 cohort_table_chemotherapy <- list()
-cohort_table_chemotherapy$eq5d <- ctru::table_summary(df        = age_gap,
+cohort_table_chemotherapy$eq5d <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eq5d_score,
@@ -575,10 +603,11 @@ cohort_table_chemotherapy$eq5d <- ctru::table_summary(df        = age_gap,
                                                        usual_activity,
                                                        pain_discomfort,
                                                        anxiety_depression),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -604,10 +633,11 @@ cohort_table_chemotherapy$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_n
                                                        co_scale,
                                                        di_scale,
                                                        fi_scale),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -624,11 +654,13 @@ cohort_table_chemotherapy$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_
                                                        brbs_raw, brbs_scale,
                                                        bras_raw, bras_scale,
                                                        brhl_scale),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
-cohort_table_chemotherapy$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap,
+                                         reshape   = NULL)
+cohort_table_chemotherapy$eortc_qlq_eld15 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
@@ -641,10 +673,11 @@ cohort_table_chemotherapy$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap
                                                        boi_raw, boi_scale,
                                                        js_scale,
                                                        fs_scale),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$therapy_assessment <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -652,13 +685,15 @@ cohort_table_chemotherapy$therapy_assessment <- dplyr::filter(age_gap, !is.na(ev
                                          select    = c(any_treatment,
                                                        endocrine_therapy,
                                                        radiotherapy,
-                                                       chemotherapy,
+                                                       ## chemotherapy,
                                                        trastuzumab,
                                                        surgery,
                                                        treatment_profile),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
+                                         reshape   = NULL,
                                          event_name)
 cohort_table_chemotherapy$endocrine_therapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
@@ -676,10 +711,11 @@ cohort_table_chemotherapy$endocrine_therapy <- dplyr::filter(age_gap, !is.na(eve
                                                        et_vaginal_bleeding,
                                                        et_vomiting,
                                                        et_somnolence),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -718,10 +754,11 @@ cohort_table_chemotherapy$radiotherapy <- dplyr::filter(age_gap, !is.na(event_na
                                                        l_breast_oedema,
                                                        l_breast_shrink,
                                                        l_breast_pain),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$chemotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -736,10 +773,11 @@ cohort_table_chemotherapy$chemotherapy <- dplyr::filter(age_gap, !is.na(event_na
                                                        c_hair_thinning,
                                                        c_nausea,
                                                        c_infection),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -751,10 +789,11 @@ cohort_table_chemotherapy$trastuzumab <- dplyr::filter(age_gap, !is.na(event_nam
                                                        t_diarrhoea,
                                                        t_headache,
                                                        t_allergy),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$clinical_assessment_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -795,10 +834,11 @@ cohort_table_chemotherapy$clinical_assessment_pet <- dplyr::filter(age_gap, !is.
                                                        plan_change_antioestrogen,
                                                        plan_change_other), ##,
                                                        ## plan_change_spcfy),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 cohort_table_chemotherapy$clinical_assessment_non_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -837,14 +877,16 @@ cohort_table_chemotherapy$clinical_assessment_non_pet <- dplyr::filter(age_gap, 
                                                        plan_routine_trast,
                                                        plan_routine_other), ## ,
                                                        ## plan_routine_spcfy),
+                                         time      = event_name,
+                                         group     = chemotherapy,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, chemotherapy)
+                                         reshape   = NULL)
 
 ## Trastuzumab
 cohort_table_trastuzumab <- list()
-cohort_table_trastuzumab$eq5d <- ctru::table_summary(df        = age_gap,
+cohort_table_trastuzumab$eq5d <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eq5d_score,
@@ -853,10 +895,11 @@ cohort_table_trastuzumab$eq5d <- ctru::table_summary(df        = age_gap,
                                                        usual_activity,
                                                        pain_discomfort,
                                                        anxiety_depression),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -882,10 +925,11 @@ cohort_table_trastuzumab$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_na
                                                        co_scale,
                                                        di_scale,
                                                        fi_scale),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -902,11 +946,13 @@ cohort_table_trastuzumab$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_n
                                                        brbs_raw, brbs_scale,
                                                        bras_raw, bras_scale,
                                                        brhl_scale),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
-cohort_table_trastuzumab$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap,
+                                         reshape   = NULL)
+cohort_table_trastuzumab$eortc_qlq_eld15 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
@@ -919,24 +965,27 @@ cohort_table_trastuzumab$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap,
                                                        boi_raw, boi_scale,
                                                        js_scale,
                                                        fs_scale),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$therapy_assessment <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(any_treatment,
-                                                       trastuzumab,
+                                                       endocrine_therapy,
                                                        radiotherapy,
-                                                       trastuzumab,
-                                                       trastuzumab,
-                                                       trastuzumab,
+                                                       chemotherapy,
+                                                       ## trastuzumab,
+                                                       surgery,
                                                        treatment_profile),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
+                                         reshape   = NULL,
                                          event_name)
 cohort_table_trastuzumab$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
@@ -954,10 +1003,11 @@ cohort_table_trastuzumab$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name
                                                        et_vaginal_bleeding,
                                                        et_vomiting,
                                                        et_somnolence),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -996,10 +1046,11 @@ cohort_table_trastuzumab$radiotherapy <- dplyr::filter(age_gap, !is.na(event_nam
                                                        l_breast_oedema,
                                                        l_breast_shrink,
                                                        l_breast_pain),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1014,10 +1065,11 @@ cohort_table_trastuzumab$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name
                                                        c_hair_thinning,
                                                        c_nausea,
                                                        c_infection),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1029,10 +1081,11 @@ cohort_table_trastuzumab$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name
                                                        t_diarrhoea,
                                                        t_headache,
                                                        t_allergy),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$clinical_assessment_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1073,10 +1126,11 @@ cohort_table_trastuzumab$clinical_assessment_pet <- dplyr::filter(age_gap, !is.n
                                                        plan_change_antioestrogen,
                                                        plan_change_other), ##,
                                                        ## plan_change_spcfy),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 cohort_table_trastuzumab$clinical_assessment_non_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1115,14 +1169,16 @@ cohort_table_trastuzumab$clinical_assessment_non_pet <- dplyr::filter(age_gap, !
                                                        plan_routine_trast,
                                                        plan_routine_other), ## ,
                                                        ## plan_routine_spcfy),
+                                         time      = event_name,
+                                         group     = trastuzumab,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, trastuzumab)
+                                         reshape   = NULL)
 
 ## Surgery
 cohort_table_surgery <- list()
-cohort_table_surgery$eq5d <- ctru::table_summary(df        = age_gap,
+cohort_table_surgery$eq5d <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eq5d_score,
@@ -1131,10 +1187,11 @@ cohort_table_surgery$eq5d <- ctru::table_summary(df        = age_gap,
                                                        usual_activity,
                                                        pain_discomfort,
                                                        anxiety_depression),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1160,10 +1217,11 @@ cohort_table_surgery$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_name))
                                                        co_scale,
                                                        di_scale,
                                                        fi_scale),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1180,11 +1238,13 @@ cohort_table_surgery$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_name)
                                                        brbs_raw, brbs_scale,
                                                        bras_raw, bras_scale,
                                                        brhl_scale),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
-cohort_table_surgery$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap,
+                                         reshape   = NULL)
+cohort_table_surgery$eortc_qlq_eld15 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
@@ -1197,24 +1257,27 @@ cohort_table_surgery$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap,
                                                        boi_raw, boi_scale,
                                                        js_scale,
                                                        fs_scale),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$therapy_assessment <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(any_treatment,
-                                                       surgery,
+                                                       endocrine_therapy,
                                                        radiotherapy,
-                                                       surgery,
+                                                       chemotherapy,
                                                        trastuzumab,
-                                                       surgery,
+                                                       ## surgery,
                                                        treatment_profile),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
+                                         reshape   = NULL,
                                          event_name)
 cohort_table_surgery$surgery <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
@@ -1232,10 +1295,11 @@ cohort_table_surgery$surgery <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                                                        et_vaginal_bleeding,
                                                        et_vomiting,
                                                        et_somnolence),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1274,10 +1338,11 @@ cohort_table_surgery$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) 
                                                        l_breast_oedema,
                                                        l_breast_shrink,
                                                        l_breast_pain),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$surgery <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1292,10 +1357,11 @@ cohort_table_surgery$surgery <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                                                        c_hair_thinning,
                                                        c_nausea,
                                                        c_infection),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1307,10 +1373,11 @@ cohort_table_surgery$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %
                                                        t_diarrhoea,
                                                        t_headache,
                                                        t_allergy),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$clinical_assessment_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1351,10 +1418,11 @@ cohort_table_surgery$clinical_assessment_pet <- dplyr::filter(age_gap, !is.na(ev
                                                        plan_change_antioestrogen,
                                                        plan_change_other), ##,
                                                        ## plan_change_spcfy),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 cohort_table_surgery$clinical_assessment_non_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1393,15 +1461,17 @@ cohort_table_surgery$clinical_assessment_non_pet <- dplyr::filter(age_gap, !is.n
                                                        plan_routine_trast,
                                                        plan_routine_other), ## ,
                                                        ## plan_routine_spcfy),
+                                         time      = event_name,
+                                         group     = surgery,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, surgery)
+                                         reshape   = NULL)
 
 
 ## Treatment Profiles
 cohort_table_treatment_profile <- list()
-cohort_table_treatment_profile$eq5d <- ctru::table_summary(df        = age_gap,
+cohort_table_treatment_profile$eq5d <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eq5d_score,
@@ -1410,10 +1480,11 @@ cohort_table_treatment_profile$eq5d <- ctru::table_summary(df        = age_gap,
                                                        usual_activity,
                                                        pain_discomfort,
                                                        anxiety_depression),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1439,10 +1510,11 @@ cohort_table_treatment_profile$eortc_qlq_c30 <- dplyr::filter(age_gap, !is.na(ev
                                                        co_scale,
                                                        di_scale,
                                                        fi_scale),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1459,11 +1531,13 @@ cohort_table_treatment_profile$eortc_qlq_br23 <- dplyr::filter(age_gap, !is.na(e
                                                        brbs_raw, brbs_scale,
                                                        bras_raw, bras_scale,
                                                        brhl_scale),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
-cohort_table_treatment_profile$eortc_qlq_eld15 <- ctru::table_summary(df    = age_gap,
+                                         reshape   = NULL)
+cohort_table_treatment_profile$eortc_qlq_eld15 <-  dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df    = age_gap,
                                          lookup    = master$lookups_fields,
                                          id        = individual_id,
                                          select    = c(eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
@@ -1476,10 +1550,11 @@ cohort_table_treatment_profile$eortc_qlq_eld15 <- ctru::table_summary(df    = ag
                                                        boi_raw, boi_scale,
                                                        js_scale,
                                                        fs_scale),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$therapy_assessment <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1489,11 +1564,13 @@ cohort_table_treatment_profile$therapy_assessment <- dplyr::filter(age_gap, !is.
                                                        radiotherapy,
                                                        surgery,
                                                        trastuzumab,
-                                                       surgery,
-                                                       treatment_profile),
+                                                       surgery),
+                                                       ## treatment_profile),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
+                                         reshape   = NULL,
                                          event_name)
 cohort_table_treatment_profile$surgery <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
@@ -1511,10 +1588,11 @@ cohort_table_treatment_profile$surgery <- dplyr::filter(age_gap, !is.na(event_na
                                                        et_vaginal_bleeding,
                                                        et_vomiting,
                                                        et_somnolence),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$radiotherapy <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1553,10 +1631,11 @@ cohort_table_treatment_profile$radiotherapy <- dplyr::filter(age_gap, !is.na(eve
                                                        l_breast_oedema,
                                                        l_breast_shrink,
                                                        l_breast_pain),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$surgery <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1571,10 +1650,11 @@ cohort_table_treatment_profile$surgery <- dplyr::filter(age_gap, !is.na(event_na
                                                        c_hair_thinning,
                                                        c_nausea,
                                                        c_infection),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$trastuzumab <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1586,10 +1666,11 @@ cohort_table_treatment_profile$trastuzumab <- dplyr::filter(age_gap, !is.na(even
                                                        t_diarrhoea,
                                                        t_headache,
                                                        t_allergy),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$clinical_assessment_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1630,10 +1711,11 @@ cohort_table_treatment_profile$clinical_assessment_pet <- dplyr::filter(age_gap,
                                                        plan_change_antioestrogen,
                                                        plan_change_other), ##,
                                                        ## plan_change_spcfy),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 cohort_table_treatment_profile$clinical_assessment_non_pet <- dplyr::filter(age_gap, !is.na(event_name)) %>%
                      ctru::table_summary(df        = .,
                                          lookup    = master$lookups_fields,
@@ -1672,10 +1754,11 @@ cohort_table_treatment_profile$clinical_assessment_non_pet <- dplyr::filter(age_
                                                        plan_routine_trast,
                                                        plan_routine_other), ## ,
                                                        ## plan_routine_spcfy),
+                                         time      = event_name,
+                                         group     = treatment_profile,
                                          nomissing = FALSE,
                                          digits    = 3,
-,
-                                         event_name, treatment_profile)
+                                         reshape   = NULL)
 
 ## Save the results
 save(cohort_table_chemotherapy,
