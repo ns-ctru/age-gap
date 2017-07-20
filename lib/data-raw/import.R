@@ -720,17 +720,17 @@ master$therapy_ever <- master$therapy_assessment %>%
                                              'surgery')) %>%
                        mutate(event_name = gsub(' ', '_', event_name)) %>%
                        dcast(individual_id ~ variable + event_name) %>%
-                       mutate(pet_ever = ifelse(endocrine_therapy_6_weeks   == 'Yes' |
+                       mutate(endocrine_therapy_ever = ifelse(endocrine_therapy_6_weeks   == 'Yes' |
                                                 endocrine_therapy_6_months  == 'Yes' |
                                                 endocrine_therapy_12_months == 'Yes' |
                                                 endocrine_therapy_18_months == 'Yes' |
                                                 endocrine_therapy_24_months == 'Yes',
                                                 yes = 'Yes',
                                                 no  = 'No'),
-                              pet_ever = ifelse(!is.na(pet_ever),
-                                                yes = pet_ever,
+                              endocrine_therapy_ever = ifelse(!is.na(endocrine_therapy_ever),
+                                                yes = endocrine_therapy_ever,
                                                 no  = 'No'),
-                              pet_ever = factor(pet_ever,
+                              endocrine_therapy_ever = factor(endocrine_therapy_ever,
                                                 levels = c('No', 'Yes')),
                               chemotherapy_ever = ifelse(chemotherapy_6_weeks   == 'Yes' |
                                                          chemotherapy_6_months  == 'Yes' |
@@ -780,7 +780,7 @@ master$therapy_ever <- master$therapy_assessment %>%
                                                     no  = 'No'),
                               surgery_ever = factor(surgery_ever,
                                                     levels = c('No', 'Yes'))) %>%
-                       dplyr::select(individual_id, pet_ever, chemotherapy_ever, radiotherapy_ever,
+                       dplyr::select(individual_id, endocrine_therapy_ever, chemotherapy_ever, radiotherapy_ever,
                                      trastuzumab_ever, surgery_ever)
 ## File : Trastuzumab.csv
 master$trastuzumab <- read_prospect(file = 'Trastuzumab.csv',
@@ -1349,6 +1349,8 @@ age_gap <- full_join(master$therapy_qol,
                      master$therapy_ever,
                      by = c('individual_id'))
 
+## HERE
+
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
 ###################################################################################
@@ -1486,34 +1488,6 @@ age_gap <- age_gap %>%
                                       age_exact >= 90                  ~ '>=90'),
                   age_cat = factor(age_cat,
                                    levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
-## Binary indicators of ever having a given type of treatment
-           group_by(individual_id) %>%
-           mutate(endocrine_therapy_ever = ifelse(sum(as.numeric(endocrine_therapy)) >= 2,
-                                                  yes     = 'Yes',
-                                                  no      = 'No'),
-                  endocrine_therapy_ever = factor(endocrine_therapy_ever,
-                                                  levels  = c('No', 'Yes')),
-                  chemotherapy_ever      = ifelse(sum(as.numeric(chemotherapy)) >= 2,
-                                                  yes     = 'Yes',
-                                                  no      = 'No'),
-                  chemotherapy_ever      = factor(chemotherapy_ever,
-                                                  levels  = c('No', 'Yes')),
-                  radiotherapy_ever      = ifelse(sum(as.numeric(radiotherapy)) >= 2,
-                                                  yes     = 'Yes',
-                                                  no      = 'No'),
-                  radiotherapy_ever      = factor(radiotherapy_ever,
-                                                  levels  = c('No', 'Yes')),
-                  surgery_ever           = ifelse(sum(as.numeric(surgery)) >= 2,
-                                                  yes     = 'Yes',
-                                                  no      = 'No'),
-                  surgery_ever           = factor(surgery_ever,
-                                                  levels  = c('No', 'Yes')),
-                  trastuzumab_ever           = ifelse(sum(as.numeric(trastuzumab)) >= 2,
-                                                  yes     = 'Yes',
-                                                  no      = 'No'),
-                  trastuzumab_ever           = factor(trastuzumab_ever,
-                                                  levels  = c('No', 'Yes'))) %>%
-           ungroup() %>%
 ## ToDo - Categorisation of other baseline scores, awaiting SAP to be completed
 ## Categorise Charlson
 ##            mutate() %>%
