@@ -10,6 +10,16 @@ site: blogdown:::blogdown_site
 ```{r child='results_cohort/consort.Rmd', eval = TRUE}
 ```
 
+### Treatment Profiles {.tabset .tabset-fade .tabset-pills}
+
+```{r child='results_cohort/treatment_profiles.Rmd', eval = TRUE}
+```
+
+### Baseline {.tabset .tabset-fade .tabset-pills}
+
+```{r child='results_cohort/baseline.Rmd', eval = FALSE}
+```
+
 ### EQ5D {.tabset .tabset-fade .tabset-pills}
 
 ```{r child='results_cohort/eq5d.Rmd', eval = TRUE}
