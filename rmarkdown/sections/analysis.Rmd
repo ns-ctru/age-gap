@@ -1,2 +1,35 @@
-```{r child = analysis/recruitment.Rmd}
+<!-- Recrutinment -->
+```{r child = 'analysis/recruitment.Rmd', echo = FALSE, eval = TRUE}
+```
+
+<!-- Cohort Plots -->
+```{r child = 'analysis/cohort_plot_chemotherapy.Rmd', echo = FALSE, eval = TRUE}
+```
+
+```{r child = 'analysis/cohort_plot_radiotherapy.Rmd', echo = FALSE, eval = TRUE}
+```
+
+```{r child = 'analysis/cohort_plot_endocrine_therapy.Rmd', echo = FALSE, eval = TRUE}
+```
+
+```{r child = 'analysis/cohort_plot_trastuzumab.Rmd', echo = FALSE, eval = FALSE}
+```
+
+```{r child = 'analysis/cohort_plot_surgery.Rmd', echo = FALSE, eval = FALSE}
+```
+
+<!-- Cohort Tables -->
+```{r child = 'analysis/cohort_table_chemotherapy.Rmd', echo = FALSE, eval = TRUE}
+```
+
+```{r child = 'analysis/cohort_table_radiotherapy.Rmd', echo = FALSE, eval = TRUE}
+```
+
+```{r child = 'analysis/cohort_table_endocrine_therapy.Rmd', echo = FALSE, eval = TRUE}
+```
+
+```{r child = 'analysis/cohort_table_trastuzumab.Rmd', echo = FALSE, eval = FALSE}
+```
+
+```{r child = 'analysis/cohort_table_surgery.Rmd', echo = FALSE, eval = FALSE}
 ```
