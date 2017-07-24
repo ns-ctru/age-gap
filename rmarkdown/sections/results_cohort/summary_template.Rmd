@@ -1,0 +1,44 @@
+#### TEMPLATE1
+```{r results_cohort_summary_outcome_template1, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = TRUE}
+## TEMPLATE1
+cohort_plot_template1$outcome$factor_outcome + facet_grid(label~template1)
+cohort_table_template1$outcome$factor %>%
+    melt(id.vars = c('event_name', 'template1', 'label', 'value'),
+         measure.vars = c('n_prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ template1 + variable, value.var = 'val') %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT_treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Component', 'Response', 'TEMPLATE1', 'No TEMPLATE1', 'Missing TEMPLATE1'))
+
+```
+
+#### TEMPLATE2
+```{r results_cohort_summary_outcome_template2, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = FALSE}
+## TEMPLATE2
+cohort_plot_template2$outcome$factor_outcome + facet_grid(label~template2)
+cohort_table_template2$outcome$factor %>%
+    melt(id.vars = c('event_name', 'template2', 'label', 'value'),
+         measure.vars = c('n_prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ template2 + variable, value.var = 'val') %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT_treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Component', 'Response', 'TEMPLATE2', 'No TEMPLATE2', 'Missing TEMPLATE2'))
+
+```
+
+#### TEMPLATE3
+```{r results_cohort_summary_outcome_template3, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = TRUE}
+## TEMPLATE3
+cohort_plot_template3$outcome$factor_outcome + facet_grid(label~template3)
+cohort_table_template3$outcome$factor %>%
+    melt(id.vars = c('event_name', 'template3', 'label', 'value'),
+         measure.vars = c('n_prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ template3 + variable, value.var = 'val') %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT_treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Component', 'Response', 'TEMPLATE3', 'No TEMPLATE3', 'Missing TEMPLATE3'))
+
+```
