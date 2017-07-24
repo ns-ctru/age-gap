@@ -1,3 +1,105 @@
+## 2017-07-20 plot_summary() doesn't use the 'event' option to grid_wrap() and only
+##            facet_wrap() the plot, lets resolve that.
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
+cohort_plot <- list()
+
+## EQ5D
+build()
+install()
+## dplyr::filter(age_gap, !is.na(eq5d_score)) %>%
+##     mutate(event_name = factor(event_name)) %>%
+cohort_plot$eq5d <- ctru::plot_summary(df            = age_gap,
+                                       id               = individual_id,
+                                       select           = c(mobility,
+                                                            self_care,
+                                                            usual_activity,
+                                                            pain_discomfort,
+                                                            anxiety_depression,
+                                                            eq5d_score),
+                                       lookup_fields    = master$lookups_fields,
+                                       levels_factor    = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                                       group            = chemotherapy_ever,
+                                       events           = event_name,
+                                       theme            = theme_bw(),
+                                       position         = 'identity',
+                                       histogram        = TRUE,
+                                       boxplot          = TRUE,
+                                       individual       = TRUE,
+                                       plotly           = FALSE,
+                                       remove_na        = TRUE,
+                                       title_factor     = 'Summary of EQ-5D-5L scores over time',
+                                       title_continuous = 'Calculated EQ-5D-5L Scores',
+                                       legend_continuous = FALSE,
+                                       legend_factor    = TRUE)
+
+cohort_plot$eq5d %>% names()
+cohort_plot$eq5d$histogram
+cohort_plot$eq5d$histogram_eq5d_score
+cohort_plot$eq5d$histogram_group
+cohort_plot$eq5d$boxplot
+cohort_plot$eq5d$boxplot_eq5d_score
+cohort_plot$eq5d$boxplot_group
+## This works, but can't for the life of me get quo_group (which holds the 'group' variable)
+## to work internally in plot_summary()
+cohort_plot$eq5d$factor_eq5d + facet_grid(label~chemotherapy_ever)
+
+## 2017-07-19 Working out why *_ever variables not correctly derived...
+## Only PET is correct...
+age_gap %$% table(endocrine_therapy_ever, useNA = 'ifany')
+age_gap %$% table(surgery_ever, useNA = 'ifany')
+age_gap %$% table(chemotherapy_ever, useNA = 'ifany')
+age_gap %$% table(radiotherapy_ever, useNA = 'ifany')
+age_gap %$% table(trastuzumab_ever, useNA = 'ifany')
+## Lets check master$therapy_ever
+master$therapy_ever %$% table(endocrine_therapy_ever, useNA = 'ifany')
+master$therapy_ever %$% table(surgery_ever, useNA = 'ifany')
+master$therapy_ever %$% table(chemotherapy_ever, useNA = 'ifany')
+master$therapy_ever %$% table(radiotherapy_ever, useNA = 'ifany')
+master$therapy_ever %$% table(trastuzumab_ever, useNA = 'ifany')
+## Ok they _are_ there and are correct, so something is happening after merging into the dataframe.
+## Having run the code upto the point where these are merged in, they are correctly merged,
+## suggesting something afterwards is causing the problem.
+
+## 2017-07-17 Working out missing in table summaries
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
+cohort_table_chemotherapy$eq5d$factor %$% table(event_name, useNA = 'ifany')
+cohort_table_chemotherapy$eq5d$factor %$% table(chemotherapy, useNA = 'ifany')
+cohort_table_chemotherapy$eq5d$factor %$% table(value, useNA = 'ifany')
+cohort_table_chemotherapy$eq5d$factor %$% table(event_name, chemotherapy, event_name, useNA = 'ifany')
+## Ok definitely down to multiple missings across what data is being reshaped for
+cohort_table_chemotherapy$eq5d$factor %>%
+    ## dplyr::filter(!is.na(chemotherapy), !is.na(value)) %>%
+    melt(id.vars = c('event_name', 'chemotherapy', 'label', 'value'),
+         measure.vars = c('n', 'prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ chemotherapy + variable, value.var = 'val') %>% head()
+## Need to have an option in summary_table() to remove these automatically, there is,
+## 'nomissing' but I've not used it on factor data.
+##
+## Lets check what is missing
+cohort_table_chemotherapy$chemotherapy$df_factor %$% table(event_name, useNA = 'ifany')
+dplyr::filter(age_gap, is.na(event_name)) %>% dim()
+## Now lets test the modified function that should remove the missing data prior to summarisation
+cohort_table_chemotherapy <- list()
+cohort_table_chemotherapy$eq5d <- dplyr::filter(age_gap, !is.na(event_name)) %>%
+                     ctru::table_summary(df        = .,
+                                         lookup    = master$lookups_fields,
+                                         id        = individual_id,
+                                         select    = c(eq5d_score,
+                                                       mobility,
+                                                       self_care,
+                                                       usual_activity,
+                                                       pain_discomfort,
+                                                       anxiety_depression),
+                                         nomissing = TRUE,
+                                         event_name, chemotherapy)
+cohort_table_chemotherapy$eq5d$factor %>%
+    dplyr::filter(is.na(value) & is.na(chemotherapy))
+## event_name missing            : 0
+## chemotherapy missing          : 193
+## value (eq5d response) missing : 100
+## chemotherapy & value missing  : 50
+
 ## 2017-07-14 Why doesn't summary_plot() work surgery/chemotherpay/radiotherapy/etc.?
 
 cohort_plot <- list()
