@@ -1,11 +1,12 @@
 Package: agegap
 Title: Package for Bridging The Age Gap Randomised Control Trial
-Version: 0.20170713
+Version: 0.20170724
 Authors@R: person("Neil", "Shephard", email = "n.shephard@sheffield.ac.uk", role = c("aut", "cre"))
 Description:
 Depends:
     R (>= 3.3.4),
     blogdown (>= 0.0.40),
+    cowplot (>= 0.7.0),
     ctru (>= 0.0.0.20170517),
     diagram (>= 1.6.3),
     DT (>= 0.2),
