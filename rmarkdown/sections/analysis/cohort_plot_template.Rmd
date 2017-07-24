@@ -11,7 +11,9 @@
 ## Initialise a list
 cohort_plot_template <- list()
 ## EQ5D
-cohort_plot_template$eq5d <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$eq5d <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(mobility,
                                                             self_care,
@@ -36,7 +38,9 @@ cohort_plot_template$eq5d <- ctru::plot_summary(df            = age_gap,
                                        legend_factor    = TRUE)
 
 ## EORTC-QLQ-C30
-cohort_plot_template$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$eortc_qlq_c30 <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
                                                             c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
@@ -75,7 +79,9 @@ cohort_plot_template$eortc_qlq_c30 <- ctru::plot_summary(df            = age_gap
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## EORTC-QLQ-BR23
-cohort_plot_template$eortc_qlq_br23 <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$eortc_qlq_br23 <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
                                                             br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
@@ -133,7 +139,9 @@ cohort_plot_template$eortc_qlq_eld15 <- ctru::plot_summary(df    = age_gap,
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## Therapy Assessment
-cohort_plot_template$therapy_assessment <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$therapy_assessment <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(any_treatment,
                                                             endocrine_therapy,
@@ -158,7 +166,9 @@ cohort_plot_template$therapy_assessment <- ctru::plot_summary(df            = ag
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## Endocrine Therapy
-cohort_plot_template$endocrine_therapy <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$endocrine_therapy <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(et_hot_flushes,
                                                             et_asthenia,
@@ -188,7 +198,9 @@ cohort_plot_template$endocrine_therapy <- ctru::plot_summary(df            = age
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## Radiotherapy
-cohort_plot_template$radiotherapy <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$radiotherapy <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(## which_breast_right,
                                                             ## which_breast_left,
@@ -240,7 +252,9 @@ cohort_plot_template$radiotherapy <- ctru::plot_summary(df            = age_gap,
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## Chemotherapy
-cohort_plot_template$chemotherapy <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$chemotherapy <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(chemo_received,
                                                             chemo_aes,
@@ -268,7 +282,9 @@ cohort_plot_template$chemotherapy <- ctru::plot_summary(df            = age_gap,
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## Trastuzumab
-cohort_plot_template$trastuzumab <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$trastuzumab <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(trast_aes,
                                                             t_cardiac_fail,
@@ -293,7 +309,9 @@ cohort_plot_template$trastuzumab <- ctru::plot_summary(df            = age_gap,
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## Surgery
-## cohort_plot_template$surgery <- ctru::plot_summary(df            = age_gap,
+## cohort_plot_template$surgery <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
 ##                                        id               = individual_id,
 ##                                        select           = c(which_breast_right,
 ##                                                             which_breast_left,
@@ -399,7 +417,9 @@ cohort_plot_template$trastuzumab <- ctru::plot_summary(df            = age_gap,
 ##                                        legend_factor    = TRUE)
 ## #
 # Clinical Assessment PET
-cohort_plot_template$clinical_assessment_pet <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$clinical_assessment_pet <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(## uni_bilateral,
                                                             ## primary_tumour,
@@ -453,7 +473,9 @@ cohort_plot_template$clinical_assessment_pet <- ctru::plot_summary(df           
                                        legend_continuous = FALSE,
                                        legend_factor    = TRUE)
 ## Clinical Assessment Non PET
-cohort_plot_template$clinical_assessment_non_pet <- ctru::plot_summary(df            = age_gap,
+cohort_plot_template$clinical_assessment_non_pet <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
                                        id               = individual_id,
                                        select           = c(recurrence_where_breast,
                                                             recurrence_where_chest_wall,
@@ -507,7 +529,9 @@ cohort_plot_template$clinical_assessment_non_pet <- ctru::plot_summary(df       
 
 ## All continuous variables
 numeric_vars <- which(sapply(age_gap, is.numeric)) %>% names()
-## cohort_plot_template$continuous <- ctru::plot_summary(df            = age_gap,
+## cohort_plot_template$continuous <- age_gap %>%
+                                 dplyr::filter(!is.na(template)) %>%
+                                 ctru::plot_summary(df            = age_gap,
 ##                                              id               = individual_id,
 ##                                              select           = numeric_vars,
 ##                                              lookup_fields    = master$lookups_fields,
