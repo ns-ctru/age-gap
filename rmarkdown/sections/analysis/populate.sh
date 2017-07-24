@@ -35,7 +35,7 @@ sed -e 's/template/trastuzumab/g'       cohort_table_template.Rmd > cohort_table
 
 
 ## Analysis/Output : Cohort Plots
-## Template        : ../sections/analysis/cohort_table_template.Rmd
+## Template        : ../sections/analysis/cohort_plot_template.Rmd
 ## Groups          : chemotherapy
 ##                   radiotherapy
 ##                   endocrine_therapy
