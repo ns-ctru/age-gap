@@ -8,7 +8,7 @@ cohort_table_template1$outcome$factor %>%
          value.name   = 'val') %>%
     dcast(event_name + label + value ~ template1 + variable, value.var = 'val') %>%
     dplyr::filter(!(event_name %in% c('Baseline'))) %>%
-    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT_treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
     kable(col.names = c('Event', 'Component', 'Response', 'TEMPLATE1', 'No TEMPLATE1', 'Missing TEMPLATE1'))
 
 ```
@@ -23,7 +23,7 @@ cohort_table_template2$outcome$factor %>%
          value.name   = 'val') %>%
     dcast(event_name + label + value ~ template2 + variable, value.var = 'val') %>%
     dplyr::filter(!(event_name %in% c('Baseline'))) %>%
-    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT_treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
     kable(col.names = c('Event', 'Component', 'Response', 'TEMPLATE2', 'No TEMPLATE2', 'Missing TEMPLATE2'))
 
 ```
@@ -38,7 +38,7 @@ cohort_table_template3$outcome$factor %>%
          value.name   = 'val') %>%
     dcast(event_name + label + value ~ template3 + variable, value.var = 'val') %>%
     dplyr::filter(!(event_name %in% c('Baseline'))) %>%
-    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT_treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
     kable(col.names = c('Event', 'Component', 'Response', 'TEMPLATE3', 'No TEMPLATE3', 'Missing TEMPLATE3'))
 
 ```
