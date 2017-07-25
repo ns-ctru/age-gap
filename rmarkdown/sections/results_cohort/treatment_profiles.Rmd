@@ -1,8 +1,8 @@
 The Statistical Analysis Plan states that two sets of comparisons are to be made, Endocrine Therapy (PET) v's Surgery and Chemotherapy v's No Chemotherapy at the 6 month follow-up time-point in the first instance.  The Quality of Life analysis extends this to some extent by summarising various measurements across all time points by the afforementioned treatment groups.
 
-This presents some problems, because the treatment regimes are not mutually exclusive and are subject to change over time as an individual has progressed along a treatment pathway.  For example the initial treatment may be endocrine therapy, but subsequent to that chemotherapy and then surgery may be undertaken.  This means that the number of individuals in each group at a given time will change, and for the Endocrine Therapy v's Surgery comparison there will be individuals who can not be categorised as such as they may have received both treatments or neither.  This is a very important and fundamental issue which influences the ability to answer the hypothesis that is being asked (i.e. that there are differences in the subsequent Quality of Life measurements between the different treatments).  In order to summarise the complexity of this issue the treatment profiles of participants is summarised below.
+This presents some problems, because the treatment regimes are not mutually exclusive and are subject to change over time as an individual has progressed along a treatment pathway.  For example the initial treatment may be endocrine therapy, but subsequent to that chemotherapy and then surgery may be undertaken.  This means that the number of individuals in each group at a given time will change (and importantly so will the classification of their baseline measurements, so looking for imbalance at baseline will be conditional on the time-point that is being followed), and for the Endocrine Therapy v's Surgery comparison there will be individuals who can not be categorised as such as they may have received both treatments or neither.  This is a very important and fundamental issue which influences the ability to answer the hypothesis that is being asked (i.e. that there are differences in the subsequent Quality of Life measurements between the different treatments).  In order to summarise the complexity of this issue the treatment profiles of participants is summarised below.  This table is based on the `Therapy Assessment`Case Report Form which is completed at each follow-up time point and asks the question *Has the participant had any treatments since the last visit?* and if the response is *Yes* then there are individual fields `Yes/No` fields for each of `Endocrine Therapy`, `Radiotherapy`, `Chemotherapy`, `Trastuzumab` and `Surgery`.  In separate files for each treatment (i.e. across five files) are the dates on which each of the therapies were recieved, making it feasible to determine at what time point individuals received treatment (although because the Prospect database only exports raw tables corresponding to each Case Report Form the data needs re-linking which would be a significant amount of work).
 
-```{r results_cohort_treatment_profile, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+```{r results_cohort_treatment_profile, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = TRUE}
 treatment_event <- list()
 events <- c('Baseline', '6 weeks', '6 months', '12 months', '18 months', '24 months')
 treatment_event$df <- age_gap %>%
@@ -10,9 +10,8 @@ treatment_event$df <- age_gap %>%
                       dplyr::select(individual_id, event_name, treatment_profile) %>%
                       mutate(event_name = factor(event_name,
                                                  levels = events))
-treatment_event$table <- treatment_event$df %$%
-                         table(treatment_profile, event_name)
-treatment_event$table %>%
+treatment_event$df %$%
+    table(treatment_profile, event_name) %>%
     kable(caption = 'Treatment profiles by event as recorded at each time point.')
 ## Now extract some key numbers for what is of interest
 treatment_event$endocrine_6week <- treatment_event$df %>%
@@ -31,6 +30,18 @@ treatment_event$endocrine_radiotherapy_surgery_6week <-   treatment_event$df %>%
 
 ```
 
-As can be seen from the above table, 6 weeks from baseline there are `r treatment_event$endocrine_6week` individuals who have received Endocrine Therapy and `r  treatment_event$surgery_6week` who have received Surgery, but there are also `r  treatment_event$endocrine_surgery_6week` individuals who have received both and `r treatment_event$endocrine_radiotherapy_surgery_6week` who had also received Radiotherapy by this time can therefore *not* be included in the comparison of Endocrine Therapy v Surgery.
+As can be seen from the above table, 6 weeks from baseline there are `r treatment_event$endocrine_6week` individuals who have received Endocrine Therapy and `r  treatment_event$surgery_6week` who have received Surgery, but there are also `r  treatment_event$endocrine_surgery_6week` individuals who have received both and `r treatment_event$endocrine_radiotherapy_surgery_6week` who had also received Radiotherapy by this time can therefore *not* be included in the comparison of Endocrine Therapy v Surgery.  But that doesn't remain the same, it changes at each time point as people have additional treatments.
 
 The comparison of Chemotherapy v's No Chemotherapy is not quite so problematic since an individual will either have received Chemotherapy by a given time point or not, however as the above table shows Chemotherapy is not independant of other treatments and it would be unwise to ingore this when analysing the data, and at present the Statistical Analysis Plan does not include other treatments in the longitudinal analyses.
+
+```{r results_cohort_treatment_profile_ever, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = FALSE}
+events <- c('Baseline', '6 weeks', '6 months', '12 months', '18 months', '24 months')
+treatment_event$df_ever <- age_gap %>%
+                      dplyr::filter(event_name %in% events) %>%
+                      dplyr::select(individual_id, treatment_profile_ever) %>%
+                      unique()
+treatment_event$df_ever %$%
+    table(treatment_profile_ever) %>% as.data.frame() %>%
+    kable(caption = 'Treatment profile (Ever) by event.')
+
+```
