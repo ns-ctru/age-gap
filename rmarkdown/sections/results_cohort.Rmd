@@ -2,6 +2,13 @@
 site: blogdown:::blogdown_site
 ---
 
+```{r echo = FALSE, eval = TRUE}
+## Generate files
+cmd <- c('cd results_cohort && ./populate.sh && cd ..')
+system(cmd)
+
+```
+
 ### Recruitment {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/recruitment.Rmd', eval = TRUE}
 ```
@@ -26,15 +33,15 @@ site: blogdown:::blogdown_site
 ```
 
 ### EORTC QLC C30 {.tabset .tabset-fade .tabset-pills}
-```{r child='results_cohort/summary_eortc_qlq_c30.Rmd', eval = FALSE}
+```{r child='results_cohort/summary_eortc_qlq_c30.Rmd', eval = TRUE}
 ```
 
 ### EORTC QLC BR23 {.tabset .tabset-fade .tabset-pills}
-```{r child='results_cohort/summary_eortc_qlq_br23.Rmd', eval = FALSE}
+```{r child='results_cohort/summary_eortc_qlq_br23.Rmd', eval = TRUE}
 ```
 
 ### EORTC QLC ELD15 {.tabset .tabset-fade .tabset-pills}
-```{r child='results_cohort/summary_eortc_qlq_eld15.Rmd', eval = FALSE}
+```{r child='results_cohort/summary_eortc_qlq_eld15.Rmd', eval = TRUE}
 ```
 
 ### Therapy Assessment {.tabset .tabset-fade .tabset-pills}
@@ -42,7 +49,7 @@ site: blogdown:::blogdown_site
 ```
 
 ### Encdocrine Therapy {.tabset .tabset-fade .tabset-pills}
-```{r child='results_cohort/summary_endocrine_therapy.Rmd', eval = FALSE}
+```{r child='results_cohort/summary_endocrine_therapy.Rmd', eval = TRUE}
 ```
 
 ### Radiotherapy {.tabset .tabset-fade .tabset-pills}
