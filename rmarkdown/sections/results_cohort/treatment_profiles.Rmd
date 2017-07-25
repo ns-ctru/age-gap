@@ -34,7 +34,7 @@ As can be seen from the above table, 6 weeks from baseline there are `r treatmen
 
 The comparison of Chemotherapy v's No Chemotherapy is not quite so problematic since an individual will either have received Chemotherapy by a given time point or not, however as the above table shows Chemotherapy is not independant of other treatments and it would be unwise to ingore this when analysing the data, and at present the Statistical Analysis Plan does not include other treatments in the longitudinal analyses.
 
-### What To Do?
+#### What To Do?
 
 There are several possible solutions...
 
