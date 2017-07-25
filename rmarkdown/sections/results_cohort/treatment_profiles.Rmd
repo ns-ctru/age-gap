@@ -34,6 +34,18 @@ As can be seen from the above table, 6 weeks from baseline there are `r treatmen
 
 The comparison of Chemotherapy v's No Chemotherapy is not quite so problematic since an individual will either have received Chemotherapy by a given time point or not, however as the above table shows Chemotherapy is not independant of other treatments and it would be unwise to ingore this when analysing the data, and at present the Statistical Analysis Plan does not include other treatments in the longitudinal analyses.
 
+### What To Do?
+
+There are several possible solutions...
+
+1. Be very strict and only compare those who have a unique single treatment in the categories defined.  This answers the direct comparison that seems to underping the original hypothesis being tested.  However it would result in a concomitant reduction in statistical power.
+
+2. Compare the treatment profiles at each time point.  Not particularly 'clean' and likely difficult to interpret.  Also have very small numbers in some treatment profiles.
+
+3. Include dummy variables indicating adjunct treatment therapy for each of the possible treatments (i.e. five dummies, one for each possible treatment) resulting in fully adjusted co-efficients.
+
+For the proposed longitudinal analyses I would personally advocate option 3, with each indicator being repeated in effect all starting as `0` (zero or negative) to indicate the treatment hadn't been received and then switching to `1` (one or positive) at the follow-up at which they indicate a given treatment has been received.  Baseline co-variates would simply be those which subject specific knowledge feel are important to adjust for (and would in essence simply be an additional time-point).  For individual follow-up times (i.e. **Primary Outcome** which is follow-up at six months, although I expect other time points to be of interest) I would suggest its a decision between option 1 and 3.  The later would maintain sample size and in turn power.
+
 ```{r results_cohort_treatment_profile_ever, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = FALSE}
 events <- c('Baseline', '6 weeks', '6 months', '12 months', '18 months', '24 months')
 treatment_event$df_ever <- age_gap %>%
