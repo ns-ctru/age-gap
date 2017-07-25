@@ -1,3 +1,11 @@
+```{r echo = FALSE, eval = TRUE}
+## Generate files
+cmd <- c('cd analysis && ./populate.sh && cd ..')
+system(cmd)
+
+```
+
+
 <!-- Recrutinment -->
 ```{r child = 'analysis/recruitment.Rmd', echo = FALSE, eval = TRUE}
 ```
@@ -6,7 +14,7 @@
 ```{r child = 'analysis/cohort_plot_chemotherapy.Rmd', echo = FALSE, eval = TRUE}
 ```
 
-```{r child = 'analysis/cohort_plot_radiotherapy.Rmd', echo = FALSE, eval = TRUE}
+```{r child = 'analysis/cohort_plot_radiotherapy.Rmd', echo = FALSE, eval = FALSE}
 ```
 
 ```{r child = 'analysis/cohort_plot_endocrine_therapy.Rmd', echo = FALSE, eval = TRUE}
@@ -15,14 +23,14 @@
 ```{r child = 'analysis/cohort_plot_trastuzumab.Rmd', echo = FALSE, eval = FALSE}
 ```
 
-```{r child = 'analysis/cohort_plot_surgery.Rmd', echo = FALSE, eval = FALSE}
+```{r child = 'analysis/cohort_plot_surgery.Rmd', echo = FALSE, eval = TRUE}
 ```
 
 <!-- Cohort Tables -->
 ```{r child = 'analysis/cohort_table_chemotherapy.Rmd', echo = FALSE, eval = TRUE}
 ```
 
-```{r child = 'analysis/cohort_table_radiotherapy.Rmd', echo = FALSE, eval = TRUE}
+```{r child = 'analysis/cohort_table_radiotherapy.Rmd', echo = FALSE, eval = FALSE}
 ```
 
 ```{r child = 'analysis/cohort_table_endocrine_therapy.Rmd', echo = FALSE, eval = TRUE}
@@ -31,5 +39,5 @@
 ```{r child = 'analysis/cohort_table_trastuzumab.Rmd', echo = FALSE, eval = FALSE}
 ```
 
-```{r child = 'analysis/cohort_table_surgery.Rmd', echo = FALSE, eval = FALSE}
+```{r child = 'analysis/cohort_table_surgery.Rmd', echo = FALSE, eval = TRUE}
 ```
