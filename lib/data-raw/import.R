@@ -5,6 +5,18 @@
 ##               produce one single data set for analysis
 
 ###################################################################################
+## Script specific functions (unlikely to ever be needed elsewhere)              ##
+###################################################################################
+agegap_rename_events <- function(df = .,
+                                 ...){
+    df <- df %>%
+          mutate(event_name = gsub('RCT ',      '',         event_name),
+                 event_name = gsub('baseline',  'Baseline', event_name),
+                 event_name = gsub('treatment', 'Baseline', event_name))
+    return(df)
+}
+
+###################################################################################
 ## Reading Data                                                                  ##
 ###################################################################################
 ## Master list for holding all imported CSVs
@@ -465,6 +477,7 @@ master$breast_cancer_treatment_choices_chemo_no_chemo <- read_prospect(file = 'B
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$breast_cancer_treatment_choices_chemo_no_chemo <- agegap_rename_events(df = master$breast_cancer_treatment_choices_chemo_no_chemo)
 ## Variable names duplicate/conflict with Breast Cancer Treatment Choices - chemo vs no chemo.csv
 names(master$breast_cancer_treatment_choices_chemo_no_chemo) <- ifelse(names(master$breast_cancer_treatment_choices_chemo_no_chemo) %in% duplicated_var_names$chemo_no_chemo,
                                                    no  = names(master$breast_cancer_treatment_choices_chemo_no_chemo),
@@ -476,6 +489,7 @@ master$breast_cancer_treatment_choices_surgery_pills <- read_prospect(file = 'Br
                          convert.dates   = TRUE,
                          convert.underscores = TRUE,
                          dictionary      = master$lookups)
+master$breast_cancer_treatment_choices_surgery_pills <- agegap_rename_events(df = master$breast_cancer_treatment_choices_surgery_pills)
 ## Variable names duplicate/conflict with Breast Cancer Treatment Choices - chemo vs no chemo.csv
 names(master$breast_cancer_treatment_choices_surgery_pills) <- ifelse(names(master$breast_cancer_treatment_choices_surgery_pills) %in% duplicated_var_names$surgery_pills,
                                                    no  = names(master$breast_cancer_treatment_choices_surgery_pills),
@@ -487,6 +501,7 @@ master$brief_cope <- read_prospect(file = 'Brief COPE.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$brief_cope <- agegap_rename_events(df = master$brief_cope)
 ## File : Change in level of participation.csv
 master$change_in_participation <- read_prospect(file = 'Change in level of participation.csv',
                          header              = TRUE,
@@ -533,6 +548,7 @@ master$collaborate <- read_prospect(file = 'CollaboRATE.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$collaborate <- agegap_rename_events(df = master$collaborate)
 names(master$collaborate) <- gsub('calc_score', 'collaborate_calc_score', names(master$collaborate))
 ## File : Consent Form.csv
 master$consent_form <- read_prospect(file = 'Consent Form.csv',
@@ -558,6 +574,7 @@ master$decision_regret_scale <- read_prospect(file = 'Decision Regret Scale (DRS
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$decision_regret_scale <- agegap_rename_events(df = master$decision_regret_scale)
 names(master$decision_regret_scale) <- gsub('calc_score', 'decision_regret_scale_calc_score', names(master$decision_regret_scale))
 ## File : Discussing treatment options.csv
 master$discussing_treatment_options <- read_prospect(file = 'Discussing treatment options.csv',
@@ -566,6 +583,7 @@ master$discussing_treatment_options <- read_prospect(file = 'Discussing treatmen
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$discussing_treatment_options <- agegap_rename_events(df = master$discussing_treatment_options)
 ## File : ECOG Performance Status Score.csv
 master$ecog_performance_status_score <- read_prospect(file = 'ECOG Performance Status Score.csv',
                          header              = TRUE,
@@ -643,6 +661,7 @@ master$process_evaluation_log <- read_prospect(file = 'Process Evaluation log.cs
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$process_evaluation <- agegap_rename_events(df = master$process_evaluation)
 ## File : QoL  LoL Questionnaire.csv
 master$qol_lol_questionnaire <- read_prospect(file = 'QoL  LoL Questionnaire.csv',
                          header              = TRUE,
@@ -671,6 +690,7 @@ master$spielberger_state_trait_anxiety <- read_prospect(file = 'Spielberger Stat
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$spielberger_state_trait_anxiety <- agegap_rename_events(df = master$spielberger_state_trait_anxiety)
 ## File : Study completion  discontinuation form.csv
 master$study_completion_discontinuation_form <- read_prospect(file = 'Study completion  discontinuation form.csv',
                          header              = TRUE,
@@ -692,6 +712,7 @@ master$the_brief_illness_perception_questionnaire <- read_prospect(file = 'The B
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$the_brief_illness_perception_questionnaire <- agegap_rename_events(df = master$the_brief_illness_perception_questionnaire)
 ## File : Therapy Assessment.csv
 master$therapy_assessment <- read_prospect(file = 'Therapy Assessment.csv',
                          header              = TRUE,
@@ -796,6 +817,7 @@ master$treatment_decision <- read_prospect(file = 'Treatment decision.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$treatment_decision <- agegap_rename_events(df = master$treatment_decision)
 ## File : Treatment decision support consultations.csv
 master$treatment_decision_support_consultations <- read_prospect(file = 'Treatment decision support consultations.csv',
                          header              = TRUE,
@@ -803,6 +825,7 @@ master$treatment_decision_support_consultations <- read_prospect(file = 'Treatme
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+master$treatment_decision_support_consultations <- agegap_rename_events(df = master$treatment_decision_support_consultations)
 ## File : Transfers.csv
 master$transfers <- read_prospect(file = 'Transfers.csv',
                          header              = TRUE,
@@ -1151,15 +1174,15 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                                               l_sc_functional_diff,
                                               l_sc_neuropathy,
                                               l_sc_lymphoedema,
-                                              l_tumoul_size,
+                                              l_tumour_size,
                                               l_allred,
                                               l_h_score,
-                                              l_hel_2_score,
+                                              l_her_2_score,
                                               l_onco_offered,
                                               l_onco_used,
                                               l_risk_score,
-                                              l_tumoul_type,
-                                              l_tumoul_grade,
+                                              l_tumour_type,
+                                              l_tumour_grade,
                                               l_margins_clear,
                                               l_margin,
                                               l_designation_anterior,
@@ -1407,15 +1430,16 @@ age_gap <- full_join(master$therapy_qol,
 ## subsequent uses
            mutate(event_name = factor(event_name,
                                       levels = c('Baseline',
-                                                 'RCT baseline',
-                                                 'RCT treatment',
+                                                 ## 'RCT baseline',
+                                                 ## 'RCT treatment',
                                                  '6 weeks',
-                                                 'RCT 6 weeks',
+                                                 ## 'RCT 6 weeks',
                                                  '6 months',
-                                                 'RCT 6 months',
+                                                 ## 'RCT 6 months',
                                                  '12 months',
                                                  '18 months',
-                                                 '24 months'))) %>%
+                                                 '24 months',
+                                                 'Surgery'))) %>%
 ## The site allocation so that RCT component can be conducted
            left_join(.,
                      dplyr::select(master$sites,
@@ -1427,14 +1451,13 @@ age_gap <- full_join(master$therapy_qol,
                      master$therapy_ever,
                      by = c('individual_id'))
 
-## HERE
-
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
 ###################################################################################
 master$duplicates <- age_gap %>%
                      group_by(individual_id, site, event_name, event_date) %>%
-                     summarise(n = n())
+    summarise(n = n())
+
 
 
 ###################################################################################
