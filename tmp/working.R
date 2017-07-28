@@ -1,3 +1,64 @@
+## 2017-07-28 Plotting missing data
+t <- age_gap %>%
+     gather(key = identifier, value = value, -individual_id, -event_name) %>%
+    mutate(missing = is.na(value),
+           individual_id = factor(individual_id))
+t <- left_join(t,
+               master$lookups_fields)
+ggplot(t, aes(x = label, y = individual_id, fill = missing)) +
+    geom_raster() +
+    theme_bw()
+
+## Testing function
+ggplot_missing(df      = age_gap,
+               exclude = NULL,
+               id      = individual_id,
+               event   = event_name,
+               site    = site,
+               theme   = theme_bw())
+
+## 2017-07-26 Is there any data associated with RCT events?
+##
+## Looks to me like baseline is simply that, baseline, and that is both cohort and RCT baseline.
+## Lets check...
+sink('~/work/scharr/age-gap/tmp/event_name.log')
+## Levels of event_name
+age_gap %$% levels(event_name)
+## EORTC QoL questionnaires are recorded at
+age_gap %$%
+    table(event_name, c30_q1)
+## Check RCT specific forms
+master$collaborate %$%
+    table(event_name, matters_most)
+master$decision_regret_scale %$%
+    table(event_name, regret_choice)
+
+## Lets check all RCT forms
+master$treatment_decision %$%
+    table(event_name)
+master$treatment_decision_support_consultations %$%
+    table(event_name)
+master$collaborate %$% ## done
+    table(event_name)
+master$breast_cancer_treatment_choices_chemo_no_chemo %$% ## done
+    table(event_name)
+master$breast_cancer_treatment_choices_surgery_pills %$% ## done
+    table(event_name)
+master$spielberger_state_trait_anxiety %$% ## done
+    table(event_name)
+master$decision_regret_scale %$% ## done
+    table(event_name)
+master$treatment_decision %$%
+    table(event_name)
+master$brief_cope %$% ## done
+    table(event_name)
+master$the_brief_illness_perception_questionnaire %$% ##done
+    table(event_name)
+master$discussing_treatment_options %$% ## done
+    table(event_name)
+master$process_evaluation_log %$% ## done
+    table(event_name)
+
 ## 2017-07-20 plot_summary() doesn't use the 'event' option to grid_wrap() and only
 ##            facet_wrap() the plot, lets resolve that.
 load('~/work/scharr/age-gap/lib/data/age-gap.RData')
