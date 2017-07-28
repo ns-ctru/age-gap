@@ -1457,8 +1457,18 @@ age_gap <- full_join(master$therapy_qol,
 master$duplicates <- age_gap %>%
                      group_by(individual_id, site, event_name, event_date) %>%
     summarise(n = n())
-
-
+###################################################################################
+## There are a number of instances where there are no event_name, this seems     ##
+## to be because the Eligibility form which is merged into age_gap consent_form  ##
+## which is included since it contains the consent date (often a proxy for       ##
+## baseline) includes those who did not consent, and in turn they have no        ##
+## follow-up data nor associated events.  These are now removed.                 ##
+###################################################################################
+master$no_event <- age_gap %>%
+                   dplyr::filter(is.na(event_name)) %>%
+                   dplyr::select(individual_id, event_name, event_date)
+age_gap <- age_gap %>%
+           dplyr::filter(!is.na(event_name))
 
 ###################################################################################
 ## Tidy data, deriving variables, removing outliers etc                          ##
@@ -1886,6 +1896,36 @@ continuous_vars$clinical_assessment_pet <- quos(r_breast_fractions, r_axilla_fra
                                                 r_chest_fractions, r_other_fractions,
                                                 l_breast_fractions, l_axilla_fractions, l_supra_fractions,
                                                 l_chest_fractions, l_other_fractions)
+
+###################################################################################
+## Generate an imputed data set                                                  ##
+###################################################################################
+## ToDo...                                                                       ##
+##                                                                               ##
+## 1. Find out what variables are to be included, this depends on input from     ##
+##    the CI at least, likely some sort of consensus from others.                ##
+##                                                                               ##
+## 2. Decide what modelling approach to use.                                     ##
+##                                                                               ##
+## 3. What package to use, mice, amelia or mi, mitools? (Likely not one but many)##
+##                                                                               ##
+## 4. How to assess whether data is MCAR/MAR/NMAR?                               ##
+##                                                                               ##
+##    - Could plot a heat-map of event (x) and response (y) with colour          ##
+##      indicating the proportion of missing data?                               ##
+##                                                                               ##
+##      See https://goo.gl/JCKv5f                                                ##
+##                                                                               ##
+## Some link/tutorials...                                                        ##
+##                                                                               ##
+## https://goo.gl/mFrTDt                                                         ##
+## https://goo.gl/chCwHz                                                         ##
+##                                                                               ##
+## Notes...                                                                      ##
+##                                                                               ##
+## Generally not advisable to impute categorical variables                       ##
+##                                                                               ##
+###################################################################################
 
 ###################################################################################
 ## Save and Export                                                               ##
