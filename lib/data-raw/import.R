@@ -1334,7 +1334,7 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
                                       influence_dcsn_cont_other_surgery_pills,
                                       other_cont_surgery_pills),
                         by = c('individual_id', 'site', 'event_name')) %>%
-## Breast Cancer Treatment Choices - surgery vs no chemo
+## Breast Cancer Treatment Choices - chemo vs no chemo
               full_join(.,
                         dplyr::select(master$breast_cancer_treatment_choices_chemo_no_chemo,
                                       individual_id, site, event_name, ## event_date, database_id,
