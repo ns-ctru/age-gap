@@ -1,0 +1,61 @@
+---
+site: blogdown:::blogdown_site
+---
+
+```{r echo = FALSE, eval = TRUE}
+## Generate files
+cmd <- c('cd results_missing && ./populate.sh && cd ..')
+system(cmd)
+
+```
+
+The patterns of missing data are summarised for each set of questionnaires and details of the multiple imputation methods are then provided.
+
+
+### EQ5D {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_eq5d.Rmd', eval = TRUE}
+```
+
+### EORTC QLC C30 {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_eortc_qlq_c30.Rmd', eval = TRUE}
+```
+
+### EORTC QLC BR23 {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_eortc_qlq_br23.Rmd', eval = TRUE}
+```
+
+### EORTC QLC ELD15 {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_eortc_qlq_eld15.Rmd', eval = TRUE}
+```
+
+### Therapy Assessment {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_therapy_assessment.Rmd', eval = FALSE}
+```
+
+### Encdocrine Therapy {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_endocrine_therapy.Rmd', eval = FALSE}
+```
+
+### Radiotherapy {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_radiotherapy.Rmd', eval = FALSE}
+```
+
+### Chemotherapy {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_chemotherapy.Rmd', eval = FALSE}
+```
+
+### Trastuzumab {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_trastuzumab.Rmd', eval = FALSE}
+```
+
+### Surgery {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_surgery.Rmd', eval = FALSE}
+```
+
+### Clinical Assessment - PET {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_clinical_assessment_pet.Rmd', eval = FALSE}
+```
+
+### Clinical Assessment - Non-PET {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/patterns_clinical_assessment_pet.Rmd', eval = FALSE}
+```
