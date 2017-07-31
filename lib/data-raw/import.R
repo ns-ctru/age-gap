@@ -680,7 +680,7 @@ names(master$radiotherapy) <- gsub('which_breast_right',
                                    'which_breast_right_radio',
                                    names(master$radiotherapy))
 names(master$radiotherapy) <- gsub('which_breast_left',
-                                   'which_breast_right_surgery',
+                                   'which_breast_right_radio',
                                    names(master$radiotherapy))
 ## File : Screening Form.csv
 master$screening_form <- read_prospect(file = 'Screening Form.csv',
