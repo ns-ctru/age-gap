@@ -14,7 +14,8 @@ opts_chunk$set(cache.path = 'cache/',
                fig.width  = 8,
                warning = FALSE,
                message = FALSE)
-options(digits = 3)
+options(digits = 3,
+        imputations = 5)
 ## Ensure anchors are assessed first
 ## opts_knit$set(eval.after = 'echo')
 ## Hooks
@@ -74,6 +75,10 @@ system(cmd)
 
 ## Results - Missing Data {.tabset .tabset-fade .tabset-pills}
 ```{r child = 'sections/results_missing.Rmd', eval = TRUE}
+```
+
+## Results - Adverse Events {.tabset .tabset-fade .tabset-pills}
+```{r child = 'sections/results_adverse_events.Rmd', eval = TRUE}
 ```
 
 ## Results - Cohort {.tabset .tabset-fade .tabset-pills}
