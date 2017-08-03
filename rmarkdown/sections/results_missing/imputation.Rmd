@@ -1,0 +1,27 @@
+The Statistical Analysis Plan stipulates that [multiple imputation](https://en.wikipedia.org/wiki/Imputation_(statistics))[@schaffer1999] is employed to replace instances where baseline covariates are missing.   using the [MICE](https://cran.r-project.org/web/packages/mice/index.html).  For continuous variables predictive mean matching is used to impute missing data, for binary variables logistic regression is used, whilst for categorical variables (which are almost all ordered) proportional odds model is used.  A summary of the missing datat that is umputed is provided and a summry of the variables that are included as baseline co-variates before and after imputation are summarised.
+
+```{r results_missing_imputation_pattern, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+## ToDo 2017-08-02 - Restrict to the true set of variables that are to be imputed
+age_gap %>%
+    dplyr::filter(event_name == 'Baseline') %>%
+    dplyr::select(age, bmi, weight_kg) %>%
+    md.pattern() %>%
+    ## as.data.frame() %>%
+    kable(caption = 'Patterns of missing data in baseline covariate data.  The matrix shows the pattern across variables with the number of times the pattern is observed the final rows and columns indicate how much missing data there is.')
+## ToDo - Possible plots...heatmap of table; margin plots of missing data
+```
+
+```{r results_missing_impute, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+## ToDo 2017-08-02 - Restrict to the true set of variables that are to be imputed
+imputations <- 5
+imputed_baseline <- age_gap %>%
+                    dplyr::filter(event_name == 'Baseline') %>%
+                    dplyr::select(age, bmi, weight_kg) %>%
+                    mice(m             = imputations,
+                         defaultMethod = c('pmm', 'logreg', 'polr'),
+                         seed          = 38843435)
+summary(imputed_baseilne)
+
+## ToDo 2017-08-02 - Merge imputed baseline data with follow-up
+
+```
