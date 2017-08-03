@@ -1,5 +1,5 @@
 #### Event
-```{r results_missing_patterns_template_event, , echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+```{r results_missing_patterns_template_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
 t <- age_gap %>%
      dplyr::select(TEMPLATE) %>%
      gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
@@ -21,7 +21,7 @@ t
 ```
 
 #### Site
-```{r results_missing_patterns_template_site, , echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+```{r results_missing_patterns_template_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
 t <- age_gap %>%
      dplyr::select(TEMPLATE) %>%
      gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
@@ -44,7 +44,7 @@ t
 
 
 #### Event and Site
-```{r results_missing_patterns_template_event_site, , echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+```{r results_missing_patterns_template_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
 t <- age_gap %>%
      dplyr::select(TEMPLATE) %>%
      gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
