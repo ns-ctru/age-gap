@@ -2,9 +2,10 @@ The Statistical Analysis Plan stipulates that [multiple imputation](https://en.w
 
 ```{r results_missing_imputation_pattern, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
 ## ToDo 2017-08-02 - Restrict to the true set of variables that are to be imputed
+to_impute <- quos(age_exact, bmi, weight_kg)
 age_gap %>%
     dplyr::filter(event_name == 'Baseline') %>%
-    dplyr::select(age, bmi, weight_kg) %>%
+    dplyr::select(!!!to_impute) %>%
     md.pattern() %>%
     ## as.data.frame() %>%
     kable(caption = 'Patterns of missing data in baseline covariate data.  The matrix shows the pattern across variables with the number of times the pattern is observed the final rows and columns indicate how much missing data there is.')
@@ -12,16 +13,65 @@ age_gap %>%
 ```
 
 ```{r results_missing_impute, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
-## ToDo 2017-08-02 - Restrict to the true set of variables that are to be imputed
-imputations <- 5
 imputed_baseline <- age_gap %>%
                     dplyr::filter(event_name == 'Baseline') %>%
-                    dplyr::select(age, bmi, weight_kg) %>%
-                    mice(m             = imputations,
+                    dplyr::select(!!!to_impute) %>%
+                    mice(m             = options()$imputations,
                          defaultMethod = c('pmm', 'logreg', 'polr'),
-                         seed          = 38843435)
-summary(imputed_baseilne)
+                         seed          = 38843435,
+                         printFlag     = FALSE)
+summary(imputed_baseline)
 
-## ToDo 2017-08-02 - Merge imputed baseline data with follow-up
+## ToDo 2017-08-02 - Merge imputed baseline data with follow-up, how to do this, subset follow-up and bind
+## scores <- enquo()
+## age_gap_imputed <- age_gap %>%
+##                    dplyr::filter(event_name != 'Baseline')
+##                    dplyr::select(
+##                                  ## EORTC QLQ C30
+##                                  ql_raw, ql_scale,  ## Global QoL
+##                                  pf_raw, pf_scale,  ## Physical functioninig
+##                                  rf_raw, rf_scale,  ## Role functioninig
+##                                  ef_raw, ef_scale,  ## Emotional functioninig
+##                                  cf_raw, cf_scale,  ## Cognitive functioninig
+##                                  sf_raw, sf_scale,  ## Social functioninig
+##                                  fa_raw, fa_scale,  ## Fatigue
+##                                  nv_raw, nv_scale,  ## Nausea/Vomiting
+##                                  dy_scale,          ## Dyspnoea
+##                                  sl_scale,          ## Insomnia
+##                                  ap_scale,          ## Appetite Loss
+##                                  co_scale,          ## Diarhoea
+##                                  di_scale,          ## Financial Problems
+##                                  ## EORTC QLQ BR23
+##                                  brbi_raw, brbi_scale,   ## Body Image
+##                                  brsef_raw, brsef_scale, ## Sexual Functioning
+##                                  brsee_scale,            ## Sexual enjoyment
+##                                  brfu_scale,             ## Future perspective
+##                                  brst_raw, brst_scale,   ## Systemic therapy side effects
+##                                  brbs_raw, brbs_scale,   ## Breast symptoms
+##                                  bras_scale,             ## Arms Symptoms
+##                                  brhl_scale,             ## Upset by hair loss
+##                                  ## EORTC QLQ ELD15
+##                                  mo_raw, mo_scale,       ## Mobility
+##                                  wao_raw, wao_scale,     ## Worries about others
+##                                  wo_raw, wo_scale,       ## Worries
+##                                  mp_raw, mp_scale,       ## Maintaining purpose
+##                                  boi_raw, boi_scale      ## Burden of illness
+##                                  js_scale,               ## Joint Stiffness
+##                                  fs_scale,               ## Family Support
+##                                  ## EQ5D
+##                                  mobility,
+##                                  self_care,
+##                                  usual_activity,
+##                                  pain_discomfort,
+##                                  anxiety_depression,
+##                                  eq5d_score,
+##                                  ## Charlson Co-Morbidity
+##                                  cci_score,
+##                                  cci_probability,
+##                                  ## Mini-Mental State Examination
+##                                  mmse_score,
+##                               ) %>%
+##                        full_join(.,
+##                                  imputed_baseline)
 
 ```
