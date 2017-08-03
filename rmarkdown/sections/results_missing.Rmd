@@ -29,27 +29,27 @@ The patterns of missing data are summarised for each set of questionnaires and d
 ```
 
 ### Therapy Assessment {.tabset .tabset-fade .tabset-pills}
-```{r child='results_missing/patterns_therapy_assessment.Rmd', eval = FALSE}
+```{r child='results_missing/patterns_therapy_assessment.Rmd', eval = TRUE}
 ```
 
 ### Encdocrine Therapy {.tabset .tabset-fade .tabset-pills}
-```{r child='results_missing/patterns_endocrine_therapy.Rmd', eval = FALSE}
+```{r child='results_missing/patterns_endocrine_therapy.Rmd', eval = TRUE}
 ```
 
 ### Radiotherapy {.tabset .tabset-fade .tabset-pills}
-```{r child='results_missing/patterns_radiotherapy.Rmd', eval = FALSE}
+```{r child='results_missing/patterns_radiotherapy.Rmd', eval = TRUE}
 ```
 
 ### Chemotherapy {.tabset .tabset-fade .tabset-pills}
-```{r child='results_missing/patterns_chemotherapy.Rmd', eval = FALSE}
+```{r child='results_missing/patterns_chemotherapy.Rmd', eval = TRUE}
 ```
 
 ### Trastuzumab {.tabset .tabset-fade .tabset-pills}
-```{r child='results_missing/patterns_trastuzumab.Rmd', eval = FALSE}
+```{r child='results_missing/patterns_trastuzumab.Rmd', eval = TRUE}
 ```
 
 ### Surgery {.tabset .tabset-fade .tabset-pills}
-```{r child='results_missing/patterns_surgery.Rmd', eval = FALSE}
+```{r child='results_missing/patterns_surgery.Rmd', eval = TRUE}
 ```
 
 ### Clinical Assessment - PET {.tabset .tabset-fade .tabset-pills}
@@ -58,4 +58,8 @@ The patterns of missing data are summarised for each set of questionnaires and d
 
 ### Clinical Assessment - Non-PET {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_missing/patterns_clinical_assessment_pet.Rmd', eval = FALSE}
+```
+
+### Imputation {.tabset .tabset-fade .tabset-pills}
+```{r child='results_missing/imputation.Rmd', eval = FALSE}
 ```
