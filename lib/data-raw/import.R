@@ -993,7 +993,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                           orientation_1, orientation_2,
                                           attention_1, attention_2,
                                           recall_1, naming_1, repetition_1, comprehension_1,
-                                          reading_1, writing_1, drawing_1),
+                                          reading_1, writing_1, drawing_1, mmse_score),
                             by = c('individual_id', 'site', 'event_name')) %>%
 ## Activites of Daily Living
                   full_join(.,
@@ -1613,24 +1613,20 @@ age_gap <- age_gap %>%
                                    levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
 ## ToDo - Categorisation of other baseline scores, awaiting SAP to be completed
 ## Categorise Charlson
-           mutate(charlson_cat = case_when(is.na(cci_score)                ~ NA,
-                                           cci_score <= 3                  ~ 1,
-                                           cci_score > 3 & cci_score <= 7  ~ 2,
-                                           cci_score > 7 & cci_score <= 11 ~ 3,
-                                           cci_score >= 12                 ~ 4)) %>%
+           ## mutate(charlson_cat = case_when(is.na(cci_score)                ~ NA,
+           ##                                 cci_score <= 3                  ~ 1,
+           ##                                 cci_score > 3 & cci_score <= 7  ~ 2,
+           ##                                 cci_score > 7 & cci_score <= 11 ~ 3,
+           ##                                 cci_score >= 12                 ~ 4)) %>%
 ## Categorise IADL
 ##            mutate() %>%
 ## Categorise MMSE
-           mutate(mmse_cat = case_when(is.na(mmse_score)                  ~ NA,
-                                         mmse_score >= 24                   ~ 1,
-                                         mmse_score >= 18 & mmse_score < 23 ~ 2,
-                                         mmse_score <= 17                   ~ 3),
-                  mmse_cat = factor(mmse_score,
-                                      levels = c(1, 2, 3),
-                                      labels = c('None',
-                                                 'Mild',
-                                                 'Severe')),
+           mutate(mmse_cat = case_when(mmse_score >= 24                   ~ 'None',
+                                       mmse_score >= 18 & mmse_score < 24 ~ 'Mild',
+                                       mmse_score <= 17                   ~ 'Severe'),
+                  mmse_cat = factor(mmse_cat),
                   mmse_cat = relevel(mmse_cat, ref = 'None')) %>%
+                  ## mmse_cat = relevel(mmse_cat, ref = 'None')) %>%
 ## Categorise Barthel ADL
 ##            mutate() %>%
 ## Elapsed time from consent/randomisation to noted event
