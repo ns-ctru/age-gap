@@ -680,7 +680,7 @@ names(master$radiotherapy) <- gsub('which_breast_right',
                                    'which_breast_right_radio',
                                    names(master$radiotherapy))
 names(master$radiotherapy) <- gsub('which_breast_left',
-                                   'which_breast_right_radio',
+                                   'which_breast_left_radio',
                                    names(master$radiotherapy))
 ## File : Screening Form.csv
 master$screening_form <- read_prospect(file = 'Screening Form.csv',
@@ -715,7 +715,7 @@ names(master$surgery_and_post_operative_pathology) <- gsub('which_breast_right',
                                                            'which_breast_right_surgery',
                                                            names(master$surgery_and_post_operative_pathology))
 names(master$surgery_and_post_operative_pathology) <- gsub('which_breast_left',
-                                                           'which_breast_right_surgery',
+                                                           'which_breast_left_surgery',
                                                            names(master$surgery_and_post_operative_pathology))
 ## File : The Brief Illness Perception Questionnaire (BIPQ).csv
 master$the_brief_illness_perception_questionnaire <- read_prospect(file = 'The Brief Illness Perception Questionnaire (BIPQ).csv',
@@ -1613,11 +1613,24 @@ age_gap <- age_gap %>%
                                    levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
 ## ToDo - Categorisation of other baseline scores, awaiting SAP to be completed
 ## Categorise Charlson
-##            mutate() %>%
+           mutate(charlson_cat = case_when(is.na(cci_score)                ~ NA,
+                                           cci_score <= 3                  ~ 1,
+                                           cci_score > 3 & cci_score <= 7  ~ 2,
+                                           cci_score > 7 & cci_score <= 11 ~ 3,
+                                           cci_score >= 12                 ~ 4)) %>%
 ## Categorise IADL
 ##            mutate() %>%
 ## Categorise MMSE
-##            mutate() %>%
+           mutate(mmse_cat = case_when(is.na(mmse_score)                  ~ NA,
+                                         mmse_score >= 24                   ~ 1,
+                                         mmse_score >= 18 & mmse_score < 23 ~ 2,
+                                         mmse_score <= 17                   ~ 3),
+                  mmse_cat = factor(mmse_score,
+                                      levels = c(1, 2, 3),
+                                      labels = c('None',
+                                                 'Mild',
+                                                 'Severe')),
+                  mmse_cat = relevel(mmse_cat, ref = 'None')) %>%
 ## Categorise Barthel ADL
 ##            mutate() %>%
 ## Elapsed time from consent/randomisation to noted event
@@ -1656,7 +1669,9 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('', '', 'rf_raw', 'RF Raw'),
                                c('', '', 'sf_raw', 'SF Raw'),
                                c('', '', 'treatment_profile', 'Treatments Received'),
-                               c('', '', 'treatment_missing', 'Indicator of whether there is missing data for any given treatment.'))
+                               c('', '', 'treatment_missing', 'Indicator of whether there is missing data for any given treatment.'),
+                               c('', '', 'mmse_cat', 'Categorisation of Mini Mental State Examination'),
+                               c('', '', 'charlson_cat', 'Categorisation of Charlson Score'))
 
 
 ###################################################################################
