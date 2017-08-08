@@ -1613,11 +1613,13 @@ age_gap <- age_gap %>%
                                    levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
 ## ToDo - Categorisation of other baseline scores, awaiting SAP to be completed
 ## Categorise Charlson
-           ## mutate(charlson_cat = case_when(is.na(cci_score)                ~ NA,
-           ##                                 cci_score <= 3                  ~ 1,
-           ##                                 cci_score > 3 & cci_score <= 7  ~ 2,
-           ##                                 cci_score > 7 & cci_score <= 11 ~ 3,
-           ##                                 cci_score >= 12                 ~ 4)) %>%
+           mutate(charlson_cat = case_when(cci_score <= 3                  ~ 'Low',
+                                           cci_score > 3 & cci_score <= 7  ~ 'Moderate',
+                                           cci_score > 7 & cci_score <= 11 ~ 'High',
+                                           cci_score >= 12                 ~ 'Extreme'),
+                  charlson_cat = factor(charlson_cat,
+                                        levels = c('Low', 'Moderate', 'High', 'Extreme')),
+                  charlson_cat = relevel(charlson_cat, ref = 'Low')) %>%
 ## Categorise IADL
 ##            mutate() %>%
 ## Categorise MMSE
