@@ -7,8 +7,6 @@ load('~/work/scharr/age-gap/lib/data/age-gap.RData')
 
 ```
 
-# Overview
-
 The Cluster Randomised Control Trial (cRCT) component of the study is the main focus of the work and results presented here.  The Cohort study is analysed seperately by another statistician (originally assigned to Oscar Bortolami, but he has since left the CTRU and its unclear who is conducting these analyses), however as the Quality Control (QC) statistician assigned to check the analyses of the Cohort study a portion of that QC process is presented within.
 
 Detailed guidelines of the work required for both studies is provided in two Statistical Analysis Plans written by Oscar Bortolami and approved by the senior statistician [Stephen Walters](mailto:s.j.walters@sheffield.ac.uk) and chief investigator [Lynda Wyld](mailto:l.wyld@sheffield.ac.uk).  These are not (yet) available online...
@@ -16,14 +14,34 @@ Detailed guidelines of the work required for both studies is provided in two Sta
 * Bridging The Age Gap Cohort Statistical Analysis Plan v1.1 2017-02-02
 * Bridging The Age Gap cRCT Statistical Analysis Plan v4 2017-02-02
 
-## Recruitment
+Abridged details of the analyses and methods to be performed as part of this study are detailed below, but readers are referred to the above Statistical Analysis Plans for full details.
+
+### Recruitment
 
 Screening and recruitment rates are summarised by time/month in tabular and graphical format across all centers and by individual centers.
 
 
-## Cluster Randomised Control Trial
+### Cohort Study
+
+#### Summary
+
+Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for continuous and number and proportion for categorical variables are provided at baseline and subsequent follow-ups are provided in tabular and graphical format.
+
+#### Clinical Outcomes
+
+Qualit of Life outcomes are the primary outcome (although which is the primary is currently unclear from the Statistical Analysis Plan).  The table below details all Quality of Life measurements that are recorded and the time points at which they are recorded.
+
+| Quality of Life                                           | Reference             | Baseline | 6 Weeks | 6 Months | 12 Months | 18 Months | 24 Months |
+|-----------------------------------------------------------|-----------------------|:--------:|:-------:|:--------:|:---------:|:---------:|:---------:|
+| [EORTC-QLQ-C30](http://groups.eortc.be/qol/eortc-qlq-c30) | [@aaronson1993]       | Yes      | Yes     | Yes      | Yes       | Yes       | Yes       |
+| [EORTC-QLQ-BR23](http://groups.eortc.be/qol/eortc-qol-module-breast-cancer-update-qol-br23) | [@aaronson1993]       | Yes      | Yes     | Yes        | Yes       | Yes       | Yes       |
+| [EORTC-QLQ-ELD15](http://groups.eortc.be/qol/elderly-cancer-patients-qlq-eld14) | [@johnson2010]       | Yes      | Yes     | Yes        | Yes       | Yes       | Yes       |
+|[Barthel Activites of Daily Living (ADL)](https://www.mdcalc.com/barthel-index-activities-daily-living-adl) | [@wade1988 @collin1988 @mahoney1965] | Yes      | No      | No         | No        | No        | No        |
+| [EQ-5D-5L](https://euroqol.org/eq-5d-instruments/eq-5d-5l-about/) |  | Yes      | Yes     | Yes        | Yes       | Yes       | Yes       |
+| [Instrumental Activities of Daily Living]() |  | Yes      | No      | No         | No        | No        | No        |
+**NB** Whilst EORTC-QLQ-ELD15 has been used in this study it has been scored using EORTC-QLQ-ELD14 as no scoring method for version 15 is currently available.
+
+#### Survival Analysis
 
 
-## Cohort Study
-
-Summary tables of the number of missing observations, mean, standard deviation (SD), minimum, maximum, median and inter-quartile range for continuous and number and proportion for categorical variables are provided.
+### Cluster Randomised Control Trial
