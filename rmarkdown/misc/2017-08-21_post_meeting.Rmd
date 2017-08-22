@@ -31,8 +31,14 @@ ggplot2.opts$binwidth <- 30
 
 ```
 
+A number of queries need addressing in order for Statistics to progress with producing summary tables, figures and statistical analyses.  These are detailed in the sections that follow.
 
-## Results - Cohort {.tabset .tabset-fade .tabset-pills}
+## Statistical Analysis Plans  {.tabset .tabset-fade .tabset-pills}
+```{r child = '2017-08-21_post_meeting/statistical_analysis_plan.Rmd', eval = TRUE}
+```
+
+
+## Treatment Profiles {.tabset .tabset-fade .tabset-pills}
 ```{r child = '2017-08-21_post_meeting/treatment_profiles.Rmd', eval = TRUE}
 ```
 
