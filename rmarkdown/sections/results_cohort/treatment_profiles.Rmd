@@ -44,7 +44,9 @@ There are several possible solutions...
 
 3. Include dummy variables indicating adjunct treatment therapy for each of the possible treatments (i.e. five dummies, one for each possible treatment) resulting in fully adjusted co-efficients.
 
-For the proposed longitudinal analyses I would personally advocate option 3, with each indicator being repeated in effect all starting as `0` (zero or negative) to indicate the treatment hadn't been received and then switching to `1` (one or positive) at the follow-up at which they indicate a given treatment has been received.  Baseline co-variates would simply be those which subject specific knowledge feel are important to adjust for (and would in essence simply be an additional time-point).  For individual follow-up times (i.e. **Primary Outcome** which is follow-up at six months, although I expect other time points to be of interest) I would suggest its a decision between option 1 and 3.  The later would maintain sample size and in turn power of the study as it was designed whilst adjusting for the treatments that are adjunct to those of interest.
+4. Ignore adjucnt treatments and classify simply on whether Surgery/Chemotherapy/Radiotherapy has been received.
+
+For the proposed analyses I would personally advocate option 3, with each dummy indicator being coded as `0` (zero or negative) to indicate the treatment hadn't been received and  `1` (one or positive) if a given treatment has been received.  Estimates would then be adjusted for additional treatments that had been received.  If this is not desirable then I would suggest being very strict and the approach described in option 1 and accepting the loss in statistical power.
 
 ```{r results_cohort_treatment_profile_ever, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = FALSE}
 events <- c('Baseline', '6 weeks', '6 months', '12 months', '18 months', '24 months')
