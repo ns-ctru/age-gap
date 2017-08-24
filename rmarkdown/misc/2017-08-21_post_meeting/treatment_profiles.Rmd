@@ -1,0 +1,66 @@
+Prior to the meeting [Neil Shephard](mailto:n.shephard@sheffield.ac.uk) had summarised the treatment profiles that individuals had received as recorded on the Case Report Forms (CRFs) completed at each follow-up and noticed that the treatment regimes are not mutually exclusive and are subject to change over time as an individual has progressed along a treatment pathway.  For example the initial treatment may be endocrine therapy, but subsequent to that chemotherapy and then surgery may be undertaken.  This means that the number of individuals in each group at a given time will change (and importantly so will the classification of their baseline measurements, so looking for imbalance at baseline will be conditional on the time-point that is being followed, i.e. you get different baseline comparisons for each follow-up time point), and for the Endocrine Therapy v's Surgery comparison there will be individuals who can not be categorised as such as they may have received both treatments or neither.  This is a very important and fundamental issue which influences the ability to answer the hypotheses that are being asked, since if multiple therapies have been received including such individuals without adjusting for the other treatments received when investigating the effect of having one treatment compared to not having it will muddy the ability to estimate the differences in factors that predict treatment choices.
+
+In order to summarise the complexity of this issue the treatment profiles of participants is summarised in the table below.  This table is based on the `Therapy Assessment`Case Report Form which is completed at each follow-up time point and asks the question *Has the participant had any treatments since the last visit?* and if the response is `Yes` then there are individual fields (`Yes/No`) for each of `Endocrine Therapy`, `Radiotherapy`, `Chemotherapy`, `Trastuzumab` and `Surgery`.  In separate files for each treatment (i.e. across five files) are the dates on which each of the therapies were recieved, making it feasible to determine at what time point individuals received treatment (**NB** - The Prospect database only exports raw tables corresponding to each Case Report Form the data needs re-linking if there is a desire to use the time point of treatment, although that in itself raises questions for example if treatment is spread over a number of visits at what time point is it declared, start or finish).
+
+```{r results_cohort_treatment_profile, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = TRUE}
+treatment_event <- list()
+events <- c('Baseline', '6 weeks', '6 months', '12 months', '18 months', '24 months')
+treatment_event$df <- age_gap %>%
+                      dplyr::filter(event_name %in% events) %>%
+                      dplyr::select(individual_id, event_name, treatment_profile) %>%
+                      mutate(event_name = factor(event_name,
+                                                 levels = events))
+treatment_event$df %$%
+    table(treatment_profile, event_name) %>%
+    kable(caption = 'Treatment profiles by event as recorded at each time point.')
+## Now extract some key numbers for what is of interest
+treatment_event$endocrine_6week <- treatment_event$df %>%
+                                   dplyr::filter(event_name == '6 weeks' & treatment_profile == 'Endocrine') %>%
+                                   nrow()
+treatment_event$surgery_6week <-   treatment_event$df %>%
+                                   dplyr::filter(event_name == '6 weeks' & treatment_profile == 'Surgery') %>%
+                                   nrow()
+treatment_event$endocrine_surgery_6week <-   treatment_event$df %>%
+                                   dplyr::filter(event_name == '6 weeks' & treatment_profile == 'Endocrine + Surgery') %>%
+                                   nrow()
+treatment_event$endocrine_radiotherapy_surgery_6week <-   treatment_event$df %>%
+                                   dplyr::filter(event_name == '6 weeks' & treatment_profile == 'Endocrine + Radiotherapy + Surgery') %>%
+                                   nrow()
+
+
+```
+
+As can be seen from the above table, 6 weeks from baseline there are `r treatment_event$endocrine_6week` individuals who have received Endocrine Therapy and `r  treatment_event$surgery_6week` who have received Surgery, but there are also `r  treatment_event$endocrine_surgery_6week` individuals who have received both and `r treatment_event$endocrine_radiotherapy_surgery_6week` who had also received Radiotherapy by this time and that treatment should be adjusted for when comparing endocrine therapy to surgery.
+
+The comparison of Chemotherapy v's No Chemotherapy is not quite so problematic since an individual will either have received Chemotherapy by a given time point or not, although again the presence of additional treatments should be adjusted for in order to obtain a better estimate of the difference.  At present the Statistical Analysis Plan does not contain details on how to handle this, but rules for collapsing the above table into two rows (Surgery v's No Surgery) need to be provided and the same is required for the desired Radiotherapy and Chemotherapy analyses.
+
+##### Statistical Approaches
+
+There are several possible solutions...
+
+1. Be very strict and only compare those who have a unique single treatment in the categories defined.  This answers the direct comparison that seems to underpin the multiple hypotheses being tested.  However it would result in a concomitant reduction in statistical power.
+
+2. Compare the treatment profiles at each time point.  Not particularly 'clean' and likely difficult to interpret.  Also there are very small numbers in some treatment profiles.
+
+3. Include dummy variables indicating adjunct treatment therapy for each of the possible treatments (i.e. five dummies, one for each possible treatment) resulting in adjusted co-efficients.
+
+4. Ignore adjucnt treatments and classify simply on whether Surgery/Chemotherapy/Radiotherapy has been received or not.
+
+For the proposed analyses I would personally advocate option 3, with each dummy indicator being coded as `0` (zero or negative) to indicate the treatment hadn't been received and  `1` (one or positive) if a given treatment has been received.  Estimates would then be adjusted for additional treatments that had been received.  If this is not desirable then I would suggest being very strict and the approach described in option 1 and accepting the loss in statistical power.
+
+```{r results_cohort_treatment_profile_ever, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = FALSE}
+events <- c('Baseline', '6 weeks', '6 months', '12 months', '18 months', '24 months')
+treatment_event$df_ever <- age_gap %>%
+                      dplyr::filter(event_name %in% events) %>%
+                      dplyr::select(individual_id, treatment_profile_ever) %>%
+                      unique()
+treatment_event$df_ever %$%
+    table(treatment_profile_ever) %>% as.data.frame() %>%
+    kable(caption = 'Treatment profile (Ever) by event.')
+
+```
+
+### ToDo
+
+* Indicate how for each of the desired comparisons (Surgery v's No Surgery; Chemotherapy v's No Chemotherapy; Radiotherapy v's No Radiotherapy; Primary Endocrine Therapy v's Surgery; Anything Else?) how individuals who have recevied more than the intervention are to be classified.
+* Is grouping people who have for example not received Surgery but have had Chemotherapy together with those who've only had Radiotherapy appropriate?
