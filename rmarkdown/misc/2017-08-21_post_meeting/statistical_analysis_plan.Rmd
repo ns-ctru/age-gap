@@ -1,0 +1,28 @@
+The CTRU Standard Operating Procedure *ST001 - The Statistical Analysis Plan* (v4 2015) stipulates that...
+
+> The Statistical Analysis Plan (SAP) will ideally be written as soon as possible after the protocol is completed, but must be...
+> * Finalised prior to any statistical analysis, whether this is an interim analysis or a blinded review.
+> • If these analyses require SAP amendments these should be made and signed off prior to database release.
+> • Not signed off before the protocol is complete or the CRF has been signed off.
+
+Unfortunately because of changes in staffing this has not happened and the Statistical Analysis Plans as they arrived with myself ([Neil Shephard](mailto:n.shephard@sheffield.ac.uk)) are incomplete.  There are sections with place holders where descriptions of what to do in the event of missing data are waiting to be filled in and also where derived scores are to be categorised but no details of the cut points on which the categorisations are to be made.
+
+Also, the originally stated comparisons in the SAP for the Cohort study (Primary Endocrine Therapy v's Surgery and Chemotherapy v's No Chemotherapy) are not the only comparisons that are to be made as became clear from [Lynda Wylde](mailto:l.wyld@sheffield.ac.uk) email (2017-08-04 @ 14:07 Subject : FW: TMG follow up - paper plans) which contained sample tables for the comparison of Chemotherapy v's No Chemotherapy as detailed in the SAP, but also Radiotherapy v's No Radiotherapy.  It was also suggested in the meeting held 2017-08-21 14:30-15:30 that Surgery v's No Surgery would be another comparison.
+
+Copies of the two SAPs can be found at the following links and it is possible to respond to existing comments to resolve them and add comments to those that already exist which highlight where there are gaps or clarification is required.
+
+
+* [Bridging the Age Gap in Breast Cancer : Improving outcomes for older women (Cohort Study)](https://docs.google.com/a/sheffield.ac.uk/document/d/1cQHP8WJ7SLg8kKl5z68PkJBf_kAodHozT_h6Gcc0xTs/edit?usp=sharing)
+* [Bridging the Age Gap in Breast Cancer : Improving outcomes for older women. Evaluation of a decision support intervention for older women with operable breast cancer. A cluster RCT nested within the Age Gap Cohort Study.](https://docs.google.com/a/sheffield.ac.uk/document/d/1YQZ7Bp9h5Wpw0z1AJ_U4XL33tK0a2krQd1y8pJJKwWo/edit?usp=sharing)
+
+The tables that form the basis of the desired comparisons for Chemotherapy and Radiotherapy (the later of which are not currently covered in the SAP) are at...
+
+* [Age GAP Radiotherapy_RING_Draft 1.1](https://docs.google.com/a/sheffield.ac.uk/document/d/1YO_ne-nfi4sEN-SLtcITz6g7cx9trXAAvYKEW2nii-I/edit?usp=sharing)
+* [Age GAP Chemotherapy_RING_Draft 1 0](https://docs.google.com/a/sheffield.ac.uk/document/d/1MYX4ofFw3Os2WNsFdcWZW5e1v7cQBgoa43gmZyXePdI/edit?usp=sharing)
+
+### ToDo
+
+* Complete details of cut points for arbitrarily classifying scores into Low/Medium/High (or the desired categories).
+* Details of how to handle missing data for questionnaires (generally multiple imputation is best reserved for continuous measures rather than quetsionnaire responses).
+* The comparison of Surgery v's No Surgery requires similar tables to the above two documents.
+* Details of the figures that are required across all papers are needed so these can be produced.
