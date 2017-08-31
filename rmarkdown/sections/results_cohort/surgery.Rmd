@@ -1,5 +1,0 @@
-```{r results_cohort_surgery, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
-## Surgery
-cohort_plot$surgery$factor_surgery
-
-```

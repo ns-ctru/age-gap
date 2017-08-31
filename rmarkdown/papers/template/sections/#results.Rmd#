@@ -1,0 +1,24 @@
+### Tables  {.tabset .tabset-fade .tabset-pills}
+
+
+```{r results_table1, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+```
+
+```{r results_table2, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+```
+
+
+```{r results_specific_tables, child = 'sections/results/tables_specific.Rmd',eval = TRUE}
+```
+
+### Figures  {.tabset .tabset-fade .tabset-pills}
+
+```{r results_table1, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+```
+
+```{r resultss_table2, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+```
+
+
+```{r results_specific_figures, child = 'sections/results/figures_specific.Rmd',eval = TRUE}
+```

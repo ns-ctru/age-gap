@@ -1,5 +1,0 @@
-```{r results_cohort_trastuzumab, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
-## Trastuzumab
-cohort_plot$trastuzumab$factor_trastuzumab
-
-```

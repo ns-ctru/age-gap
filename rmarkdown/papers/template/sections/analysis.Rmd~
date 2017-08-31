@@ -1,0 +1,32 @@
+```{r analysis_common_tables, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Table 1 - Tumour characteristics
+
+## Table 2 - Patient characteristics
+
+
+```
+
+```{r analysis_specific_tables, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Table 3 - Adjuvant OUTCOMETEXT
+
+## Table 4 - Adjuvant OUTCOMETEXT in high risk patients
+
+## Table 5 - OUTCOMETEXT therapy received
+
+```
+
+```{r analysis_common_figures, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Figure 1 - Tumour characteristics
+
+## Figure 2 - Patient Characteristics
+
+```
+
+```{r analysis_specific_figures, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Table 3 - Adjuvant OUTCOMETEXT
+
+## Table 4 - Adjuvant OUTCOMETEXT in high risk patients
+
+## Table 5 - OUTCOMETEXT therapy received
+
+```

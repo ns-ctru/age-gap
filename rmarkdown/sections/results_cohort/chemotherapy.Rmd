@@ -1,5 +1,0 @@
-```{r results_cohort_chemotherapy, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
-## Chemotherapy
-cohort_plot$chemotherapy$factor_chemotherapy
-
-```

@@ -1,5 +1,0 @@
-```{r results_cohort_endocrine_therapy, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
-## Endocrine Therapy
-cohort_plot$endocrine_therapy$factor_endocrine_therapy
-
-```
