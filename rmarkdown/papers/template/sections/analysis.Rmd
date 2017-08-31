@@ -1,0 +1,30 @@
+```{r analysis_common_tables, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Table 1 - Tumour characteristics
+results$tables$table1 <- dplyr::filter(age_gap,
+                                       event_name == 'Baseline') %>%
+                         table_summary(df = .,
+                                       lookup_fields = ,
+                                       individual_id = ,
+                                       select        = c(),
+                                       time          = event_name,
+                                       group         = OUTCOME,
+                                       nomissing     = TRUE,
+                                       digits        = options$digits,
+                                       reshape       = NULL)
+## Table 2 - Patient characteristics
+
+
+```
+
+```{r analysis_specific_tables, child = 'sections/analysis/tables_specific.Rmd',eval = TRUE}
+```
+
+```{r analysis_common_figures, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Figure 1 - Tumour characteristics
+
+## Figure 2 - Patient Characteristics
+
+```
+
+```{r analysis_specific_figures, child = 'sections/analysis/figures_specific.Rmd',eval = TRUE}
+```
