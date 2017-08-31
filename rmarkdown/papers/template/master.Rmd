@@ -25,6 +25,11 @@ set.seed(69027181)
 ## Set sensible defaults
 ggplot2.opts <- list()
 ggplot2.opts$binwidth <- 30
+## Setup lists for storing results
+results         <- list()
+results$tables  <- list()
+results$figures <- list()
+results$models  <- list()
 ## Exclusions
 ##
 ## The following 'non-recruited' need excluding from all analyses
