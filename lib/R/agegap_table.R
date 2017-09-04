@@ -114,15 +114,15 @@ agegap_table <- function(df                  = age_gap,
     }
     ## ToDo - tidyeval NSE to replace NA to 'No'
     else if(treatment_missing == 'none'){
-        df <- df %>%
+        df <- df ## %>%
               ## dplyr::mutate(treatment = as.character(!!quo_treatment),
               ##               treatment = ifelse(is.na(treatment),
               ##                                  yes = 'No',
               ##                                  no  = treatment)) %>%
             ## dplyr::select(-!!quo_treatment)
-            dplyr::mutate(quo_name(quo_treatment) = ifelse(is.na(!!quo_treatment),
-                                                           yes = 'No',
-                                                           no  = as.characater(!!quo_treatment)))
+            ## dplyr::mutate(quo_name(quo_treatment) = ifelse(is.na(!!quo_treatment),
+            ##                                                yes = 'No',
+            ##                                                no  = as.characater(!!quo_treatment)))
         ## if(quo_treatment == 'chemotherapy')      names(df) <- gsub('treatment', 'chemotherapy', names(df))
         ## else if(!!quo_treatment == 'radiotherapy') names(df) <- gsub('treatment', 'radiotherapy', names(df))
         ## else print('No matches!?!?')
