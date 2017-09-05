@@ -1,3 +1,424 @@
+## 2017-09-04 - Deriving overall tumour grade and type from left/right
+cd('~/work/scharr/age-gap/lib/data-raw/')
+source('import.R')
+
+sink('~/work/scharr/age-gap/tmp/check.txt')
+print('Rows    : Right')
+print('Columns : Left')
+table(age_gap$r_tumour_grade, age_gap$l_tumour_grade, useNA = 'ifany')
+print('Rows    : Combined')
+print('Columns : Left')
+table(age_gap$tumour_grade, age_gap$l_tumour_grade, useNA = 'ifany')
+print('Rows    : Combined')
+print('Columns : Right')
+table(age_gap$tumour_grade, age_gap$r_tumour_grade, useNA = 'ifany')
+print('Left')
+table(age_gap$l_tumour_grade, useNA = 'ifany')
+print('Right')
+table(age_gap$r_tumour_grade, useNA = 'ifany')
+print('Combined')
+table(age_gap$tumour_grade, useNA = 'ifany')
+print('Left')
+dplyr::select(age_gap, l_tumour_grade, r_tumour_grade, tumour_grade) %>%
+    dplyr::filter(!is.na(l_tumour_grade))%>%
+    head(n = 30) %>%
+    as.data.frame()
+print('Right')
+dplyr::select(age_gap, l_tumour_grade, r_tumour_grade, tumour_grade) %>%
+    dplyr::filter(!is.na(r_tumour_grade))%>%
+    head(n = 30) %>%
+        as.data.frame()
+sink()
+
+
+## Check all of the variables
+sink('~/work/scharr/age-gap/tmp/check_left_right_resolution.txt')
+quick_check <- function(df    = age_gap,
+                        both  = tumour_grade,
+                        left  = l_tumour_grade,
+                        right = r_tumour_grade,
+                        n     = 30,
+                        checking = 'Tumour Grade'){
+    quo_left  <- enquo(left)
+    quo_right <- enquo(right)
+    quo_both  <- enquo(both)
+    paste0('Checking    : ', checking)          %>% print()
+    paste0('Combined value !is.na(', quo_both, ')') %>% print()
+    dplyr::select(df, individual_id, !!quo_left, !!quo_right, !!quo_both) %>%
+        dplyr::filter(!is.na(!!quo_both)) %>%
+        head(n = n) %>%
+        as.data.frame() %>%
+        print()
+    paste0('Both Left and Right are recorded') %>% print()
+    dplyr::select(df, individual_id, !!quo_left, !!quo_right, !!quo_both) %>%
+        dplyr::filter(!is.na(!!quo_left) & !is.na(!!quo_right)) %>%
+        head(n = n) %>%
+        as.data.frame() %>%
+        print()
+    paste0('Cross Tabulation') %>% print()
+    dplyr::select(df, individual_id, !!!quo_left, !!!quo_right) %>%
+        group_by(., !!quo_left, !!quo_right) %>%
+        summarise(n = n()) %>%
+        print()
+    dplyr::select(df, individual_id, !!!quo_both) %>%
+        group_by(., !!quo_both) %>%
+        summarise(n = n()) %>%
+        print()
+    print('')
+    print('')
+}
+quick_check(df       = age_gap,
+            left     = l_site_breast,
+            right    = r_site_breast,
+            both     = site_breast,
+            n        = 30,
+            checking = 'Site Breast')
+quick_check(df       = age_gap,
+            left     = l_site_axilla,
+            right    = r_site_axilla,
+            both     = site_axilla,
+            n        = 30,
+            checking = 'Site Axilla')
+quick_check(df       = age_gap,
+            left     = l_site_supraclavicular,
+            right    = r_site_supraclavicular,
+            both     = site_supraclavicular,
+            n        = 30,
+            checking = 'Site Supraclavicular')
+quick_check(df       = age_gap,
+            left     = l_site_chest_wall,
+            right    = r_site_chest_wall,
+            both     = site_chest_wall,
+            n        = 30,
+            checking = 'Site Chest Wall')
+quick_check(df       = age_gap,
+            left     = l_site_other,
+            right    = r_site_other,
+            both     = site_other,
+            n        = 30,
+            checking = ' Site Other')
+quick_check(df       = age_gap,
+            left     = l_breast_fractions,
+            right    = r_breast_fractions,
+            both     = breast_fractions,
+            n        = 30,
+            checking = 'Breast Fractions')
+quick_check(df       = age_gap,
+            left     = l_axilla_fractions,
+            right    = r_axilla_fractions,
+            both     = axilla_fractions,
+            n        = 30,
+            checking = 'Axilla Fractions')
+quick_check(df       = age_gap,
+            left     = l_supra_fractions,
+            right    = r_supra_fractions,
+            both     = supra_fractions,
+            n        = 30,
+            checking = 'Supra_Fractions')
+quick_check(df       = age_gap,
+            left     = l_chest_fractions,
+            right    = r_chest_fractions,
+            both     = chest_fractions,
+            n        = 30,
+            checking = ' Chest Fractions')
+quick_check(df       = age_gap,
+            left     = l_other_fractions,
+            right    = r_other_fractions,
+            both     = other_fractions,
+            n        = 30,
+            checking = ' Other Fractions')
+quick_check(df       = age_gap,
+            left     = l_radiotherapy_aes,
+            right    = r_radiotherapy_aes,
+            both     = radiotherapy_aes,
+            n        = 30,
+            checking = ' Radiotherapy AES')
+quick_check(df       = age_gap,
+            left     = l_skin_erythema,
+            right    = r_skin_erythema,
+            both     = skin_erythema,
+            n        = 30,
+            checking = ' Skin Erythema')
+quick_check(df       = age_gap,
+            left     = l_pain,
+            right    = r_pain,
+            both     = pain,
+            n        = 30,
+            checking = ' Pain')
+quick_check(df       = age_gap,
+            left     = l_breast_oedema,
+            right    = r_breast_oedema,
+            both     = breast_oedema,
+            n        = 30,
+            checking = ' Breast Oedema')
+quick_check(df       = age_gap,
+            left     = l_breast_shrink,
+            right    = r_breast_shrink,
+            both     = breast_shrink,
+            n        = 30,
+            checking = ' Breast Shrink')
+quick_check(df       = age_gap,
+            left     = l_breast_pain,
+            right    = r_breast_pain,
+            both     = breast_pain,
+            n        = 30,
+            checking = ' Breast Pain')
+quick_check(df       = age_gap,
+            left     = l_surgery_aes_acute,
+            right    = r_surgery_aes_acute,
+            both     = surgery_aes_acute,
+            n        = 30,
+            checking = ' Surgery AES Acute')
+quick_check(df       = age_gap,
+            left     = l_surgery_aes_chronic,
+            right    = r_surgery_aes_chronic,
+            both     = surgery_aes_chronic,
+            n        = 30,
+            checking = ' Surgery AES Chronic')
+quick_check(df       = age_gap,
+            left     = l_sa_haemorrhage,
+            right    = r_sa_haemorrhage,
+            both     = sa_haemorrhage,
+            n        = 30,
+            checking = ' SA Haemorrhage')
+quick_check(df       = age_gap,
+            left     = l_sa_seroma,
+            right    = r_sa_seroma,
+            both     = sa_seroma,
+            n        = 30,
+            checking = ' SA Seroma')
+quick_check(df       = age_gap,
+            left     = l_sa_haematoma,
+            right    = r_sa_haematoma,
+            both     = sa_haematoma,
+            n        = 30,
+            checking = ' SA Haematoma')
+quick_check(df       = age_gap,
+            left     = l_sa_infection,
+            right    = r_sa_infection,
+            both     = sa_infection,
+            n        = 30,
+            checking = ' SA Infection')
+quick_check(df       = age_gap,
+            left     = l_sa_necrosis,
+            right    = r_sa_necrosis,
+            both     = sa_necrosis,
+            n        = 30,
+            checking = ' SA Necrosis')
+quick_check(df       = age_gap,
+            left     = l_sc_wound_pain,
+            right    = r_sc_wound_pain,
+            both     = sc_wound_pain,
+            n        = 30,
+            checking = ' SC Wound Pain')
+quick_check(df       = age_gap,
+            left     = l_sc_functional_diff,
+            right    = r_sc_functional_diff,
+            both     = sc_functional_diff,
+            n        = 30,
+            checking = ' SC Functional Diff')
+quick_check(df       = age_gap,
+            left     = l_sc_neuropathy,
+            right    = r_sc_neuropathy,
+            both     = sc_neuropathy,
+            n        = 30,
+            checking = ' SC Neuropathy')
+quick_check(df       = age_gap,
+            left     = l_sc_lymphoedema,
+            right    = r_sc_lymphoedema,
+            both     = sc_lymphoedema,
+            n        = 30,
+            checking = ' SC Lymphoedema')
+quick_check(df       = age_gap,
+            left     = l_tumour_size,
+            right    = r_tumour_size,
+            both     = tumour_size,
+            n        = 30,
+            checking = ' Tumour Size')
+quick_check(df       = age_gap,
+            left     = l_tumour_type,
+            right    = r_tumour_type,
+            both     = tumour_type,
+            n        = 30,
+            checking = ' Tumour Type')
+quick_check(df       = age_gap,
+            left     = l_tumour_grade,
+            right    = r_tumour_grade,
+            both     = tumour_grade,
+            n        = 30,
+            checking = ' Tumour Grade')
+quick_check(df       = age_gap,
+            left     = l_allred,
+            right    = r_allred,
+            both     = allred,
+            n        = 30,
+            checking = ' Allred')
+quick_check(df       = age_gap,
+            left     = l_h_score,
+            right    = r_h_score,
+            both     = h_score,
+            n        = 30,
+            checking = ' H Score')
+quick_check(df       = age_gap,
+            left     = l_onco_offered,
+            right    = r_onco_offered,
+            both     = onco_offered,
+            n        = 30,
+            checking = ' Onco Offered')
+quick_check(df       = age_gap,
+            left     = l_onco_used,
+            right    = r_onco_used,
+            both     = onco_used,
+            n        = 30,
+            checking = ' Onco Used')
+quick_check(df       = age_gap,
+            left     = l_margins_clear,
+            right    = r_margins_clear,
+            both     = margins_clear,
+            n        = 30,
+            checking = ' Margins Clear')
+quick_check(df       = age_gap,
+            left     = l_margin,
+            right    = r_margin,
+            both     = margin,
+            n        = 30,
+            checking = ' Margin')
+quick_check(df       = age_gap,
+            left     = l_designation_anterior,
+            right    = r_designation_anterior,
+            both     = designation_anterior,
+            n        = 30,
+            checking = ' Designation Anterior')
+quick_check(df       = age_gap,
+            left     = l_designation_posterior,
+            right    = r_designation_posterior,
+            both     = designation_posterior,
+            n        = 30,
+            checking = ' Designation Posterior')
+quick_check(df       = age_gap,
+            left     = l_designation_lateral,
+            right    = r_designation_lateral,
+            both     = designation_lateral,
+            n        = 30,
+            checking = ' Designation Lateral')
+quick_check(df       = age_gap,
+            left     = l_designation_medial,
+            right    = r_designation_medial,
+            both     = designation_medial,
+            n        = 30,
+            checking = ' Designation Medial')
+quick_check(df       = age_gap,
+            left     = l_designation_superior,
+            right    = r_designation_superior,
+            both     = designation_superior,
+            n        = 30,
+            checking = ' Designation Superior')
+quick_check(df       = age_gap,
+            left     = l_designation_inferior,
+            right    = r_designation_inferior,
+            both     = designation_inferior,
+            n        = 30,
+            checking = ' Designation Inferior')
+quick_check(df       = age_gap,
+            left     = l_nodes_excised,
+            right    = r_nodes_excised,
+            both     = nodes_excised,
+            n        = 30,
+            checking = ' Nodes Excised')
+quick_check(df       = age_gap,
+            left     = l_nodes_involved,
+            right    = r_nodes_involved,
+            both     = nodes_involved,
+            n        = 30,
+            checking = ' Nodes Involved')
+quick_check(df       = age_gap,
+            left     = l_num_tumours_pet,
+            right    = r_num_tumours_pet,
+            both     = num_tumours_pet,
+            n        = 30,
+            checking = ' Num Tumours PET')
+quick_check(df       = age_gap,
+            left     = l_cancer_palpable_pet,
+            right    = r_cancer_palpable_pet,
+            both     = cancer_palpable_pet,
+            n        = 30,
+            checking = ' Cancer Palpable PET')
+quick_check(df       = age_gap,
+            left     = l_size_clin_assess_pet,
+            right    = r_size_clin_assess_pet,
+            both     = size_clin_assess_pet,
+            n        = 30,
+            checking = ' Size Clinical Assessment PET')
+quick_check(df       = age_gap,
+            left     = l_size_ultrasound_pet,
+            right    = r_size_ultrasound_pet,
+            both     = size_ultrasound_pet,
+            n        = 30,
+            checking = ' Size Ultrasound PET')
+quick_check(df       = age_gap,
+            left     = l_size_mammo_pet,
+            right    = r_size_mammo_pet,
+            both     = size_mammo_pet,
+            n        = 30,
+            checking = ' Size Mammography PET')
+quick_check(df       = age_gap,
+            left     = l_axillary_present_pet,
+            right    = r_axillary_present_pet,
+            both     = axillary_present_pet,
+            n        = 30,
+            checking = ' Axillary Present PET')
+quick_check(df       = age_gap,
+            left     = l_axillary_nodes_pet,
+            right    = r_axillary_nodes_pet,
+            both     = axillary_nodes_pet,
+            n        = 30,
+            checking = ' Axillary Nodes PET')
+quick_check(df       = age_gap,
+            left     = l_axillary_axis_pet,
+            right    = r_axillary_axis_pet,
+            both     = axillary_axis_pet,
+            n        = 30,
+            checking = ' Axillary Axis PET')
+sink()
+
+## 2017-08-21 - Fixing plot_summary()
+load('~/work/scharr/age-gap/lib/data/age-gap.RData')
+
+build()
+install()
+cohort_plot_chemotherapy$eq5d <- age_gap %>%
+    dplyr::filter(!is.na(chemotherapy)) %>%
+    ctru::plot_summary(
+                       id               = individual_id,
+                       select           = c(mobility,
+                                            self_care,
+                                            usual_activity,
+                                            pain_discomfort,
+                                            anxiety_depression,
+                                            eq5d_score),
+                       lookup_fields    = master$lookups_fields,
+                       levels_factor    = c('None', 'Slight', 'Moderate', 'Severe', 'Extreme'),
+                       group            = chemotherapy,
+                       events           = event_name,
+                       theme            = theme_bw(),
+                       position         = 'identity',
+                       histogram        = TRUE,
+                       boxplot          = TRUE,
+                       individual       = TRUE,
+                       plotly           = FALSE,
+                       remove_na        = TRUE,
+                       title_factor     = 'Summary of EQ-5D-5L scores over time',
+                       title_continuous = NULL,
+                       legend_continuous = FALSE,
+                       legend_factor    = TRUE)
+
+## 2017-08-08 - case_when for mmse_score
+t <- age_gap %>%
+     mutate(mmse_cat = case_when(mmse_score >= 24                   ~ 1,
+                                 mmse_score >= 18 & mmse_score < 23 ~ 2,
+                                 mmse_score <= 17                   ~ 3))
+## Solution : Using is.na() within case_when() is a bad idea.
+
 ## 2017-07-31 - Why isn't import.R working
 dplyr::select(master$surgery_and_post_operative_pathology,
               individual_id, site, event_name, ## event_date, database_id,
