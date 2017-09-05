@@ -1658,11 +1658,11 @@ age_gap <- age_gap %>%
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   site_other            = factor(site_other),
-                  breast_fractions      = max(l_breast_fractions, r_breast_fractions),
-                  axilla_fractions      = max(l_axilla_fractions, r_axilla_fractions),
-                  supra_fractions       = max(l_supra_fractions, r_supra_fractions),
-                  chest_fractions       = max(l_chest_fractions, r_chest_fractions),
-                  other_fractions       = max(l_other_fractions, r_other_fractions),
+                  breast_fractions      = max(l_breast_fractions, r_breast_fractions, na.rm = TRUE),
+                  axilla_fractions      = max(l_axilla_fractions, r_axilla_fractions, na.rm = TRUE),
+                  supra_fractions       = max(l_supra_fractions, r_supra_fractions, na.rm = TRUE),
+                  chest_fractions       = max(l_chest_fractions, r_chest_fractions, na.rm = TRUE),
+                  other_fractions       = max(l_other_fractions, r_other_fractions, na.rm = TRUE),
                   radiotherapy_aes      = ifelse(l_radiotherapy_aes == 'Yes' | r_radiotherapy_aes == 'Yes',
                                                  no  = 'No',
                                                  yes = 'Yes'),
@@ -1735,11 +1735,23 @@ age_gap <- age_gap %>%
                                                  yes = 'Yes'),
                   sc_lymphoedema        = factor(sc_lymphoedema),
                   ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
-                  ## tumour_size           = max(l_tumour_size, r_tumour_size),
-                  ## tumour_type           = max(l_tumour_type, r_tumour_type),
-                  ## tumour_grade          = max(l_tumour_grade, r_tumour_grade),
-                  allred                = max(l_allred, r_allred),
-                  h_score               = max(l_h_score, r_h_score),
+                  tumour_size           = max(l_tumour_size, r_tumour_size, na.rm = TRUE),
+                  ## tumour_type           = l_tumour_type,
+                  ## tumour_grade          = case_when((l_tumour_grade == 'III' | r_tumour_grade == 'III') ~ 'III',
+                  ##                                   (l_tumour_grade == 'III' & r_tumour_grade != 'III') ~ 'III',
+                  ##                                   (l_tumour_grade != 'III' & r_tumour_grade == 'III') ~ 'III',
+                  ##                                   (l_tumour_grade == 'II'  & r_tumour_grade == 'I')   ~ 'II',
+                  ##                                   (l_tumour_grade == 'I'   & r_tumour_grade == 'II')  ~ 'II',
+                  ##                                   (l_tumour_grade == 'I'   & r_tumour_grade == 'I')   ~ 'I',
+                  ##                                   (l_tumour_grade == 'Not available' | r_tumour_grade == 'Not available')   ~ 'Not available'),
+                  l_tumour_grade_num    = as.numeric(l_tumour_grade),
+                  r_tumour_grade_num    = as.numeric(r_tumour_grade),
+                  tumour_grade          = max(l_tumour_grade_num, r_tumour_grade_nu, na.rm = TRUE),
+                  ## tumour_grade          = factor(tumour_grade,
+                  ##                                levels = c(1:4),
+                  ##                                labels = c('I', 'II', 'III', 'Not available')),
+                  allred                = max(l_allred, r_allred, na.rm = TRUE),
+                  h_score               = max(l_h_score, r_h_score, na.rm = TRUE),
                   ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
                   ## her_2_score           = max(l_her_2_score, r_her_2_score),
                   onco_offered          = ifelse(l_onco_offered == 'Yes' | r_onco_offered == 'Yes',
@@ -1756,7 +1768,7 @@ age_gap <- age_gap %>%
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   margins_clear         = factor(margins_clear),
-                  margin                = max(l_margin, r_margin),
+                  margin                = max(l_margin, r_margin, na.rm = TRUE),
                   designation_anterior  = ifelse(l_designation_anterior == ' Ticked' | l_designation_anterior == 'Ticked',
                                                  no  = 'No',
                                                  yes = 'Yes'),
@@ -1784,26 +1796,26 @@ age_gap <- age_gap %>%
                   ## ToDo 2017-09-04 : How to reconcile these, only really two that are discordant
                   ## l_close_margin
                   ## ToDo 2017-09-04 : Take the maximum or should these be sumnmed for excised and involved?
-                  nodes_excised         = max(l_nodes_excised, r_nodes_excised),
-                  nodes_involved        = max(l_nodes_involved, r_nodes_involved),
+                  nodes_excised         = max(l_nodes_excised, r_nodes_excised, na.rm = TRUE),
+                  nodes_involved        = max(l_nodes_involved, r_nodes_involved, na.rm = TRUE),
                   ## ToDo 2017-09-04 : How to reconcile these, only really a handful that are discordant
                   ## l_focal_pet
-                  num_tumours_pet       = max(l_num_tumours_pet, r_num_tumours_pet),
+                  num_tumours_pet       = max(l_num_tumours_pet, r_num_tumours_pet, na.rm = TRUE),
                   cancer_palpable_pet   = ifelse(l_cancer_palpable_pet == ' Ticked' | l_cancer_palpable_pet == 'Ticked',
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   cancer_palpable_pet   = factor(cancer_palpable_pet),
-                  size_clin_assess_pet  = max(l_size_clin_assess_pet, r_size_clin_assess_pet),
+                  size_clin_assess_pet  = max(l_size_clin_assess_pet, r_size_clin_assess_pet, na.rm = TRUE),
                   ## ToDo 2017-09-04 : How to reconcile these, none are discordant
                   ## l_method_assess_pet
-                  size_ultrasound_pet   = max(l_size_ultrasound_pet, r_size_ultrasound_pet),
-                  size_mammo_pet        = max(l_size_mammo_pet, r_size_mammo_pet),
+                  size_ultrasound_pet   = max(l_size_ultrasound_pet, r_size_ultrasound_pet, na.rm = TRUE),
+                  size_mammo_pet        = max(l_size_mammo_pet, r_size_mammo_pet, na.rm = TRUE),
                   axillary_present_pet  = ifelse(l_axillary_present_pet == ' Ticked' | l_axillary_present_pet == 'Ticked',
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   axillary_present_pet  = factor(axillary_present_pet),
-                  axillary_nodes_pet    = max(l_axillary_nodes_pet, r_axillary_nodes_pet),
-                  axillary_axis_pet     = max(l_axillary_axis_pet, r_axillary_axis_pet))
+                  axillary_nodes_pet    = max(l_axillary_nodes_pet, r_axillary_nodes_pet, na.rm = TRUE),
+                  axillary_axis_pet     = max(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE))
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
