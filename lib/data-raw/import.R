@@ -1736,14 +1736,11 @@ age_gap <- age_gap %>%
                   sc_lymphoedema        = factor(sc_lymphoedema),
                   ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
                   tumour_size           = pmax(l_tumour_size, r_tumour_size, na.rm = TRUE),
-                  ## tumour_type           = l_tumour_type,
-                  ## tumour_grade          = case_when((l_tumour_grade == 'III' | r_tumour_grade == 'III') ~ 'III',
-                  ##                                   (l_tumour_grade == 'III' & r_tumour_grade != 'III') ~ 'III',
-                  ##                                   (l_tumour_grade != 'III' & r_tumour_grade == 'III') ~ 'III',
-                  ##                                   (l_tumour_grade == 'II'  & r_tumour_grade == 'I')   ~ 'II',
-                  ##                                   (l_tumour_grade == 'I'   & r_tumour_grade == 'II')  ~ 'II',
-                  ##                                   (l_tumour_grade == 'I'   & r_tumour_grade == 'I')   ~ 'I',
-                  ##                                   (l_tumour_grade == 'Not available' | r_tumour_grade == 'Not available')   ~ 'Not available'),
+                  l_tumour_type_num     = as.numeric(l_tumour_type),
+                  r_tumour_type_num     = as.numeric(r_tumour_type),
+                  tumour_type           = pmax(l_tumour_type_num, r_tumour_type_num, na.rm = TRUE),
+                  tumour_type           = factor(tumour_type,
+                                                 levels = c(1:4))
                   l_tumour_grade_num    = as.numeric(l_tumour_grade),
                   r_tumour_grade_num    = as.numeric(r_tumour_grade),
                   tumour_grade          = pmax(l_tumour_grade_num, r_tumour_grade_num, na.rm = TRUE),
@@ -1815,7 +1812,9 @@ age_gap <- age_gap %>%
                                                  yes = 'Yes'),
                   axillary_present_pet  = factor(axillary_present_pet),
                   axillary_nodes_pet    = pmax(l_axillary_nodes_pet, r_axillary_nodes_pet, na.rm = TRUE),
-                  axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE))
+                  axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE)) %>%
+           dplyr::select(-l_tumour_type_num, -r_tumour_type_num,
+                         -l_tumour_grade_num, -r_tumour_grade_num)
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
