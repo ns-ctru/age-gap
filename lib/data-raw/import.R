@@ -1658,11 +1658,11 @@ age_gap <- age_gap %>%
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   site_other            = factor(site_other),
-                  breast_fractions      = pmax(l_breast_fractions, r_breast_fractions, na.rm = TRUE),
-                  axilla_fractions      = pmax(l_axilla_fractions, r_axilla_fractions, na.rm = TRUE),
-                  supra_fractions       = pmax(l_supra_fractions, r_supra_fractions, na.rm = TRUE),
-                  chest_fractions       = pmax(l_chest_fractions, r_chest_fractions, na.rm = TRUE),
-                  other_fractions       = pmax(l_other_fractions, r_other_fractions, na.rm = TRUE),
+                  breast_fractions      = pmax(l_breast_fractions, r_breast_fractions, na.rm = FALSE),
+                  axilla_fractions      = pmax(l_axilla_fractions, r_axilla_fractions, na.rm = FALSE),
+                  supra_fractions       = pmax(l_supra_fractions, r_supra_fractions, na.rm = FALSE),
+                  chest_fractions       = pmax(l_chest_fractions, r_chest_fractions, na.rm = FALSE),
+                  other_fractions       = pmax(l_other_fractions, r_other_fractions, na.rm = FALSE),
                   radiotherapy_aes      = ifelse(l_radiotherapy_aes == 'Yes' | r_radiotherapy_aes == 'Yes',
                                                  no  = 'No',
                                                  yes = 'Yes'),
@@ -1735,7 +1735,7 @@ age_gap <- age_gap %>%
                                                  yes = 'Yes'),
                   sc_lymphoedema        = factor(sc_lymphoedema),
                   ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
-                  tumour_size           = pmax(l_tumour_size, r_tumour_size, na.rm = TRUE),
+                  tumour_size           = pmax(l_tumour_size, r_tumour_size, na.rm = FALSE),
                   ## tumour_type           = l_tumour_type,
                   ## tumour_grade          = case_when((l_tumour_grade == 'III' | r_tumour_grade == 'III') ~ 'III',
                   ##                                   (l_tumour_grade == 'III' & r_tumour_grade != 'III') ~ 'III',
@@ -1746,13 +1746,12 @@ age_gap <- age_gap %>%
                   ##                                   (l_tumour_grade == 'Not available' | r_tumour_grade == 'Not available')   ~ 'Not available'),
                   l_tumour_grade_num    = as.numeric(l_tumour_grade),
                   r_tumour_grade_num    = as.numeric(r_tumour_grade),
-                  tumour_grade          = paste0()
-                  tumour_grade          = pmax(l_tumour_grade_num, r_tumour_grade_num, na.rm = TRUE),
+                  tumour_grade          = pmax(l_tumour_grade_num, r_tumour_grade_num, na.rm = FALSE),
                   ## tumour_grade          = factor(tumour_grade,
                   ##                                levels = c(1:4),
                   ##                                labels = c('I', 'II', 'III', 'Not available')),
-                  allred                = pmax(l_allred, r_allred, na.rm = TRUE),
-                  h_score               = pmax(l_h_score, r_h_score, na.rm = TRUE),
+                  allred                = pmax(l_allred, r_allred, na.rm = FALSE),
+                  h_score               = pmax(l_h_score, r_h_score, na.rm = FALSE),
                   ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
                   ## her_2_score           = pmax(l_her_2_score, r_her_2_score),
                   onco_offered          = ifelse(l_onco_offered == 'Yes' | r_onco_offered == 'Yes',
@@ -1769,7 +1768,7 @@ age_gap <- age_gap %>%
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   margins_clear         = factor(margins_clear),
-                  margin                = pmax(l_margin, r_margin, na.rm = TRUE),
+                  margin                = pmax(l_margin, r_margin, na.rm = FALSE),
                   designation_anterior  = ifelse(l_designation_anterior == ' Ticked' | l_designation_anterior == 'Ticked',
                                                  no  = 'No',
                                                  yes = 'Yes'),
@@ -1797,26 +1796,26 @@ age_gap <- age_gap %>%
                   ## ToDo 2017-09-04 : How to reconcile these, only really two that are discordant
                   ## l_close_margin
                   ## ToDo 2017-09-04 : Take the pmaximum or should these be sumnmed for excised and involved?
-                  nodes_excised         = pmax(l_nodes_excised, r_nodes_excised, na.rm = TRUE),
-                  nodes_involved        = pmax(l_nodes_involved, r_nodes_involved, na.rm = TRUE),
+                  nodes_excised         = pmax(l_nodes_excised, r_nodes_excised, na.rm = FALSE),
+                  nodes_involved        = pmax(l_nodes_involved, r_nodes_involved, na.rm = FALSE),
                   ## ToDo 2017-09-04 : How to reconcile these, only really a handful that are discordant
                   ## l_focal_pet
-                  num_tumours_pet       = pmax(l_num_tumours_pet, r_num_tumours_pet, na.rm = TRUE),
+                  num_tumours_pet       = pmax(l_num_tumours_pet, r_num_tumours_pet, na.rm = FALSE),
                   cancer_palpable_pet   = ifelse(l_cancer_palpable_pet == ' Ticked' | l_cancer_palpable_pet == 'Ticked',
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   cancer_palpable_pet   = factor(cancer_palpable_pet),
-                  size_clin_assess_pet  = pmax(l_size_clin_assess_pet, r_size_clin_assess_pet, na.rm = TRUE),
+                  size_clin_assess_pet  = pmax(l_size_clin_assess_pet, r_size_clin_assess_pet, na.rm = FALSE),
                   ## ToDo 2017-09-04 : How to reconcile these, none are discordant
                   ## l_method_assess_pet
-                  size_ultrasound_pet   = pmax(l_size_ultrasound_pet, r_size_ultrasound_pet, na.rm = TRUE),
-                  size_mammo_pet        = pmax(l_size_mammo_pet, r_size_mammo_pet, na.rm = TRUE),
+                  size_ultrasound_pet   = pmax(l_size_ultrasound_pet, r_size_ultrasound_pet, na.rm = FALSE),
+                  size_mammo_pet        = pmax(l_size_mammo_pet, r_size_mammo_pet, na.rm = FALSE),
                   axillary_present_pet  = ifelse(l_axillary_present_pet == ' Ticked' | l_axillary_present_pet == 'Ticked',
                                                  no  = 'No',
                                                  yes = 'Yes'),
                   axillary_present_pet  = factor(axillary_present_pet),
-                  axillary_nodes_pet    = pmax(l_axillary_nodes_pet, r_axillary_nodes_pet, na.rm = TRUE),
-                  axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE))
+                  axillary_nodes_pet    = pmax(l_axillary_nodes_pet, r_axillary_nodes_pet, na.rm = FALSE),
+                  axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = FALSE))
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
