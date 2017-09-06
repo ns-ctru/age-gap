@@ -23,6 +23,7 @@ The tables that form the basis of the desired comparisons for Chemotherapy and R
 ### ToDo
 
 * Complete details of cut points for arbitrarily classifying scores into Low/Medium/High (or the desired categories).
+* A number of parameters are collected for both left and right hand side (e.g. tumour stage, grade, affected area etc.), these need reconciling and it is straight-forward where only one axis has been affected, but what should be done when there are tumors recorded for both the left and the right hand side?
 * Details of how to handle missing data for questionnaires (generally multiple imputation is best reserved for continuous measures rather than quetsionnaire responses).
 * The comparison of Surgery v's No Surgery requires similar tables to the above two documents.
 * Details of the figures that are required across all papers are needed so these can be produced.
