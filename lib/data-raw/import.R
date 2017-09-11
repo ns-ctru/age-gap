@@ -1826,11 +1826,17 @@ mutate(site_breast           = case_when(l_site_breast == 'Ticked' & r_site_brea
        sc_lymphoedema        = factor(sc_lymphoedema),
        ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
        tumour_size           = pmax(l_tumour_size, r_tumour_size, na.rm = TRUE),
-       l_tumour_type_num     = as.numeric(l_tumour_type),
-       r_tumour_type_num     = as.numeric(r_tumour_type),
-       tumour_type           = pmax(l_tumour_type_num, r_tumour_type_num, na.rm = TRUE),
-       tumour_type           = factor(tumour_type,
-                                      levels = c(1:4)),
+       ## Combine laft and right tumour types
+       l_tumour_type_str     = ifelse(is.na(l_tumour_type),
+                                      no  = as.character(l_tumour_type),
+                                      yes = 'None'),
+       r_tumour_type_str     = ifelse(is.na(r_tumour_type),
+                                      no  = as.character(r_tumour_type),
+                                      yes = 'None'),
+       tumour_type           = paste0(l_tumour_type_str, ' (Left)', ' / ', r_tumour_type_str, ' (Right)'),
+       ## tumour_type           = gsub('NA (Right)', 'None (Right)', tumour_type),
+       ## tumour_type           = gsub('NA (Left)', 'None (Left)', tumour_type),
+       tumour_type           = factor(tumour_type),
        l_tumour_grade_num    = as.numeric(l_tumour_grade),
        r_tumour_grade_num    = as.numeric(r_tumour_grade),
        tumour_grade          = pmax(l_tumour_grade_num, r_tumour_grade_num, na.rm = TRUE),
@@ -1988,8 +1994,8 @@ mutate(tumour_grade = as.character(tumour_grade),
                              no  = tumour_grade,
                              yes = NA),
        tumour_grade = factor(tumour_grade)) %>%
-dplyr::select(-l_tumour_type_num, -r_tumour_type_num,
-              -l_tumour_grade_num, -r_tumour_grade_num)
+dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
+              -l_tumour_type_str, -r_tumour_type_str)
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
