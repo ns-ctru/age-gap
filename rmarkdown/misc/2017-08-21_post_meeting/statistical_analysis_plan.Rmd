@@ -22,7 +22,7 @@ The tables that form the basis of the desired comparisons for Chemotherapy and R
 
 ### ToDo
 
-* Complete details of cut points for arbitrarily classifying scores into Low/Medium/High (or the desired categories).
+* Complete details of cut points for arbitrarily classifying scores into Low/Medium/High (or the desired categories).  However, in the sample tables tumour characteristics are to be summarised by age based on three bands in Table 1, yet in Table 3 it is to be performed by five age bands, should these not be consistent?  Personally I do not think there is any advantage to breaking the continuous variable age down into five categories in table 3 at all, the comparison and p-value will be based on the mean/sd, however Table 1 should probably have even bin widths for grouping age, i.e. five columns.
 * A number of parameters are collected for both left and right hand side (e.g. tumour stage, grade, affected area etc.), these need reconciling and it is straight-forward where only one axis has been affected, but what should be done when there are tumors recorded for both the left and the right hand side?  In particular...
  - `surgery_type`
  - `tumour_type`
@@ -35,4 +35,3 @@ The tables that form the basis of the desired comparisons for Chemotherapy and R
 * The comparison of Surgery v's No Surgery requires similar tables to the above two documents, but what about specific tables?
 * Details of the figures that are required across all papers are needed so these can be produced.
 * The tables received so far for Radiotherapy and Chemotherapy require T-stage and N-stage to be summarised along with the ER status, but these are *not* explicitly recorded on any Case Report Forms.  The Tumour Stage (which if my understanding is correct pretains to size) might be derived from the `[l|r]_tumour_size` but what are the categories?  Similarly the Node Stage which pertains to lymph nodes to which the cancer has been spread might be recorded in the `[l|r]_axillary_nodes` variable but again the number for the different grades (N0/N1/N2/N3) are unclear at present.  For Estrogen Receptor (ER) -/+ve status the `[l|r]_allred` is recorded but I've been unable to find anything on the determination of ER status based on this continuous variable (I found [@allred1998] but couldn't access a copy online), please advise on thresholds.
-* How to reconcile surgery type when different procedures are performed on left and right hand side.
