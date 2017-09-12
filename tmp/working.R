@@ -379,6 +379,24 @@ quick_check(df       = age_gap,
             both     = axillary_axis_pet,
             n        = 10,
             checking = ' Axillary Axis PET')
+quick_check(df       = age_gap,
+            left     = l_histo_grade_baseline,
+            right    = r_histo_grade_baseline,
+            both     = histo_grade_baseline,
+            n        = 10,
+            checking = ' Histological Grade (Baseline)')
+quick_check(df       = age_gap,
+            left     = l_histo_subtype_baseline,
+            right    = r_histo_subtype_baseline,
+            both     = histo_subtype_baseline,
+            n        = 10,
+            checking = ' Histological Subtype (Baseline)')
+quick_check(df       = age_gap,
+            left     = l_her_2_score_baseline,
+            right    = r_her_2_score_baseline,
+            both     = her_2_score_baseline,
+            n        = 10,
+            checking = ' HER2 Score (Baseline)')
 sink()
 
 ## 2017-08-21 - Fixing plot_summary()
