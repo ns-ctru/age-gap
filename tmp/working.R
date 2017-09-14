@@ -15,27 +15,32 @@ test <- master$therapy_assessment %>%
                               'chemotherapy',
                               'trastuzumab',
                               'surgery')) %>%
-        mutate(event_name = gsub(' ', '_', event_name)) %>%
+        ## mutate(event_name = gsub(' ', '_', event_name)) %>%
         group_by(individual_id, variable) %>%
         mutate(lag1 = dplyr::lag(value, n = 1, order_by = event_date),
                lag2 = dplyr::lag(value, n = 2, order_by = event_date),
                lag3 = dplyr::lag(value, n = 3, order_by = event_date),
                lag4 = dplyr::lag(value, n = 4, order_by = event_date),
                lag5 = dplyr::lag(value, n = 5, order_by = event_date)) %>%
-        mutate(dummy = case_when(value == 'Yes' |
+        mutate(value = case_when(value == 'Yes' |
                                  lag1  == 'Yes' |
                                  lag2  == 'Yes' |
                                  lag3  == 'Yes' |
                                  lag4  == 'Yes' |
                                  lag5  == 'Yes' ~ 'Yes'),
-               dummy = ifelse(!is.na(dummy),
+               value = ifelse(!is.na(value),
                               no  = 'No',
-                              yes = dummy)) %>%
+                              yes = value)) %>%
         dplyr::select(-lag1, -lag2, -lag3, -lag4, -lag5) %>%
-        dcast(individual_id + event_date + event_name ~ variable)
+        dcast(individual_id + event_name + event_date ~ variable, value.var = 'value')
+
 ## ToDo - Finish this off, need to dcast to wide with variable the repeated columns of dummy, then
 ##        its ready for merging with the main age_gap
-
+test %>%  %>% head()
+dplyr::filter(test, individual_id == 47731) %>% arrange(event_date) %>% as.data.frame()
+dplyr::filter(master$therapy_assessment, individual_id == 47731) %>%
+    arrange(event_date) %>%
+    dplyr::select(individual_id, event_name, event_date, chemotherapy, radiotherapy, endocrine_therapy, surgery, trastuzumab)
 ## 2017-09-13 - Checking whether we have the actual dates on which therapy was received
 
 sink(file = 'checking_treatment_dates.txt')
