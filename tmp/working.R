@@ -1,3 +1,69 @@
+## 2017-09-13 - Developing code for recording whether a treatment has been received between
+##              baseline and a given event_date
+test <- master$therapy_assessment %>%
+        dplyr::select(individual_id,
+                      event_name,
+                      event_date,
+                      endocrine_therapy,
+                      radiotherapy,
+                      chemotherapy,
+                      trastuzumab,
+                      surgery) %>%
+        melt(id.vars = c('individual_id', 'event_name', 'event_date'),
+             measure.vars = c('endocrine_therapy',
+                              'radiotherapy',
+                              'chemotherapy',
+                              'trastuzumab',
+                              'surgery')) %>%
+        mutate(event_name = gsub(' ', '_', event_name)) %>%
+        group_by(individual_id, variable) %>%
+        mutate(lag1 = dplyr::lag(value, n = 1, order_by = event_date),
+               lag2 = dplyr::lag(value, n = 2, order_by = event_date),
+               lag3 = dplyr::lag(value, n = 3, order_by = event_date),
+               lag4 = dplyr::lag(value, n = 4, order_by = event_date),
+               lag5 = dplyr::lag(value, n = 5, order_by = event_date)) %>%
+        mutate(dummy = case_when(value == 'Yes' |
+                                 lag1  == 'Yes' |
+                                 lag2  == 'Yes' |
+                                 lag3  == 'Yes' |
+                                 lag4  == 'Yes' |
+                                 lag5  == 'Yes' ~ 'Yes'),
+               dummy = ifelse(!is.na(dummy),
+                              no  = 'No',
+                              yes = dummy)) %>%
+        dplyr::select(-lag1, -lag2, -lag3, -lag4, -lag5) %>%
+        dcast(individual_id + event_date + event_name ~ variable)
+## ToDo - Finish this off, need to dcast to wide with variable the repeated columns of dummy, then
+##        its ready for merging with the main age_gap
+
+## 2017-09-13 - Checking whether we have the actual dates on which therapy was received
+
+sink(file = 'checking_treatment_dates.txt')
+print('Check the number of rows in the data frame (first number after the noted therapy) then print out the number or rows where the two dates are not the same (second number after the noted therapy)...')
+print('Therapy Assessment')
+master$therapy_assessment %>% nrow()
+dplyr::filter(master$therapy_assessment, event_date != date) %>% nrow()
+print('Chemotherapy')
+master$chemotherapy %>% nrow()
+dplyr::filter(master$chemotherapy, event_date != assessment_dt) %>% nrow()
+print('Chemotherapy - Chemotherapy')
+print('Only one event_date recorded here so just list the number of rows and then print out the first ten rows to show a subset of the data')
+master$chemotherapy_chemotherapy %>% nrow()
+dplyr::select(master$chemotherapy_chemotherapy, individual_id, event_name, event_date, dose, unit) %>% head(n = 10)
+print('Endocrine Therapy')
+master$endocrine_therapy %>% nrow()
+dplyr::filter(master$endocrine_therapy, event_date != assessment_dt) %>% nrow()
+print('Radiotherapy')
+master$radiotherapy %>% nrow()
+dplyr::filter(master$radiotherapy, event_date != assessment_dt) %>% nrow()
+print('Surgery')
+master$surgery %>% nrow()
+dplyr::filter(master$surgery, event_date != assessment_dt) %>% nrow()
+print('Trastuzumab')
+master$trastuzumab %>% nrow()
+dplyr::filter(master$trastuzumab, event_date != assessment_dt) %>% nrow()
+sink()
+
 ## 2017-09-04 - Deriving overall tumour grade and type from left/right
 cd('~/work/scharr/age-gap/lib/data-raw/')
 source('import.R')
