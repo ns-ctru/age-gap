@@ -737,84 +737,130 @@ master$therapy_assessment <- read_prospect(file = 'Therapy Assessment.csv',
 ## therefore not useful when summarising at baseline, since no one will have received any
 ## therapy at that time point.  Therefore need to construct an indicator of ever having
 ## received each type of therapy
+## master$therapy_ever <- master$therapy_assessment %>%
+##                        dplyr::select(individual_id,
+##                                      event_name,
+##                                      endocrine_therapy,
+##                                      radiotherapy,
+##                                      chemotherapy,
+##                                      trastuzumab,
+##                                      surgery) %>%
+##                        melt(id.vars = c('individual_id', 'event_name'),
+##                             measure.vars = c('endocrine_therapy',
+##                                              'radiotherapy',
+##                                              'chemotherapy',
+##                                              'trastuzumab',
+##                                              'surgery')) %>%
+##                        mutate(event_name = gsub(' ', '_', event_name)) %>%
+##                        dcast(individual_id ~ variable + event_name) %>%
+##                        mutate(endocrine_therapy_ever = ifelse(endocrine_therapy_6_weeks   == 'Yes' |
+##                                                 endocrine_therapy_6_months  == 'Yes' |
+##                                                 endocrine_therapy_12_months == 'Yes' |
+##                                                 endocrine_therapy_18_months == 'Yes' |
+##                                                 endocrine_therapy_24_months == 'Yes',
+##                                                 yes = 'Yes',
+##                                                 no  = 'No'),
+##                               endocrine_therapy_ever = ifelse(!is.na(endocrine_therapy_ever),
+##                                                 yes = endocrine_therapy_ever,
+##                                                 no  = 'No'),
+##                               endocrine_therapy_ever = factor(endocrine_therapy_ever,
+##                                                 levels = c('No', 'Yes')),
+##                               chemotherapy_ever = ifelse(chemotherapy_6_weeks   == 'Yes' |
+##                                                          chemotherapy_6_months  == 'Yes' |
+##                                                          chemotherapy_12_months == 'Yes' |
+##                                                          chemotherapy_18_months == 'Yes' |
+##                                                          chemotherapy_24_months == 'Yes',
+##                                                          yes = 'Yes',
+##                                                          no  = 'No'),
+##                               chemotherapy_ever = ifelse(!is.na(chemotherapy_ever),
+##                                                          yes = chemotherapy_ever,
+##                                                          no  = 'No'),
+##                               chemotherapy_ever = factor(chemotherapy_ever,
+##                                                          levels = c('No', 'Yes')),
+##                               radiotherapy_ever = ifelse(radiotherapy_6_weeks   == 'Yes' |
+##                                                          radiotherapy_6_months  == 'Yes' |
+##                                                          radiotherapy_12_months == 'Yes' |
+##                                                          radiotherapy_18_months == 'Yes' |
+##                                                          radiotherapy_24_months == 'Yes',
+##                                                          yes = 'Yes',
+##                                                          no  = 'No'),
+##                               radiotherapy_ever = ifelse(!is.na(radiotherapy_ever),
+##                                                          yes = radiotherapy_ever,
+##                                                          no  = 'No'),
+##                               radiotherapy_ever = factor(radiotherapy_ever,
+##                                        levels = c('No', 'Yes')),
+##                               trastuzumab_ever = ifelse(trastuzumab_6_weeks   == 'Yes' |
+##                                                         trastuzumab_6_months  == 'Yes' |
+##                                                         trastuzumab_12_months == 'Yes' |
+##                                                         trastuzumab_18_months == 'Yes' |
+##                                                         trastuzumab_24_months == 'Yes',
+##                                                         yes = 'Yes',
+##                                                         no  = 'No'),
+##                               trastuzumab_ever = ifelse(!is.na(trastuzumab_ever),
+##                                                         yes = trastuzumab_ever,
+##                                                         no  = 'No'),
+##                               trastuzumab_ever = factor(trastuzumab_ever,
+##                                                         levels = c('No', 'Yes')),
+##                               surgery_ever = ifelse(surgery_6_weeks   == 'Yes' |
+##                                                     surgery_6_months  == 'Yes' |
+##                                                     surgery_12_months == 'Yes' |
+##                                                     surgery_18_months == 'Yes' |
+##                                                     surgery_24_months == 'Yes',
+##                                                     yes = 'Yes',
+##                                                     no  = 'No'),
+##                               surgery_ever = ifelse(!is.na(surgery_ever),
+##                                                     yes = surgery_ever,
+##                                                     no  = 'No'),
+##                               surgery_ever = factor(surgery_ever,
+##                                                     levels = c('No', 'Yes'))) %>%
+##                        dplyr::select(individual_id, endocrine_therapy_ever, chemotherapy_ever, radiotherapy_ever,
+##                                      trastuzumab_ever, surgery_ever)
+## Rather than whether someone has ever received a treatment instead record whether they have received a
+## given treatment between baseline and the noted event_[name|date].  Ideally I think we would want to
+## know the date on which therapy was received, but this doesn't appear to be available for anything.
 master$therapy_ever <- master$therapy_assessment %>%
                        dplyr::select(individual_id,
                                      event_name,
+                                     event_date,
                                      endocrine_therapy,
                                      radiotherapy,
                                      chemotherapy,
                                      trastuzumab,
                                      surgery) %>%
-                       melt(id.vars = c('individual_id', 'event_name'),
+                       melt(id.vars = c('individual_id', 'event_name', 'event_date'),
                             measure.vars = c('endocrine_therapy',
                                              'radiotherapy',
                                              'chemotherapy',
                                              'trastuzumab',
                                              'surgery')) %>%
-                       mutate(event_name = gsub(' ', '_', event_name)) %>%
-                       dcast(individual_id ~ variable + event_name) %>%
-                       mutate(endocrine_therapy_ever = ifelse(endocrine_therapy_6_weeks   == 'Yes' |
-                                                endocrine_therapy_6_months  == 'Yes' |
-                                                endocrine_therapy_12_months == 'Yes' |
-                                                endocrine_therapy_18_months == 'Yes' |
-                                                endocrine_therapy_24_months == 'Yes',
-                                                yes = 'Yes',
-                                                no  = 'No'),
-                              endocrine_therapy_ever = ifelse(!is.na(endocrine_therapy_ever),
-                                                yes = endocrine_therapy_ever,
-                                                no  = 'No'),
-                              endocrine_therapy_ever = factor(endocrine_therapy_ever,
-                                                levels = c('No', 'Yes')),
-                              chemotherapy_ever = ifelse(chemotherapy_6_weeks   == 'Yes' |
-                                                         chemotherapy_6_months  == 'Yes' |
-                                                         chemotherapy_12_months == 'Yes' |
-                                                         chemotherapy_18_months == 'Yes' |
-                                                         chemotherapy_24_months == 'Yes',
-                                                         yes = 'Yes',
-                                                         no  = 'No'),
-                              chemotherapy_ever = ifelse(!is.na(chemotherapy_ever),
-                                                         yes = chemotherapy_ever,
-                                                         no  = 'No'),
-                              chemotherapy_ever = factor(chemotherapy_ever,
-                                                         levels = c('No', 'Yes')),
-                              radiotherapy_ever = ifelse(radiotherapy_6_weeks   == 'Yes' |
-                                                         radiotherapy_6_months  == 'Yes' |
-                                                         radiotherapy_12_months == 'Yes' |
-                                                         radiotherapy_18_months == 'Yes' |
-                                                         radiotherapy_24_months == 'Yes',
-                                                         yes = 'Yes',
-                                                         no  = 'No'),
-                              radiotherapy_ever = ifelse(!is.na(radiotherapy_ever),
-                                                         yes = radiotherapy_ever,
-                                                         no  = 'No'),
-                              radiotherapy_ever = factor(radiotherapy_ever,
-                                       levels = c('No', 'Yes')),
-                              trastuzumab_ever = ifelse(trastuzumab_6_weeks   == 'Yes' |
-                                                        trastuzumab_6_months  == 'Yes' |
-                                                        trastuzumab_12_months == 'Yes' |
-                                                        trastuzumab_18_months == 'Yes' |
-                                                        trastuzumab_24_months == 'Yes',
-                                                        yes = 'Yes',
-                                                        no  = 'No'),
-                              trastuzumab_ever = ifelse(!is.na(trastuzumab_ever),
-                                                        yes = trastuzumab_ever,
-                                                        no  = 'No'),
-                              trastuzumab_ever = factor(trastuzumab_ever,
-                                                        levels = c('No', 'Yes')),
-                              surgery_ever = ifelse(surgery_6_weeks   == 'Yes' |
-                                                    surgery_6_months  == 'Yes' |
-                                                    surgery_12_months == 'Yes' |
-                                                    surgery_18_months == 'Yes' |
-                                                    surgery_24_months == 'Yes',
-                                                    yes = 'Yes',
-                                                    no  = 'No'),
-                              surgery_ever = ifelse(!is.na(surgery_ever),
-                                                    yes = surgery_ever,
-                                                    no  = 'No'),
-                              surgery_ever = factor(surgery_ever,
-                                                    levels = c('No', 'Yes'))) %>%
-                       dplyr::select(individual_id, endocrine_therapy_ever, chemotherapy_ever, radiotherapy_ever,
-                                     trastuzumab_ever, surgery_ever)
+                       group_by(individual_id, variable) %>%
+                       mutate(lag1 = dplyr::lag(value, n = 1, order_by = event_date),
+                              lag2 = dplyr::lag(value, n = 2, order_by = event_date),
+                              lag3 = dplyr::lag(value, n = 3, order_by = event_date),
+                              lag4 = dplyr::lag(value, n = 4, order_by = event_date),
+                              lag5 = dplyr::lag(value, n = 5, order_by = event_date)) %>%
+                       ungroup() %>%
+                       mutate(value = case_when(value == 'Yes' |
+                                                lag1  == 'Yes' |
+                                                lag2  == 'Yes' |
+                                                lag3  == 'Yes' |
+                                                lag4  == 'Yes' |
+                                                lag5  == 'Yes' ~ 'Yes'),
+                              value = ifelse(!is.na(value),
+                                             no  = 'No',
+                                             yes = value),
+                              value = factor(value),
+                              ## Need to make therapy names unique to avoid conflict when merging
+                              variable = paste0(variable, '_received_yet' )) %>%
+                       dplyr::select(-lag1, -lag2, -lag3, -lag4, -lag5) %>%
+                       dcast(individual_id + event_name + event_date ~ variable, value.var = 'value') %>%
+                       ## Derive 'ever' treatment indicators
+                       group_by(individual_id) %>%
+                       mutate(endocrine_therapy_ever  = max(endocrine_therapy_received_yet),
+                              chemotherapy_ever       = max(chemotherapy_received_yet),
+                              radiotherapy_ever       = max(radiotherapy_received_yet),
+                              surgery_ever            = max(surgery_received_yet),
+                              trastuzumab_ever        = max(trastuzumab_received_yet))
 ## File : Trastuzumab.csv
 master$trastuzumab <- read_prospect(file = 'Trastuzumab.csv',
                          header              = TRUE,
@@ -1207,8 +1253,6 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                                               l_nodes_excised,
                                               l_nodes_involved),
                                 by = c('individual_id', 'site', 'event_name')) %>%
-
-## HERE
 ## Clinical Assessment Non-Pet
                       full_join(.,
                                 dplyr::select(master$clinical_assessment_non_pet,
@@ -1257,7 +1301,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                       ##           dplyr::select(master$sites,
                       ##                         site, group, pe_site, qol_sub_study),
                       ##           by = c('site'))
-
+## HERE
 ###################################################################################
 ## Combine the RCT components                                                    ##
 ###################################################################################
@@ -1457,11 +1501,11 @@ age_gap <- full_join(master$therapy_qol,
                      dplyr::select(master$sites,
                                    site, group, rct_date, pe_site, qol_sub_study),
                      by = c('site')) %>%
-## And finally the '_ever' treatments such that the baseline summaries and
-## cohort analyses can be made
+## And finally the treatments received by a given follow-up
            full_join(.,
                      master$therapy_ever,
-                     by = c('individual_id'))
+                     by = c('individual_id', 'event_name', 'event_date'))
+## HERE
 
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
@@ -1722,9 +1766,26 @@ mutate(site_breast           = case_when(l_site_breast == 'Ticked' & r_site_brea
                                          l_breast_pain == 'Yes' & is.na(r_breast_pain)   ~ 'Yes',
                                          is.na(l_breast_pain)   & r_breast_pain == 'Yes' ~ 'Yes'),
        breast_pain           = factor(breast_pain),
-       ## ToDo 2017-09-04 : How to reconcile these?
-       ## l_surgery_type
-       ## l_axillary_type
+       ## ToDo 2017-09-04 : How to reconcile these?  Clearly this adds too many categories
+       l_surgery_type_str    = ifelse(is.na(l_surgery_type),
+                                      no  = as.character(l_surgery_type),
+                                      yes = 'None'),
+       r_surgery_type_str    = ifelse(is.na(r_surgery_type),
+                                      no  = as.character(r_surgery_type),
+                                      yes = 'None'),
+       surgery_type          = paste0(l_surgery_type_str, ' (Left)',
+                                      ' / ',
+                                      r_surgery_type_str, ' (Right)'),
+       ## ToDo 2017-09-04 : How to reconcile these?  Clearly this adds too many categories
+       l_axillary_type_str   = ifelse(is.na(l_axillary_type),
+                                      no  = as.character(l_axillary_type),
+                                      yes = 'None'),
+       r_axillary_type_str   = ifelse(is.na(r_axillary_type),
+                                      no  = as.character(r_axillary_type),
+                                      yes = 'None'),
+       axillary_type         = paste0(l_axillary_type_str, ' (Left)',
+                                      ' / ',
+                                      r_axillary_type_str, ' (Right)'),
        surgery_aes_acute     = case_when(l_surgery_aes_acute == 'No'  & r_surgery_aes_acute == 'No'  ~ 'No',
                                          l_surgery_aes_acute == 'No'  & is.na(r_surgery_aes_acute)   ~ 'No',
                                          is.na(l_surgery_aes_acute)   & r_surgery_aes_acute == 'No'  ~ 'No',
@@ -1961,7 +2022,11 @@ mutate(site_breast           = case_when(l_site_breast == 'Ticked' & r_site_brea
                                          is.na(l_axillary_present_pet)   & r_axillary_present_pet == 'Yes' ~ 'Yes'),
        axillary_present_pet  = factor(axillary_present_pet),
        axillary_nodes_pet    = pmax(l_axillary_nodes_pet, r_axillary_nodes_pet, na.rm = TRUE),
-       axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE)) %>%
+       axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE),
+       ## ToDo 2017-09-12 : How to reconcile these, also check these very carefully
+       histo_grade_baseline  = pmax(l_histo_grade_baseline, r_histo_grade_baseline, na.rm = TRUE),
+       histo_subtype_baseline= pmax(l_histo_subtype_baseline, r_histo_subtype_baseline, na.rm = TRUE),
+       her_2_score_baseline  = pmax(l_her_2_score_baseline, r_her_2_score_baseline, na.rm = TRUE)) %>%
 ## Can not for the life of me work out why this doesn't work as I would expect it to...
 ## mutate(tumour_grade = as.character(tumour_grade),
 ##        tumour_grade          = ifelse((l_tumour_grade == 'I' & r_tumour_grade == 'Not available') |
@@ -1995,7 +2060,9 @@ mutate(tumour_grade = as.character(tumour_grade),
                              yes = NA),
        tumour_grade = factor(tumour_grade)) %>%
 dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
-              -l_tumour_type_str, -r_tumour_type_str)
+              -l_tumour_type_str, -r_tumour_type_str,
+              -l_surgery_type_str, -r_surgery_type_str,
+              -l_axillary_type_str, -r_axillary_type_str)
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
@@ -2028,7 +2095,17 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('', '', 'treatment_profile', 'Treatments Received'),
                                c('', '', 'treatment_missing', 'Indicator of whether there is missing data for any given treatment.'),
                                c('', '', 'mmse_cat', 'Categorisation of Mini Mental State Examination'),
-                               c('', '', 'charlson_cat', 'Categorisation of Charlson Score'))
+                               c('', '', 'charlson_cat', 'Categorisation of Charlson Score'),
+                               c('', '', 'endocrine_therapy_yet', 'Has patient received Endocrine Therapy by the noted event'),
+                               c('', '', 'endocrine_therapy_ever', 'Has patient ever received Endocrine Therapy during the study'),
+                               c('', '', 'chemotherapy_yet', 'Has patient received Chemotherapy by the noted event'),
+                               c('', '', 'chemotherapy_ever', 'Has patient ever received Chemotherapy during the study'),
+                               c('', '', 'radiotherapy_yet', 'Has patient received Radiotherapy by the noted event'),
+                               c('', '', 'radiotherapy_ever', 'Has patient ever received Radiotherapy during the study'),
+                               c('', '', 'surgery_yet', 'Has patient received Surgery by the noted event'),
+                               c('', '', 'surgery_ever', 'Has patient ever received Surgery during the study'),
+                               c('', '', 'trastuzumab_yet', 'Has patient received Trastuzumab by the noted event'),
+                               c('', '', 'trastuzumab_ever', 'Has patient ever received Trastuzumab during the study'))
 
 
 ###################################################################################
