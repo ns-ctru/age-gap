@@ -1602,6 +1602,18 @@ age_gap <- age_gap %>%
                                                 is.na(trastuzumab) |
                                                 is.na(surgery) ~ 'One or more missing treatment')) %>%
            dplyr::select(-endocrine_therapy_t, -radiotherapy_t, -chemotherapy_t, -trastuzumab_t, -surgery_t) %>%
+## Derive an indicator of the primary treatment received based on
+## notes from meeting with Lynda Wylde 2017-10-23 @ 09:00-11:00
+mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Endocrine',
+                                     endocrine_therapy == 'Yes' & priary_adjuvant == 'Adjuvant' ~ ,
+                                     endocrine_therapy == 'Yes' & priary_adjuvant == 'Neoadjuvant' ~ ,
+                                     surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
+                                     surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
+                                     chemotherapy == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Endocrine',
+                                     radiotherapy == 'Yes' ~ 'Radiotherapy',
+                                     radiotherapy == 'No'  ~ '',
+                                     trastuzumab  == 'Yes' ~ '',
+                                     trastuzumab  == 'No'  ~ '')) %>%
 ## Derive an indicator of all of the possible combinations of treatment ever received
            mutate(endocrine_therapy_t = ifelse(endocrine_therapy_ever == 'Yes',
                                                yes = 'Endocrine + ',
