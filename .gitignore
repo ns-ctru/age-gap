@@ -1,3 +1,5 @@
+# Zip files
+*.zip
 # CSV files (raw data)
 *.csv
 # R files
