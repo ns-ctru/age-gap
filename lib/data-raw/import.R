@@ -1612,7 +1612,7 @@ mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuva
                                      chemotherapy == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Endocrine',
                                      radiotherapy == 'Yes' ~ 'Radiotherapy',
                                      radiotherapy == 'No'  ~ '',
-                                     trastuzumab  == 'Yes' ~ '',
+                                     trastuzumab  == 'Yes' ~ 'Trastuzumab',
                                      trastuzumab  == 'No'  ~ '')) %>%
 ## Derive an indicator of all of the possible combinations of treatment ever received
            mutate(endocrine_therapy_t = ifelse(endocrine_therapy_ever == 'Yes',
