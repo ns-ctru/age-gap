@@ -61,5 +61,5 @@ The patterns of missing data are summarised for each set of questionnaires and d
 ```
 
 ### Imputation {.tabset .tabset-fade .tabset-pills}
-```{r child='results_missing/imputation.Rmd', eval = FALSE}
+```{r child='results_missing/imputation.Rmd', eval = TRUE}
 ```

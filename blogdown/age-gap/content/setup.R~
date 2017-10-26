@@ -1,0 +1,18 @@
+## Sets up some key components
+variables <- list()
+variables$eortc_c30 <- c(c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
+                         c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
+                         c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                         c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                         c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                         c30_q26, c30_q27, c30_q28, c30_q29, c30_q30)
+variables$eortc_br23
+variables$eortc_eld15
+variables$eq5d
+variables$therapy_assessment
+variables$endocrine_therapy
+variables$radiotherapy
+variables$chemotherapy
+variables$trastuzumab
+variables$clinical_assessment_non_pet
+variables$clinical_assessment_pet

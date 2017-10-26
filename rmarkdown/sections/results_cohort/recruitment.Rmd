@@ -7,9 +7,33 @@ screening_recruitment$plotly_screened_recruited_all
 screening_recruitment$table_screened_recruited_month %>%
     dplyr::filter(Site == 'All') %>%
     kable(caption = 'Screening and Recruitment across all sites by m1onth')
+## ToDo - Leave this in for now, ultimately it will be replaced by htmlwidget that allows selection
+##        of site as per below.
 screening_recruitment$plot_screened_recruited_site
 screening_recruitment$table_screened_recruited_month %>%
     dplyr::filter(Site != 'All') %>%
     kable(caption = 'Screening and Recruitment by site and month')
+
+```
+
+```{r results_cohort_recruitment_each_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_height = 20, fig_width = 10, eval = FALSE}
+## See https://shiny.rstudio.com/articles/interactive-docs.html
+##
+## Currently fails with...
+##
+## > rmarkdown::run('age-gap.Rmd')
+## Listening on http://127.0.0.1:6275
+## 
+## Warning in readLines(if (is.character(input2)) { :
+##   cannot open file '/tmp/Rtmpd5mHQF/sections/analysis/recruitment.Rmd': No such file or directory
+##
+## Quitting from lines 2-2 (/tmp/Rtmpd5mHQF/sections/analysis/recruitment.Rmd)
+## Quitting from lines NA-8 (/tmp/Rtmpd5mHQF/sections/analysis/recruitment.Rmd)
+## Warning: Error in readLines: cannot open the connection
+sites <- names(screening_recruitment$plot_screened_recruited_each_site)
+selectInput('site', label = 'Site',
+            choices = sites, selected = 'sheffield')
+renderText(site)
+renderPlot(screening_recruitment$plot_screened_recruited_each_site[[site]])
 
 ```

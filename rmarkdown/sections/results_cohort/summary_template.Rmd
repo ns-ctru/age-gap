@@ -1,7 +1,7 @@
 #### TEMPLATE1
-```{r results_cohort_summary_outcome_template1, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = TRUE}
-plot_grid(cohort_plot_template1$outcome$boxplot    + facet_grid(.~chemotherapy),
-          cohort_plot_template1$outcome$histogram  + facet_grid(.~chemotherapy),
+```{r results_cohort_summary_outcome_template1, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+plot_grid(cohort_plot_template1$outcome$boxplot    + facet_grid(.~template1),
+          cohort_plot_template1$outcome$histogram  + facet_grid(.~template1),
           nrow  = 2,
           align = 'h')
 cohort_table_template1$outcome$continuous %>%
@@ -22,9 +22,9 @@ cohort_table_template1$outcome$factor %>%
 ```
 
 #### TEMPLATE2
-```{r results_cohort_summary_outcome_template2, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = TRUE}
-plot_grid(cohort_plot_template2$outcome$boxplot    + facet_grid(.~chemotherapy),
-          cohort_plot_template2$outcome$histogram  + facet_grid(.~chemotherapy),
+```{r results_cohort_summary_outcome_template2, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+plot_grid(cohort_plot_template2$outcome$boxplot    + facet_grid(.~template2),
+          cohort_plot_template2$outcome$histogram  + facet_grid(.~template2),
           nrow  = 2,
           align = 'h')
 cohort_table_template2$outcome$continuous %>%
@@ -45,9 +45,9 @@ cohort_table_template2$outcome$factor %>%
 ```
 
 #### TEMPLATE3
-```{r results_cohort_summary_outcome_template3, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, eval = TRUE}
-plot_grid(cohort_plot_template3$outcome$boxplot    + facet_grid(.~chemotherapy),
-          cohort_plot_template3$outcome$histogram  + facet_grid(.~chemotherapy),
+```{r results_cohort_summary_outcome_template3, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+plot_grid(cohort_plot_template3$outcome$boxplot    + facet_grid(.~template3),
+          cohort_plot_template3$outcome$histogram  + facet_grid(.~template3),
           nrow  = 2,
           align = 'h')
 cohort_table_template3$outcome$continuous %>%

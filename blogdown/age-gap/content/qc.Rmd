@@ -20,56 +20,65 @@ summary_tables$eortc_c30                   <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$eortc_c30),
-                                                            event_name)
+                                                            site)
 summary_tables$eortc_br23                  <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$eortc_c30),
-                                                            event_name)
+                                                            site)
 summary_tables$eortc_eld15                 <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$eortc_eld15),
-                                                            event_name)
+                                                            site)
 summary_tables$eq5d                        <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$eq5d),
-                                                            event_name)
+                                                            site)
+## No continuous variables in the therapy_assessment data
 ## summary_tables$therapy_assessment          <- table_summary(df = age_gap,
 ##                                                             id = individual_id,
 ##                                                             select = c(!!!continuous_vars$therapy_assessment),
-##                                                             event_name)
-summary_tables$endocrine_therapy           <- table_summary(df = age_gap,
-                                                            lookup = master$lookups_fields,
-                                                            id = individual_id,
-                                                            select = c(!!!continuous_vars$endocrine_therapy),
-                                                            event_name)
+##                                                             site)
+## No continuous variables in the therapy_assessment data
+## summary_tables$endocrine_therapy           <- table_summary(df = age_gap,
+##                                                             lookup = master$lookups_fields,
+##                                                             id = individual_id,
+##                                                             select = c(!!!continuous_vars$endocrine_therapy),
+##                                                             site)
+## Error in summarise_impl(.data, dots) :
+##   Evaluation error: non-numeric argument to binary operator.
 summary_tables$radiotherapy                <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$radiotherapy),
-                                                            event_name)
-summary_tables$chemotherapy                <- table_summary(df = age_gap,
-                                                            lookup = master$lookups_fields,
-                                                            id = individual_id,
-                                                            select = c(!!!continuous_vars$chemotherapy),
-                                                            event_name)
+                                                            site)
+## No continuous variables in the therapy_assessment data
+## summary_tables$chemotherapy                <- table_summary(df = age_gap,
+##                                                             lookup = master$lookups_fields,
+##                                                             id = individual_id,
+##                                                             select = c(!!!continuous_vars$chemotherapy),
+##                                                             site)
 summary_tables$trastuzumab                 <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$trastuzumab),
-                                                            event_name)
+                                                            site)
+## Error in summarise_impl(.data, dots) :
+##   Evaluation error: non-numeric argument to binary operator.
 summary_tables$clinical_assessment_non_pet <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$clinical_assessment_non_pet),
-                                                            event_name)
+                                                            site)
+## Error in summarise_impl(.data, dots) :
+##   Evaluation error: non-numeric argument to binary operator.
 summary_tables$clinical_assessment_pet     <- table_summary(df = age_gap,
                                                             lookup = master$lookups_fields,
                                                             id = individual_id,
                                                             select = c(!!!continuous_vars$clinical_assessment_pet),
-                                                            event_name)
+                                                            site)
 
 ## Plots of outcomes
 summary_plots <- list()
@@ -113,16 +122,16 @@ summary_plots$eq5d                        <- plot_summary(df = age_gap,
                                                           individual = TRUE,
                                                           plotly     = FALSE,
                                                           title.continuous = 'EQ-5D-5L Quality of Life Questionnaire')
-summary_plots$therapy_assessment          <- plot_summary(df = age_gap,
-                                                          id         = individual_id,
-                                                          select     = c(!!!all_var$therapy_assessment),
-                                                          lookup     = master$lookups_field,
-                                                          theme      = theme_bw(),
-                                                          group      = event_name,
-                                                          position   = 'dodge',
-                                                          individual = TRUE,
-                                                          plotly     = FALSE,
-                                                          title.continuous = 'Therapy Assessemnt Questionnaire')
+## summary_plots$therapy_assessment          <- plot_summary(df = age_gap,
+##                                                           id         = individual_id,
+##                                                           select     = c(!!!all_var$therapy_assessment),
+##                                                           lookup     = master$lookups_field,
+##                                                           theme      = theme_bw(),
+##                                                           group      = event_name,
+##                                                           position   = 'dodge',
+##                                                           individual = TRUE,
+##                                                           plotly     = FALSE,
+##                                                           title.continuous = 'Therapy Assessemnt Questionnaire')
 summary_plots$endocrine_therapy           <- plot_summary(df = age_gap,
                                                           id         = individual_id,
                                                           select     = c(!!!all_var$endocrine_therapy),

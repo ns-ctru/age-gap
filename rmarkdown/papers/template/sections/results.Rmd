@@ -20,5 +20,5 @@
 ```
 
 
-```{r results_specific_figures, child = 'sections/figures/figures_specific.Rmd',eval = TRUE}
+```{r results_specific_figures, child = 'sections/results/figures_specific.Rmd',eval = TRUE}
 ```

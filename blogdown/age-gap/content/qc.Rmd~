@@ -1,0 +1,7 @@
+---
+site: blogdown:::blogdown_site
+---
+
+```{r qc_start, echo = FALSE, results = hide, cache = FALSE, eval = TRUE}
+
+```

@@ -2,16 +2,28 @@
 ## Table 1 - Tumour characteristics
 results$tables$table1 <- dplyr::filter(age_gap,
                                        event_name == 'Baseline') %>%
-                         table_summary(df = .,
-                                       lookup_fields = ,
-                                       individual_id = ,
-                                       select        = c(),
+                         table_summary(df            = .,
+                                       lookup_fields = master$lookups_fields,
+                                       individual_id = individual_id,
+                                       select        = c(tumour_grade, tumor_type, tumour_size),
                                        time          = event_name,
                                        group         = OUTCOME,
                                        nomissing     = TRUE,
                                        digits        = options$digits,
                                        reshape       = NULL)
 ## Table 2 - Patient characteristics
+results$tables$table2 <- dplyr::filter(age_gap,
+                                       event_name == 'Baseline') %>%
+                         table_summary(df            = .,
+                                       lookup_fields = master$lookups_fields,
+                                       individual_id = individual_id,
+                                       select        = c(age),
+                                       time          = event_name,
+                                       group         = OUTCOME,
+                                       nomissing     = TRUE,
+                                       digits        = options$digits,
+                                       reshape       = NULL)
+
 
 
 ```

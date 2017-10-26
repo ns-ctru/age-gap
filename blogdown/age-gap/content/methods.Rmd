@@ -21,14 +21,16 @@ Detailed guidelines of the work required for both studies is provided in two Sta
 Screening and recruitment rates are summarised by time/month in tabular and graphical format across all centers and by individual centers.
 
 ```{r methods_recruitment, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
-screening_recruitment <- ctru::recruitment(df            = master$screening_form,
-                                           screening     = screening_no,
-                                           enrolment     = enrolment_no,
-                                           plot.by       = both,
-                                           facet.col     = NULL,
-                                           facet.scales  = free,
-                                           theme         = theme_bw(),
-                                           plotly        = TRUE)
+screening_recruitment <- ctru::recruitment(df             = master$screening_form,
+                                           screening      = 'screening_no',
+                                           enrolment      = 'enrolment_no',
+                                           plot.by        = 'both',
+                                           facet.col      = 'site',
+                                           facet.scales   = 'free_y',
+                                           strip.position = 'left',
+                                           theme          = theme_bw(),
+                                           plotly         = TRUE)
+
 ```
 
 ## Cluster Randomised Control Trial
