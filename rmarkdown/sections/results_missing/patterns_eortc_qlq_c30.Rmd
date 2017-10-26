@@ -1,0 +1,65 @@
+#### Event
+```{r results_missing_patterns_erotc_qlq_c30_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, c30_q1,  c30_q2,  c30_q3,  c30_q4,  c30_q5, c30_q6,  c30_q7,  c30_q8,  c30_q9,  c30_q10, c30_q11, c30_q12, c30_q13, c30_q14, c30_q15, c30_q16, c30_q17, c30_q18, c30_q19, c30_q20, c30_q21, c30_q22, c30_q23, c30_q24, c30_q25, c30_q26, c30_q27, c30_q28, c30_q29, c30_q30, ql_raw, ql_scale, pf_raw, pf_scale, rf_raw, rf_scale, ef_raw, ef_scale, cf_raw, cf_scale, sf_raw, sf_scale, fa_raw, fa_scale, nv_raw, nv_scale, pa_raw, pa_scale, dy_scale, sl_scale, ap_scale, co_scale, di_scale, fi_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(event_name~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+#### Site
+```{r results_missing_patterns_erotc_qlq_c30_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, c30_q1,  c30_q2,  c30_q3,  c30_q4,  c30_q5, c30_q6,  c30_q7,  c30_q8,  c30_q9,  c30_q10, c30_q11, c30_q12, c30_q13, c30_q14, c30_q15, c30_q16, c30_q17, c30_q18, c30_q19, c30_q20, c30_q21, c30_q22, c30_q23, c30_q24, c30_q25, c30_q26, c30_q27, c30_q28, c30_q29, c30_q30, ql_raw, ql_scale, pf_raw, pf_scale, rf_raw, rf_scale, ef_raw, ef_scale, cf_raw, cf_scale, sf_raw, sf_scale, fa_raw, fa_scale, nv_raw, nv_scale, pa_raw, pa_scale, dy_scale, sl_scale, ap_scale, co_scale, di_scale, fi_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+
+#### Event and Site
+```{r results_missing_patterns_erotc_qlq_c30_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, c30_q1,  c30_q2,  c30_q3,  c30_q4,  c30_q5, c30_q6,  c30_q7,  c30_q8,  c30_q9,  c30_q10, c30_q11, c30_q12, c30_q13, c30_q14, c30_q15, c30_q16, c30_q17, c30_q18, c30_q19, c30_q20, c30_q21, c30_q22, c30_q23, c30_q24, c30_q25, c30_q26, c30_q27, c30_q28, c30_q29, c30_q30, ql_raw, ql_scale, pf_raw, pf_scale, rf_raw, rf_scale, ef_raw, ef_scale, cf_raw, cf_scale, sf_raw, sf_scale, fa_raw, fa_scale, nv_raw, nv_scale, pa_raw, pa_scale, dy_scale, sl_scale, ap_scale, co_scale, di_scale, fi_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~event_name, scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+```

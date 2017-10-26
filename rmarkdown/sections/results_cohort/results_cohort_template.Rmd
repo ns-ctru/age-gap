@@ -1,0 +1,11 @@
+```{r results_cohort_template, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Plot : Template
+cohort_plot$template$factor_template
+## cohort_table_endocrine_therapy$template
+## cohort_table_chemotherapy$template
+## cohort_table_radiotherapy$template
+## cohort_table_trastuzumab$template
+## cohort_table_surgery$template
+## cohort_table_treatment_profile$template
+
+```

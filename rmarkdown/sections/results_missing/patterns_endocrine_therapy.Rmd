@@ -1,0 +1,65 @@
+#### Event
+```{r results_missing_patterns_endocrine_therapy_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, primary_adjuvant, reason_pet, reason_pet_risk, reason_pet_spcfy, endocrine_type, endocrine_type_oth, therapy_changed, therapy_changed_dtls, compliance, endocrine_aes, et_hot_flushes, et_asthenia, et_joint_pain, et_vaginal_dryness, et_hair_thinning, et_rash, et_nausea, et_diarrhoea, et_headache, et_vaginal_bleeding, et_vomiting, et_somnolence) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(event_name~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+#### Site
+```{r results_missing_patterns_endocrine_therapy_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, primary_adjuvant, reason_pet, reason_pet_risk, reason_pet_spcfy, endocrine_type, endocrine_type_oth, therapy_changed, therapy_changed_dtls, compliance, endocrine_aes, et_hot_flushes, et_asthenia, et_joint_pain, et_vaginal_dryness, et_hair_thinning, et_rash, et_nausea, et_diarrhoea, et_headache, et_vaginal_bleeding, et_vomiting, et_somnolence) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+
+#### Event and Site
+```{r results_missing_patterns_endocrine_therapy_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, primary_adjuvant, reason_pet, reason_pet_risk, reason_pet_spcfy, endocrine_type, endocrine_type_oth, therapy_changed, therapy_changed_dtls, compliance, endocrine_aes, et_hot_flushes, et_asthenia, et_joint_pain, et_vaginal_dryness, et_hair_thinning, et_rash, et_nausea, et_diarrhoea, et_headache, et_vaginal_bleeding, et_vomiting, et_somnolence) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~event_name, scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+```

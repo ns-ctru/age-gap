@@ -1,0 +1,5 @@
+Adverse events are summarised below.
+
+```{r results_adverse_events, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+
+```

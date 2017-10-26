@@ -1,0 +1,65 @@
+#### Event
+```{r results_missing_patterns_clinical_assessment_non_pet_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, recurrence, recurrence_dt, recurrence_where_breast, recurrence_where_chest_wall, recurrence_where_axilla, recurrence_where_metastatic, recurrence_met_bone, recurrence_met_liver, recurrence_met_lung, recurrence_met_superclavicular, recurrence_met_brain, recurrence_met_other, recurrence_met_spcfy, new_tumour_yn, new_tumour_dtls, clinical_plan, plan_local_surgery, plan_local_radio, plan_local_endocrine, plan_local_chemo, plan_local_trast, plan_local_other, plan_local_spcfy, plan_met_radio, plan_met_endocrine, plan_met_chemo, plan_met_trast, plan_met_other, plan_met_spcfy, plan_routine_surgery, plan_routine_radio, plan_routine_endocrine, plan_routine_chemo, plan_routine_trast, plan_routine_other, plan_routine_spcfy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(event_name~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+#### Site
+```{r results_missing_patterns_clinical_assessment_non_pet_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, recurrence, recurrence_dt, recurrence_where_breast, recurrence_where_chest_wall, recurrence_where_axilla, recurrence_where_metastatic, recurrence_met_bone, recurrence_met_liver, recurrence_met_lung, recurrence_met_superclavicular, recurrence_met_brain, recurrence_met_other, recurrence_met_spcfy, new_tumour_yn, new_tumour_dtls, clinical_plan, plan_local_surgery, plan_local_radio, plan_local_endocrine, plan_local_chemo, plan_local_trast, plan_local_other, plan_local_spcfy, plan_met_radio, plan_met_endocrine, plan_met_chemo, plan_met_trast, plan_met_other, plan_met_spcfy, plan_routine_surgery, plan_routine_radio, plan_routine_endocrine, plan_routine_chemo, plan_routine_trast, plan_routine_other, plan_routine_spcfy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+
+#### Event and Site
+```{r results_missing_patterns_clinical_assessment_non_pet_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, recurrence, recurrence_dt, recurrence_where_breast, recurrence_where_chest_wall, recurrence_where_axilla, recurrence_where_metastatic, recurrence_met_bone, recurrence_met_liver, recurrence_met_lung, recurrence_met_superclavicular, recurrence_met_brain, recurrence_met_other, recurrence_met_spcfy, new_tumour_yn, new_tumour_dtls, clinical_plan, plan_local_surgery, plan_local_radio, plan_local_endocrine, plan_local_chemo, plan_local_trast, plan_local_other, plan_local_spcfy, plan_met_radio, plan_met_endocrine, plan_met_chemo, plan_met_trast, plan_met_other, plan_met_spcfy, plan_routine_surgery, plan_routine_radio, plan_routine_endocrine, plan_routine_chemo, plan_routine_trast, plan_routine_other, plan_routine_spcfy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~event_name, scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+```

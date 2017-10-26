@@ -1,0 +1,9 @@
+---
+title: Bridging the Age Gap in Elderly Women with Breast Cancer
+runtime: shiny
+output: html_document
+---
+
+# Treatment Profiles
+```{r child = '../../rmarkdown/sections/results_cohort/treatment_profiles.Rmd', eval = TRUE}
+```

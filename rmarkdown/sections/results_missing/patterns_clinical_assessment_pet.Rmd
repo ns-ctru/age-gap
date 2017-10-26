@@ -1,0 +1,65 @@
+#### Event
+```{r results_missing_patterns_clinical_assessment_pet_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, uni_bilateral_pet, primary_tumour_pet, r_focal_pet, r_num_tumours_pet, r_cancer_palpable_pet, r_size_clin_assess_pet, r_method_assess_pet, r_size_ultrasound_pet, r_size_mammo_pet, r_axillary_present_pet, r_axillary_nodes_pet, r_axillary_axis_pet, l_focal_pet, l_num_tumours_pet, l_cancer_palpable_pet, l_size_clin_assess_pet, l_method_assess_pet, l_size_ultrasound_pet, l_size_mammo_pet, l_axillary_present_pet, l_axillary_nodes_pet, l_axillary_axis_pet, metastatic, metastatic_where_bone, metastatic_where_lung, metastatic_where_cervical_node, metastatic_where_other, metastatic_where_liver, metastatic_where_brain, proposed_treat, clinical_plan2, plan_change_surgery, plan_change_radio, plan_change_antioestrogen, plan_change_other,plan_change_spcfy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(event_name~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+#### Site
+```{r results_missing_patterns_clinical_assessment_pet_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, uni_bilateral_pet, primary_tumour_pet, r_focal_pet, r_num_tumours_pet, r_cancer_palpable_pet, r_size_clin_assess_pet, r_method_assess_pet, r_size_ultrasound_pet, r_size_mammo_pet, r_axillary_present_pet, r_axillary_nodes_pet, r_axillary_axis_pet, l_focal_pet, l_num_tumours_pet, l_cancer_palpable_pet, l_size_clin_assess_pet, l_method_assess_pet, l_size_ultrasound_pet, l_size_mammo_pet, l_axillary_present_pet, l_axillary_nodes_pet, l_axillary_axis_pet, metastatic, metastatic_where_bone, metastatic_where_lung, metastatic_where_cervical_node, metastatic_where_other, metastatic_where_liver, metastatic_where_brain, proposed_treat, clinical_plan2, plan_change_surgery, plan_change_radio, plan_change_antioestrogen, plan_change_other,plan_change_spcfy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+
+#### Event and Site
+```{r results_missing_patterns_clinical_assessment_pet_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, uni_bilateral_pet, primary_tumour_pet, r_focal_pet, r_num_tumours_pet, r_cancer_palpable_pet, r_size_clin_assess_pet, r_method_assess_pet, r_size_ultrasound_pet, r_size_mammo_pet, r_axillary_present_pet, r_axillary_nodes_pet, r_axillary_axis_pet, l_focal_pet, l_num_tumours_pet, l_cancer_palpable_pet, l_size_clin_assess_pet, l_method_assess_pet, l_size_ultrasound_pet, l_size_mammo_pet, l_axillary_present_pet, l_axillary_nodes_pet, l_axillary_axis_pet, metastatic, metastatic_where_bone, metastatic_where_lung, metastatic_where_cervical_node, metastatic_where_other, metastatic_where_liver, metastatic_where_brain, proposed_treat, clinical_plan2, plan_change_surgery, plan_change_radio, plan_change_antioestrogen, plan_change_other,plan_change_spcfy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~event_name, scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+```

@@ -1,0 +1,65 @@
+#### Event
+```{r results_missing_patterns_trastuzumab_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, trast_received, infusion_no, trast_aes, t_cardiac_fail, t_flu_like, t_nausea, t_diarrhoea, t_headache, t_allergy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(event_name~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+#### Site
+```{r results_missing_patterns_trastuzumab_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, trast_received, infusion_no, trast_aes, t_cardiac_fail, t_flu_like, t_nausea, t_diarrhoea, t_headache, t_allergy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+
+#### Event and Site
+```{r results_missing_patterns_trastuzumab_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, trast_received, infusion_no, trast_aes, t_cardiac_fail, t_flu_like, t_nausea, t_diarrhoea, t_headache, t_allergy) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~event_name, scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+```

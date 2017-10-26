@@ -1,0 +1,16 @@
+```{r results_cohort_chemotherapy, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Chemotherapy
+cohort_plot$chemotherapy$factor_chemotherapy
+cohort_table_chemotherapy$chemotherapy$factor %>%
+    melt(id.vars = c('event_name', 'label', 'value'),
+         measure.vars = c('n', 'prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ variable) %>% head()
+## cohort_table_chemotherapy$eq5d$factor %>%
+##     gather(key = var,
+##            value = val,
+##            n, prop, chemotherapy) %>%
+##     spread(key = var,
+##            value = val) %>% head()
+
+```

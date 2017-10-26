@@ -1,0 +1,68 @@
+#### Chemotherapy
+```{r results_cohort_summary_eortc_qlq_br23_chemotherapy, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+plot_grid(cohort_plot_chemotherapy$eortc_qlq_br23$boxplot    + facet_grid(.~chemotherapy),
+          cohort_plot_chemotherapy$eortc_qlq_br23$histogram  + facet_grid(.~chemotherapy),
+          nrow  = 2,
+          align = 'h')
+cohort_table_chemotherapy$eortc_qlq_br23$continuous %>%
+    dplyr::select(event_name, label, chemotherapy, n, missing, mean_sd, median_iqr, range) %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Measurement', 'Chemotherapy', 'N', 'Missing', 'Mean (SD)', 'Median (IQR)', 'Range'))
+cohort_plot_chemotherapy$eortc_qlq_br23$factor_eortc_qlq_br23 + facet_grid(label~chemotherapy)
+cohort_table_chemotherapy$eortc_qlq_br23$factor %>%
+    melt(id.vars = c('event_name', 'chemotherapy', 'label', 'value'),
+         measure.vars = c('n_prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ chemotherapy + variable, value.var = 'val') %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Component', 'Response', 'Chemotherapy', 'No Chemotherapy', 'Missing Chemotherapy'))
+
+```
+
+#### Surgery
+```{r results_cohort_summary_eortc_qlq_br23_surgery, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+plot_grid(cohort_plot_surgery$eortc_qlq_br23$boxplot    + facet_grid(.~surgery),
+          cohort_plot_surgery$eortc_qlq_br23$histogram  + facet_grid(.~surgery),
+          nrow  = 2,
+          align = 'h')
+cohort_table_surgery$eortc_qlq_br23$continuous %>%
+    dplyr::select(event_name, label, surgery, n, missing, mean_sd, median_iqr, range) %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Measurement', 'Surgery', 'N', 'Missing', 'Mean (SD)', 'Median (IQR)', 'Range'))
+cohort_plot_surgery$eortc_qlq_br23$factor_eortc_qlq_br23 + facet_grid(label~surgery)
+cohort_table_surgery$eortc_qlq_br23$factor %>%
+    melt(id.vars = c('event_name', 'surgery', 'label', 'value'),
+         measure.vars = c('n_prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ surgery + variable, value.var = 'val') %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Component', 'Response', 'Surgery', 'No Surgery', 'Missing Surgery'))
+
+```
+
+#### Endocrine therapy
+```{r results_cohort_summary_eortc_qlq_br23_endocrine_therapy, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+plot_grid(cohort_plot_endocrine_therapy$eortc_qlq_br23$boxplot    + facet_grid(.~endocrine_therapy),
+          cohort_plot_endocrine_therapy$eortc_qlq_br23$histogram  + facet_grid(.~endocrine_therapy),
+          nrow  = 2,
+          align = 'h')
+cohort_table_endocrine_therapy$eortc_qlq_br23$continuous %>%
+    dplyr::select(event_name, label, endocrine_therapy, n, missing, mean_sd, median_iqr, range) %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Measurement', 'Endocrine therapy', 'N', 'Missing', 'Mean (SD)', 'Median (IQR)', 'Range'))
+cohort_plot_endocrine_therapy$eortc_qlq_br23$factor_eortc_qlq_br23 + facet_grid(label~endocrine_therapy)
+cohort_table_endocrine_therapy$eortc_qlq_br23$factor %>%
+    melt(id.vars = c('event_name', 'endocrine_therapy', 'label', 'value'),
+         measure.vars = c('n_prop'),
+         value.name   = 'val') %>%
+    dcast(event_name + label + value ~ endocrine_therapy + variable, value.var = 'val') %>%
+    dplyr::filter(!(event_name %in% c('Baseline'))) %>%
+    dplyr::filter(!(event_name %in% c('RCT baseline', 'RCT treatment', 'RCT 6 weeks', 'RCT 6 months'))) %>%
+    kable(col.names = c('Event', 'Component', 'Response', 'Endocrine therapy', 'No Endocrine therapy', 'Missing Endocrine therapy'))
+
+```

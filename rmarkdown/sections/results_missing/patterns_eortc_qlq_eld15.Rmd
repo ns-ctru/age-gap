@@ -1,0 +1,65 @@
+#### Event
+```{r results_missing_patterns_eortc_qlq_eld15_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58, eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63, eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68, mo_raw, mo_scale, wao_raw, wao_scale, wo_raw, wo_scale, mp_raw, mp_scale, boi_raw, boi_scale, js_scale, fs_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(event_name~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+#### Site
+```{r results_missing_patterns_eortc_qlq_eld15_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58, eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63, eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68, mo_raw, mo_scale, wao_raw, wao_scale, wo_raw, wo_scale, mp_raw, mp_scale, boi_raw, boi_scale, js_scale, fs_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+
+#### Event and Site
+```{r results_missing_patterns_eortc_qlq_eld15_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58, eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63, eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68, mo_raw, mo_scale, wao_raw, wao_scale, wo_raw, wo_scale, mp_raw, mp_scale, boi_raw, boi_scale, js_scale, fs_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~event_name, scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+```

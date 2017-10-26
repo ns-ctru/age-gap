@@ -1,0 +1,65 @@
+#### Event
+```{r results_missing_patterns_erotc_qlq_br23_event, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, br23_q31, br23_q32, br23_q33, br23_q34, br23_q35, br23_q36, br23_q37, br23_q38, br23_q39, br23_q40, br23_q41, br23_q42, br23_q43, br23_q44, br23_q45, br23_q46, br23_q47, br23_q48, br23_q49, br23_q50, br23_q51, br23_q52, br23_q53, brbi_raw, brbi_scale, brsef_raw, brsef_scale, brsee_scale, brfu_scale, brst_raw, brst_scale, brbs_raw, brbs_scale, bras_raw, bras_scale, brhl_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(event_name~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+#### Site
+```{r results_missing_patterns_erotc_qlq_br23_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, br23_q31, br23_q32, br23_q33, br23_q34, br23_q35, br23_q36, br23_q37, br23_q38, br23_q39, br23_q40, br23_q41, br23_q42, br23_q43, br23_q44, br23_q45, br23_q46, br23_q47, br23_q48, br23_q49, br23_q50, br23_q51, br23_q52, br23_q53, brbi_raw, brbi_scale, brsef_raw, brsef_scale, brsee_scale, brfu_scale, brst_raw, brst_scale, brbs_raw, brbs_scale, bras_raw, bras_scale, brhl_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~., scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+
+```
+
+
+#### Event and Site
+```{r results_missing_patterns_erotc_qlq_br23_event_site, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+t <- age_gap %>%
+     dplyr::select(individual_id, event_name, site, br23_q31, br23_q32, br23_q33, br23_q34, br23_q35, br23_q36, br23_q37, br23_q38, br23_q39, br23_q40, br23_q41, br23_q42, br23_q43, br23_q44, br23_q45, br23_q46, br23_q47, br23_q48, br23_q49, br23_q50, br23_q51, br23_q52, br23_q53, brbi_raw, brbi_scale, brsef_raw, brsef_scale, brsee_scale, brfu_scale, brst_raw, brst_scale, brbs_raw, brbs_scale, bras_raw, bras_scale, brhl_scale) %>%
+     gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     mutate(Missing = is.na(value),
+            individual_id = factor(individual_id)) %>%
+     dplyr::filter(event_name != 'Surgery')
+t <- left_join(t,
+               master$lookups_fields) %>%
+     ggplot(., aes(x = label, y = individual_id, fill = Missing)) +
+     geom_raster() +
+     facet_grid(site~event_name, scales = 'free_y') +
+     theme_bw() +
+     theme(axis.text.x = element_text(angle = 90))
+t
+## Plot using ggplotly
+## ggplotly(t)
+
+```
