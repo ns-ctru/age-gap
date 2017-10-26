@@ -1663,8 +1663,7 @@ mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuva
                   age_cat = case_when(age_exact >= 70 & age_exact < 75 ~ '70-74',
                                       age_exact >= 75 & age_exact < 80 ~ '75-79',
                                       age_exact >= 80 & age_exact < 85 ~ '80-84',
-                                      age_exact >= 85 & age_exact < 90 ~ '85-89',
-                                      age_exact >= 90                  ~ '>=90'),
+                                      age_exact >= 85                  ~ '>=85'),
                   age_cat = factor(age_cat,
                                    levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
 ## ToDo - Categorisation of other baseline scores, awaiting SAP to be completed
