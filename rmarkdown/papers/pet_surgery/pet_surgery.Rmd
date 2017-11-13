@@ -6,7 +6,29 @@ output: word_document
 bibliography: sections/bibliography.bib
 ---
 
-```{r child = 'sections/overview.Rmd', eval = FALSE}
+```{r setup, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Library
+library(agegap)
+## Options
+opts_chunk$set(cache.path = 'cache/',
+               width    = 200,
+               fig.height = 8,
+               fig.width  = 8,
+               warning = FALSE,
+               message = FALSE)
+options(digits = 3)
+## Ensure anchors are assessed first
+## opts_knit$set(eval.after = 'echo')
+## Hooks
+## knit_hooks$set(anchor = hook_anchor)
+## Set a seed
+set.seed(69027181)
+## Set sensible defaults
+ggplot2.opts <- list()
+ggplot2.opts$binwidth <- 30
+```
+
+```{r child = 'sections/introduction.Rmd', eval = FALSE}
 ```
 
 ```{r child = 'sections/methods.Rmd', eval = TRUE}
