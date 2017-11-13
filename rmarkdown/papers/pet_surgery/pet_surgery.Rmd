@@ -1,0 +1,18 @@
+---
+title: "Bridging the Age Gap In Breast Cancer:  Surgery or primary endocrine therapy for early breast cancer in older women."
+author: Neil Shephard
+date: 2017-11-14
+output: word_document
+bibliography: sections/bibliography.bib
+---
+
+```{r child = 'sections/overview.Rmd', eval = FALSE}
+```
+
+```{r child = 'sections/methods.Rmd', eval = TRUE}
+```
+
+```{r child = 'sections/results.Rmd', eval = TRUE}
+```
+
+# References
