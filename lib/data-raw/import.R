@@ -1605,15 +1605,15 @@ age_gap <- age_gap %>%
 ## Derive an indicator of the primary treatment received based on
 ## notes from meeting with Lynda Wylde 2017-10-23 @ 09:00-11:00
 mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Endocrine',
-                                     endocrine_therapy == 'Yes' & priary_adjuvant == 'Adjuvant' ~ ,
-                                     endocrine_therapy == 'Yes' & priary_adjuvant == 'Neoadjuvant' ~ ,
+                                     ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Adjuvant' ~ ,
+                                     ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Neoadjuvant' ~ ,
                                      surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
                                      surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
                                      chemotherapy == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Endocrine',
                                      radiotherapy == 'Yes' ~ 'Radiotherapy',
-                                     radiotherapy == 'No'  ~ '',
-                                     trastuzumab  == 'Yes' ~ 'Trastuzumab',
-                                     trastuzumab  == 'No'  ~ '')) %>%
+                                     ## radiotherapy == 'No'  ~ '',
+                                     trastuzumab  == 'Yes' ~ 'Trastuzumab')) %>% ## ,
+                                     ## trastuzumab  == 'No'  ~ '')) %>%
 ## Derive an indicator of all of the possible combinations of treatment ever received
            mutate(endocrine_therapy_t = ifelse(endocrine_therapy_ever == 'Yes',
                                                yes = 'Endocrine + ',
@@ -1943,8 +1943,9 @@ mutate(site_breast           = case_when(l_site_breast == 'Ticked' & r_site_brea
        tumour_grade          = factor(tumour_grade,
                                       levels = c(1:4),
                                       labels = c('I', 'II', 'III', 'Not available')),
-       allred                = pmax(l_allred, r_allred, na.rm = TRUE),
-       h_score               = pmax(l_h_score, r_h_score, na.rm = TRUE),
+       allred_baseilne       = pmax(l_allred_baseline, r_allred_baseline, na.rm = TRUE),
+       h_score_baseline      = pmax(l_h_score_baseline, r_h_score_baseilne, na.rm = TRUE),
+       her_2_score           = pmax(l_her_2_score, r_h_score_baseline, na.rm = TRUE),
        ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
        ## her_2_score           = pmax(l_her_2_score, r_her_2_score),
        onco_offered          = case_when(l_onco_offered == 'No'  & r_onco_offered == 'No'  ~ 'No',
@@ -2073,7 +2074,15 @@ mutate(tumour_grade = as.character(tumour_grade),
 dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
               -l_tumour_type_str, -r_tumour_type_str,
               -l_surgery_type_str, -r_surgery_type_str,
-              -l_axillary_type_str, -r_axillary_type_str)
+              -l_axillary_type_str, -r_axillary_type_str) %>%
+## Define Estrogen Receptor status of tumurs based on...
+## allred  | ER Status
+## --------+-------------------
+## 0-2     | ER Negative
+## 3-8     | ER Positive
+mutate(er_tumour = case_when(allred <= 2 ~ 'ER Negative',
+                             allred >= 3 ~ 'ER Positive'),
+       er_tumour = factor(er_tumour))
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
