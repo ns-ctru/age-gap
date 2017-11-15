@@ -2121,12 +2121,30 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
 ###################################################################################
 age_gap <- age_gap %>%
            group_by(individual_id) %>%
-           fill(er_tumour,
+           fill(## Baseline tumour assessments
                 allred_baseline,
                 h_score_baseline,
                 pgr_score_baseline,
                 her_2_score_baseline,
-                primary_treatment)
+                taking_meds_baseline,
+                histo_grade_baseline,
+                histo_subtype_baseline,
+                focal_baseline,
+                num_tumours_baseline,
+                cancer_palpable_baseline,
+                size_clin_assess_baseline,
+                method_assess_baseline,
+                size_ultrasound_baseline,
+                size_mammo_baseline,
+                axillary_present_baseline,
+                axillary_nodes_baseline,
+                axillary_axis_baseline,
+                biopsy_type_baseline,
+                confirm_present_baseline,
+                histo_spcfy_baseline,
+                ## Derived variables
+                primary_treatment,
+                er_tumour)
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
