@@ -472,10 +472,18 @@ names(master$baseline_tumour_assessment) <- ifelse(names(master$baseline_tumour_
                                                    yes = paste0(names(master$baseline_tumour_assessment), '_baseline'))
 ## Derive overall allred/h_score_her_2_score at baseline, do this here so that
 ## merged and available across all time points
-master$baseline_tumour_assessment <- mutate(master$baseline_tumour_assessment
+master$baseline_tumour_assessment <- mutate(master$baseline_tumour_assessment,
                                             allred_baseline       = pmax(l_allred_baseline, r_allred_baseline, na.rm = TRUE),
                                             h_score_baseline      = pmax(l_h_score_baseline, r_h_score_baseline, na.rm = TRUE),
-                                            her_2_score_baseline  = pmax(l_her_2_score_baseline, r_h_score_baseline, na.rm = TRUE))
+                                            her_2_score_baseline  = pmax(l_her_2_score_baseline, r_h_score_baseline, na.rm = TRUE)) %>%
+## Define Estrogen Receptor status of tumurs based on...
+## allred  | ER Status
+## --------+-------------------
+## 0-2     | ER Negative
+## 3-8     | ER Positive
+    mutate(er_tumour = case_when(allred_baseline <= 2 ~ 'ER Negative',
+                                 allred_baseline >= 3 ~ 'ER Positive'),
+           er_tumour = factor(er_tumour))
 ## File : Breast Cancer Treatment Choices - chemo vs no chemo.csv
 master$breast_cancer_treatment_choices_chemo_no_chemo <- read_prospect(file = 'Breast Cancer Treatment Choices - chemo vs no chemo.csv',
                          header              = TRUE,
@@ -1025,6 +1033,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                            allred_baseline,
                                            h_score_baseline,
                                            her_2_score_baseline,
+                                           er_tumour,
                                            taking_meds_baseline),
                              by = c('individual_id', 'site')) %>%
 ## Baseline Medications
@@ -2089,15 +2098,7 @@ mutate(tumour_grade = as.character(tumour_grade),
 dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
               -l_tumour_type_str, -r_tumour_type_str,
               -l_surgery_type_str, -r_surgery_type_str,
-              -l_axillary_type_str, -r_axillary_type_str) %>%
-## Define Estrogen Receptor status of tumurs based on...
-## allred  | ER Status
-## --------+-------------------
-## 0-2     | ER Negative
-## 3-8     | ER Positive
-mutate(er_tumour = case_when(allred_baseline <= 2 ~ 'ER Negative',
-                             allred_baseline >= 3 ~ 'ER Positive'),
-       er_tumour = factor(er_tumour))
+              -l_axillary_type_str, -r_axillary_type_str)
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
@@ -2216,11 +2217,11 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('Derived', '', 'histo_grade_baseline', 'Overall '),
                                c('Derived', '', 'histo_subtype_baseline', 'Overall '),
                                c('Derived', '', 'histo_spcfy_baseline', 'Overall '),
-                               c('Derived', '', 'allred_baseline', 'Overall '),
+                               c('Derived', '', 'allred_baseline', 'Estrogen receptor score at Baseline (worst of l_allred_baseline and r_allred_baseline)'),
                                c('Derived', '', 'h_score_baseline', 'Overall '),
                                c('Derived', '', 'pgr_score_baseline', 'Overall '),
                                c('Derived', '', 'her_2_score_baseline', 'Overall '),
-
+                               c('Derived', '', 'er_tumour', 'Estrogen Receptor binary classifcation (based on allred_baseline)'),
                                c('Derived', '', '' ,''))
 
 
