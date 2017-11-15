@@ -470,6 +470,12 @@ master$baseline_tumour_assessment <- read_prospect(file = 'Baseline Tumour Asses
 names(master$baseline_tumour_assessment) <- ifelse(names(master$baseline_tumour_assessment) %in% duplicated_var_names$baseline,
                                                    no  = names(master$baseline_tumour_assessment),
                                                    yes = paste0(names(master$baseline_tumour_assessment), '_baseline'))
+## Derive overall allred/h_score_her_2_score at baseline, do this here so that
+## merged and available across all time points
+master$baseline_tumour_assessment <- mutate(master$baseline_tumour_assessment
+                                            allred_baseline       = pmax(l_allred_baseline, r_allred_baseline, na.rm = TRUE),
+                                            h_score_baseline      = pmax(l_h_score_baseline, r_h_score_baseline, na.rm = TRUE),
+                                            her_2_score_baseline  = pmax(l_her_2_score_baseline, r_h_score_baseline, na.rm = TRUE))
 ## File : Breast Cancer Treatment Choices - chemo vs no chemo.csv
 master$breast_cancer_treatment_choices_chemo_no_chemo <- read_prospect(file = 'Breast Cancer Treatment Choices - chemo vs no chemo.csv',
                          header              = TRUE,
@@ -1000,8 +1006,11 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                            r_axillary_present_baseline, r_axillary_nodes_baseline,
                                            r_axillary_axis_baseline, r_biopsy_type_baseline,
                                            r_confirm_present_baseline, r_histo_grade_baseline,
-                                           r_histo_subtype_baseline, r_histo_spcfy_baseline, r_allred_baseline,
-                                           r_h_score_baseline, r_pgr_score_baseline, r_her_2_score_baseline,
+                                           r_histo_subtype_baseline, r_histo_spcfy_baseline,
+                                           ## r_allred_baseline,
+                                           ## r_h_score_baseline,
+                                           r_pgr_score_baseline,
+                                           ## r_her_2_score_baseline,
                                            l_focal_baseline, l_num_tumours_baseline, l_cancer_palpable_baseline,
                                            l_size_clin_assess_baseline, l_method_assess_baseline,
                                            l_size_ultrasound_baseline, l_size_mammo_baseline,
@@ -1009,8 +1018,14 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                            l_axillary_axis_baseline, l_biopsy_type_baseline,
                                            l_confirm_present_baseline, l_histo_grade_baseline,
                                            l_histo_subtype_baseline, l_histo_spcfy_baseline,
-                                           l_allred_baseline, l_h_score_baseline, l_pgr_score_baseline,
-                                           l_her_2_score_baseline, taking_meds_baseline),
+                                           ## l_allred_baseline,
+                                           ## l_h_score_baseline,
+                                           l_pgr_score_baseline,
+                                           ## l_her_2_score_baseline,
+                                           allred_baseline,
+                                           h_score_baseline,
+                                           her_2_score_baseline,
+                                           taking_meds_baseline),
                              by = c('individual_id', 'site')) %>%
 ## Baseline Medications
            ## full_join(.,
@@ -1943,9 +1958,9 @@ mutate(site_breast           = case_when(l_site_breast == 'Ticked' & r_site_brea
        tumour_grade          = factor(tumour_grade,
                                       levels = c(1:4),
                                       labels = c('I', 'II', 'III', 'Not available')),
-       allred_baseilne       = pmax(l_allred_baseline, r_allred_baseline, na.rm = TRUE),
-       h_score_baseline      = pmax(l_h_score_baseline, r_h_score_baseilne, na.rm = TRUE),
-       her_2_score           = pmax(l_her_2_score, r_h_score_baseline, na.rm = TRUE),
+       ## allred_baseline       = pmax(l_allred_baseline, r_allred_baseline, na.rm = TRUE),
+       ## h_score_baseline      = pmax(l_h_score_baseline, r_h_score_baseline, na.rm = TRUE),
+       ## her_2_score_baseline  = pmax(l_her_2_score_baseline, r_h_score_baseline, na.rm = TRUE),
        ## ToDo 2017-09-04 : How to reconcile these? case_when() rules?
        ## her_2_score           = pmax(l_her_2_score, r_her_2_score),
        onco_offered          = case_when(l_onco_offered == 'No'  & r_onco_offered == 'No'  ~ 'No',
@@ -2080,8 +2095,8 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
 ## --------+-------------------
 ## 0-2     | ER Negative
 ## 3-8     | ER Positive
-mutate(er_tumour = case_when(allred <= 2 ~ 'ER Negative',
-                             allred >= 3 ~ 'ER Positive'),
+mutate(er_tumour = case_when(allred_baseline <= 2 ~ 'ER Negative',
+                             allred_baseline >= 3 ~ 'ER Positive'),
        er_tumour = factor(er_tumour))
 
 ###################################################################################
