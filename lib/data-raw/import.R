@@ -473,9 +473,25 @@ names(master$baseline_tumour_assessment) <- ifelse(names(master$baseline_tumour_
 ## Derive overall allred/h_score_her_2_score at baseline, do this here so that
 ## merged and available across all time points
 master$baseline_tumour_assessment <- mutate(master$baseline_tumour_assessment,
-                                            allred_baseline       = pmax(l_allred_baseline, r_allred_baseline, na.rm = TRUE),
-                                            h_score_baseline      = pmax(l_h_score_baseline, r_h_score_baseline, na.rm = TRUE),
-                                            her_2_score_baseline  = pmax(l_her_2_score_baseline, r_h_score_baseline, na.rm = TRUE)) %>%
+                                            allred_baseline           = pmax(l_allred_baseline, r_allred_baseline, na.rm = TRUE),
+                                            h_score_baseline          = pmax(l_h_score_baseline, r_h_score_baseline, na.rm = TRUE),
+                                            her_2_score_baseline      = pmax(l_her_2_score_baseline, r_h_score_baseline, na.rm = TRUE),
+                                            pgr_score_baseline        = pmax(l_pgr_score_baseline, r_pgr_score_baseline),
+                                            histo_grade_baseline      = pmax(l_histo_grade_baseline, r_histo_grade_baseline, na.rm = TRUE),
+                                            histo_subtype_baseline    = pmax(l_histo_subtype_baseline, r_histo_subtype_baseline, na.rm = TRUE),
+                                            focal_baseline            = pmax(l_focal_baseline, r_focal_baseline),
+                                            num_tumours_baseline      = pmax(l_num_tumours_baseline, r_num_tumours_baseline),
+                                            cancer_palpable_baseline  = pmax(l_cancer_palpable_baseline, r_cancer_palpable_baseline),
+                                            size_clin_assess_baseline = pmax(l_size_clin_assess_baseline, r_size_clin_assess_baseline),
+                                            method_assess_baseline    = pmax(l_method_assess_baseline, r_method_assess_baseline),
+                                            size_ultrasound_baseline  = pmax(l_size_ultrasound_baseline, r_size_ultrasound_baseline),
+                                            size_mammo_baseline       = pmax(l_size_mammo_baseline, r_size_mammo_baseline),
+                                            axillary_present_baseline = pmax(l_axillary_present_baseline, r_axillary_present_baseline),
+                                            axillary_nodes_baseline   = pmax(l_axillary_nodes_baseline, r_axillary_nodes_baseline),
+                                            axillary_axis_baseline    = pmax(l_axillary_axis_baseline, r_axillary_axis_baseline),
+                                            biopsy_type_baseline      = pmax(l_biopsy_type_baseline, r_biopsy_type_baseline),
+                                            confirm_present_baseline  = pmax(l_confirm_present_baseline, r_confirm_present_baseline),
+                                            histo_spcfy_baseline      = pmax(l_histo_spcfy_baseline, r_histo_spcfy_baseline)) %>%
 ## Define Estrogen Receptor status of tumurs based on...
 ## allred  | ER Status
 ## --------+-------------------
@@ -1006,33 +1022,33 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                            individual_id, site, ## event_name, event_date, database_id,
                                            screening_no, dob, participation_lvl, consent_dt),
                              dplyr::select(master$baseline_tumour_assessment,
-                                           individual_id, site, event_name, event_date, ## database_id,
-                                           uni_bilateral_baseline, primary_tumour_baseline,
-                                           r_focal_baseline, r_num_tumours_baseline, r_cancer_palpable_baseline,
-                                           r_size_clin_assess_baseline, r_method_assess_baseline,
-                                           r_size_ultrasound_baseline, r_size_mammo_baseline,
-                                           r_axillary_present_baseline, r_axillary_nodes_baseline,
-                                           r_axillary_axis_baseline, r_biopsy_type_baseline,
-                                           r_confirm_present_baseline, r_histo_grade_baseline,
-                                           r_histo_subtype_baseline, r_histo_spcfy_baseline,
-                                           ## r_allred_baseline,
-                                           ## r_h_score_baseline,
-                                           r_pgr_score_baseline,
-                                           ## r_her_2_score_baseline,
-                                           l_focal_baseline, l_num_tumours_baseline, l_cancer_palpable_baseline,
-                                           l_size_clin_assess_baseline, l_method_assess_baseline,
-                                           l_size_ultrasound_baseline, l_size_mammo_baseline,
-                                           l_axillary_present_baseline, l_axillary_nodes_baseline,
-                                           l_axillary_axis_baseline, l_biopsy_type_baseline,
-                                           l_confirm_present_baseline, l_histo_grade_baseline,
-                                           l_histo_subtype_baseline, l_histo_spcfy_baseline,
-                                           ## l_allred_baseline,
-                                           ## l_h_score_baseline,
-                                           l_pgr_score_baseline,
-                                           ## l_her_2_score_baseline,
+                                           individual_id,
+                                           enrolment_no,
+                                           site,
+                                           event_name,
+                                           event_date,
+                                           ## database_id,
+                                           uni_bilateral_baseline,
+                                           primary_tumour_baseline,
+                                           focal_baseline,
+                                           num_tumours_baseline,
+                                           cancer_palpable_baseline,
+                                           size_clin_assess_baseline,
+                                           method_assess_baseline,
+                                           size_ultrasound_baseline,
+                                           size_mammo_baseline,
+                                           axillary_present_baseline,
+                                           axillary_nodes_baseline,
+                                           axillary_axis_baseline,
+                                           biopsy_type_baseline,
+                                           confirm_present_baseline,
+                                           histo_grade_baseline,
+                                           histo_subtype_baseline,
+                                           histo_spcfy_baseline,
                                            allred_baseline,
                                            h_score_baseline,
                                            her_2_score_baseline,
+                                           pgr_score_baseline,
                                            er_tumour,
                                            taking_meds_baseline),
                              by = c('individual_id', 'site')) %>%
@@ -2060,9 +2076,9 @@ mutate(site_breast           = case_when(l_site_breast == 'Ticked' & r_site_brea
        axillary_nodes_pet    = pmax(l_axillary_nodes_pet, r_axillary_nodes_pet, na.rm = TRUE),
        axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE),
        ## ToDo 2017-09-12 : How to reconcile these, also check these very carefully
-       histo_grade_baseline  = pmax(l_histo_grade_baseline, r_histo_grade_baseline, na.rm = TRUE),
-       histo_subtype_baseline= pmax(l_histo_subtype_baseline, r_histo_subtype_baseline, na.rm = TRUE),
-       her_2_score_baseline  = pmax(l_her_2_score_baseline, r_her_2_score_baseline, na.rm = TRUE)) %>%
+       ## histo_grade_baseline  = pmax(l_histo_grade_baseline, r_histo_grade_baseline, na.rm = TRUE),
+       ## histo_subtype_baseline= pmax(l_histo_subtype_baseline, r_histo_subtype_baseline, na.rm = TRUE),
+       ##her_2_score_baseline  = pmax(l_her_2_score_baseline, r_her_2_score_baseline, na.rm = TRUE)) %>%
 ## Can not for the life of me work out why this doesn't work as I would expect it to...
 ## mutate(tumour_grade = as.character(tumour_grade),
 ##        tumour_grade          = ifelse((l_tumour_grade == 'I' & r_tumour_grade == 'Not available') |
@@ -2099,6 +2115,22 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
               -l_tumour_type_str, -r_tumour_type_str,
               -l_surgery_type_str, -r_surgery_type_str,
               -l_axillary_type_str, -r_axillary_type_str)
+
+###################################################################################
+## Bulk out data                                                                 ##
+###################################################################################
+## Some variables are derived at a single time point, but are required to be     ##
+## present at all event_names (e.g. primary_treatment or er_tumour), these are   ##
+## bulked out here                                                               ##
+###################################################################################
+age_gap <- age_gap %>%
+           group_by(individual_id) %>%
+           fill(er_tumour,
+                allred_baseline,
+                h_score_baseline,
+                pgr_score_baseline,
+                her_2_score_baseline,
+                primary_treatment)
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
