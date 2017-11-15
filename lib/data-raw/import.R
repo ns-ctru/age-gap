@@ -1341,7 +1341,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                       ##           dplyr::select(master$sites,
                       ##                         site, group, pe_site, qol_sub_study),
                       ##           by = c('site'))
-## HERE
+
 ###################################################################################
 ## Combine the RCT components                                                    ##
 ###################################################################################
@@ -1545,7 +1545,6 @@ age_gap <- full_join(master$therapy_qol,
            full_join(.,
                      master$therapy_ever,
                      by = c('individual_id', 'event_name', 'event_date'))
-## HERE
 
 ###################################################################################
 ## Check for duplicates that might have arisen                                   ##
@@ -1565,6 +1564,7 @@ master$no_event <- age_gap %>%
                    dplyr::select(individual_id, event_name, event_date)
 age_gap <- age_gap %>%
            dplyr::filter(!is.na(event_name))
+## HERE
 
 ###################################################################################
 ## Tidy data, deriving variables, removing outliers etc                          ##
@@ -2074,11 +2074,7 @@ mutate(site_breast           = case_when(l_site_breast == 'Ticked' & r_site_brea
                                          is.na(l_axillary_present_pet)   & r_axillary_present_pet == 'Yes' ~ 'Yes'),
        axillary_present_pet  = factor(axillary_present_pet),
        axillary_nodes_pet    = pmax(l_axillary_nodes_pet, r_axillary_nodes_pet, na.rm = TRUE),
-       axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE),
-       ## ToDo 2017-09-12 : How to reconcile these, also check these very carefully
-       ## histo_grade_baseline  = pmax(l_histo_grade_baseline, r_histo_grade_baseline, na.rm = TRUE),
-       ## histo_subtype_baseline= pmax(l_histo_subtype_baseline, r_histo_subtype_baseline, na.rm = TRUE),
-       ##her_2_score_baseline  = pmax(l_her_2_score_baseline, r_her_2_score_baseline, na.rm = TRUE)) %>%
+       axillary_axis_pet     = pmax(l_axillary_axis_pet, r_axillary_axis_pet, na.rm = TRUE)) %>%
 ## Can not for the life of me work out why this doesn't work as I would expect it to...
 ## mutate(tumour_grade = as.character(tumour_grade),
 ##        tumour_grade          = ifelse((l_tumour_grade == 'I' & r_tumour_grade == 'Not available') |
