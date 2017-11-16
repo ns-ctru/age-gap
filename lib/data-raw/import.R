@@ -1705,7 +1705,7 @@ mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuva
                                       age_exact >= 80 & age_exact < 85 ~ '80-84',
                                       age_exact >= 85                  ~ '>=85'),
                   age_cat = factor(age_cat,
-                                   levels = c('70-74', '75-79', '80-84', '85-89', '>=90'))) %>%
+                                   levels = c('70-74', '75-79', '80-84', '>=85'))) %>%
 ## ToDo - Categorisation of other baseline scores, awaiting SAP to be completed
 ## Categorise Charlson
            mutate(charlson_cat = case_when(cci_score <= 3                  ~ 'Low',
@@ -2143,6 +2143,8 @@ age_gap <- age_gap %>%
                 confirm_present_baseline,
                 histo_spcfy_baseline,
                 ## Derived variables
+                age_exact,
+                age_cat,
                 primary_treatment,
                 er_tumour)
 
