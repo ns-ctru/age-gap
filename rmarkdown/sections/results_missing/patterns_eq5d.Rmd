@@ -3,6 +3,7 @@
 t <- age_gap %>%
      dplyr::select(individual_id, event_name, site, mobility, self_care, usual_activity, pain_discomfort, anxiety_depression, health_today, eq5d_number, eq5d_score) %>%
      gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     ungroup() %>%
      mutate(Missing = is.na(value),
             individual_id = factor(individual_id)) %>%
      dplyr::filter(event_name != 'Surgery')
@@ -25,6 +26,7 @@ t
 t <- age_gap %>%
      dplyr::select(individual_id, event_name, site, mobility, self_care, usual_activity, pain_discomfort, anxiety_depression, health_today, eq5d_number, eq5d_score) %>%
      gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     ungroup() %>%
      mutate(Missing = is.na(value),
             individual_id = factor(individual_id)) %>%
      dplyr::filter(event_name != 'Surgery')
@@ -48,6 +50,7 @@ t
 t <- age_gap %>%
      dplyr::select(individual_id, event_name, site, mobility, self_care, usual_activity, pain_discomfort, anxiety_depression, health_today, eq5d_number, eq5d_score) %>%
      gather(key = identifier, value = value, -individual_id, -event_name, -site) %>%
+     ungroup() %>%
      mutate(Missing = is.na(value),
             individual_id = factor(individual_id)) %>%
      dplyr::filter(event_name != 'Surgery')
