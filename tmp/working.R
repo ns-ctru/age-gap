@@ -1,3 +1,117 @@
+## 2017-11-21 - Deriving indicators of whether treatment specific forms are missing
+##              Code is present in ~/rmarkdown/sections/results_cohort/treatment_profiles.Rmd
+to_share <- age_gap %>%
+            dplyr::filter(event_name %in% events) %>%
+            dplyr::select(-database_id) %>%
+            dplyr::arrange(enrolment_no, event_name) %>%
+            dplyr::filter(!treatment_profile %in% c('None',
+                                                    'Chemotherapy',
+                                                    'Chemotherapy + Surgery',
+                                                    'Endocrine',
+                                                    'Endocrine + Radiotherapy',
+                                                    'Endocrine + Surgery',
+                                                    'Radiotherapy + Surgery',
+                                                    'Surgery'))
+## Derive indicators of whether they are missing forms for a given treatment...
+missing_forms <- to_share %>%
+                 mutate(missing_surgery      = case_when(surgery           == 'Yes' &
+                                                         is.na(surgery_dt) ~ 'Missing'),
+                        missing_endocrine    = case_when(endocrine_therapy == 'Yes' &
+                                                         is.na(assessment_dt_endocrine) ~ 'Missing'),
+                        missing_radiotherapy = case_when(radiotherapy      == 'Yes' &
+                                                         is.na(assessment_dt_radiotherapy) ~ 'Missing'),
+                        missing_chemotherapy = case_when(chemotherapy      == 'Yes' &
+                                                         is.na(assessment_dt_chemotherapy) ~ 'Missing'),
+                        missing_trastuzumab  = case_when(trastuzumab       == 'Yes' &
+                                                         is.na(assessment_dt_trastuzumab) ~ 'Missing')) %>%
+                 dplyr::filter(missing_surgery     == 'Missing' |
+                               missing_endocrine    == 'Missing' |
+                               missing_radiotherapy == 'Missing' |
+                               missing_chemotherapy == 'Missing' |
+                               missing_trastuzumab  == 'Missing')
+## Now check if anyone has missing forms...
+##
+## Surgery
+missing_forms %>%
+    dplyr::filter(missing_surgery == 'Missing') %>%
+    dplyr::select(individual_id, enrolment_no, event_name, surgery_dt, treatment_profile,
+                  general_local,
+                  which_breast_right_surgery,
+                  which_breast_left_surgery,
+                  r_surgery_type,
+                  r_axillary_type,
+                  r_surgery_aes_acute,
+                  l_allred,
+                  l_surgery_type,
+                  l_axillary_type,
+                  l_surgery_aes_acute,
+                  r_allred) %>% as.data.frame()
+## Chemotherapy
+missing_forms %>%
+    dplyr::filter(missing_chemotherapy == 'Missing') %>%
+    dplyr::select(individual_id, enrolment_no, event_name, assessment_dt_chemotherapy, treatment_profile,
+                  chemo_received, chemo_aes,
+                  c_fatigue, c_anaemia, c_low_wc_count, c_thrombocytopenia, c_allergic,
+                  c_hair_thinning, c_nausea, c_infection) %>% as.data.frame()
+## Radiotherapy
+missing_forms %>%
+    dplyr::filter(missing_radiotherapy == 'Missing') %>%
+    dplyr::select(individual_id, enrolment_no, event_name, assessment_dt_radiotherapy, treatment_profile,
+                  which_breast_right_radio, r_site_breast,
+                  r_site_axilla, r_site_supraclavicular, r_site_chest_wall,
+                  r_site_other, r_breast_fractions, r_axilla_fractions,
+                  which_breast_left_radio, l_site_breast,
+                  l_site_axilla, l_site_supraclavicular, l_site_chest_wall,
+                  l_site_other, l_breast_fractions, l_axilla_fractions) %>% as.data.frame()
+## Endocrine
+missing_forms %>%
+    dplyr::filter(missing_endocrine == 'Missing') %>%
+    dplyr::select(individual_id, enrolment_no, event_name, assessment_dt_endocrine, treatment_profile,
+                  primary_adjuvant, reason_pet, reason_pet_risk,
+                  reason_pet_spcfy, endocrine_type, endocrine_type_oth,
+                  therapy_changed, therapy_changed_dtls,
+                  compliance, endocrine_aes, et_hot_flushes, et_asthenia) %>% as.data.frame()
+## Trastuzumab
+missing_forms %>%
+    dplyr::filter(missing_trastuzumab == 'Missing') %>%
+    dplyr::select(individual_id, enrolment_no, event_name, assessment_dt_trastuzumab, treatment_profile,
+                  trast_received, infusion_no, trast_aes, t_cardiac_fail,
+                  t_flu_like, t_nausea, t_diarrhoea, t_headache, t_allergy) %>% as.data.frame()
+## Write the files to check
+write.table(to_share,
+            file = '~/work/scharr/age-gap/rmarkdown/data/csv/age_gap_review.csv',
+            row.names = FALSE,
+            col.names = TRUE,
+            sep = ',')
+write.table(missing_forms,
+            file = '~/work/scharr/age-gap/rmarkdown/data/csv/missing_forms.csv',
+            row.names = FALSE,
+            col.names = TRUE,
+            sep = ',')
+write.table(master$lookup_fields,
+            file = '~/work/scharr/age-gap/rmarkdown/data/csv/age_gap_dictionary.csv',
+            row.names = FALSE,
+            col.names = TRUE,
+            sep = ',')
+
+## 2017-11-21 - Checking whether there are any missing assessment_dt in the five treatment forms
+master$chemotherapy %>%
+    dplyr::filter(is.na(assessment_dt_chemotherapy)) %>%
+    nrow()
+master$radiotherapy %>%
+    dplyr::filter(is.na(assessment_dt_radiotherapy)) %>%
+    nrow()
+master$endocrine %>%
+    dplyr::filter(is.na(assessment_dt_endocrine)) %>%
+    nrow()
+master$surgery %>%
+    dplyr::filter(is.na(surgery_dt)) %>%
+    nrow()
+master$trastuzumab %>%
+    dplyr::filter(is.na(assessment_dt_trastuzumab)) %>%
+    nrow()
+
+
 ## 2017-09-13 - Developing code for recording whether a treatment has been received between
 ##              baseline and a given event_date
 test <- master$therapy_assessment %>%
