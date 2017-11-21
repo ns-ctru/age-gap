@@ -553,6 +553,9 @@ master$chemotherapy <- read_prospect(file = 'Chemotherapy.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+names(master$chemotherapy) <- gsub('assessment_dt',
+                                   'assessment_dt_chemotherapy',
+                                   names(master$chemotherapy))
 ## File : Clinical Assessment (non-PET).csv
 master$clinical_assessment_non_pet <- read_prospect(file = 'Clinical Assessment (non-PET).csv',
                          header              = TRUE,
@@ -635,6 +638,9 @@ master$endocrine_therapy <- read_prospect(file = 'Endocrine Therapy.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+names(master$endocrine_therapy) <- gsub('assessment_dt',
+                                        'assessment_dt_endocrine',
+                                        names(master$endocrine_therapy))
 ## File : EORTC-QLQ-BR23.csv
 master$eortc_qlq_br23 <- read_prospect(file = 'EORTC-QLQ-BR23.csv',
                          header              = TRUE,
@@ -711,6 +717,9 @@ names(master$radiotherapy) <- gsub('which_breast_right',
                                    names(master$radiotherapy))
 names(master$radiotherapy) <- gsub('which_breast_left',
                                    'which_breast_left_radio',
+                                   names(master$radiotherapy))
+names(master$radiotherapy) <- gsub('assessment_dt',
+                                   'assessment_dt_radiotherapy',
                                    names(master$radiotherapy))
 ## File : Screening Form.csv
 master$screening_form <- read_prospect(file = 'Screening Form.csv',
@@ -898,6 +907,9 @@ master$trastuzumab <- read_prospect(file = 'Trastuzumab.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+names(master$trastuzumab) <- gsub('assessment_dt',
+                                  'assessment_dt_trastuzumab',
+                                  names(master$trastuzumab))
 ## File : Treatment decision.csv
 master$treatment_decision <- read_prospect(file = 'Treatment decision.csv',
                          header              = TRUE,
@@ -1184,6 +1196,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                       full_join(.,
                                 dplyr::select(master$endocrine_therapy,
                                               individual_id, site, event_name, ## event_date, database_id,
+                                              assessment_dt_endocrine,
                                               primary_adjuvant, reason_pet, reason_pet_risk,
                                               reason_pet_spcfy, endocrine_type, endocrine_type_oth,
                                               therapy_changed, therapy_changed_dtls,
@@ -1196,6 +1209,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                       full_join(.,
                                 dplyr::select(master$radiotherapy,
                                               individual_id, site, event_name, ## event_date, database_id,
+                                              assessment_dt_radiotherapy,
                                               which_breast_right_radio, which_breast_left_radio, r_site_breast,
                                               r_site_axilla, r_site_supraclavicular, r_site_chest_wall,
                                               r_site_other, r_breast_fractions, r_axilla_fractions,
@@ -1213,6 +1227,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                       full_join(.,
                                 dplyr::select(master$chemotherapy,
                                               individual_id, site, event_name, ## event_date, database_id,
+                                              assessment_dt_chemotherapy,
                                               chemo_received, chemo_aes,
                                               c_fatigue, c_anaemia, c_low_wc_count, c_thrombocytopenia, c_allergic,
                                               c_hair_thinning, c_nausea, c_infection),
@@ -1221,6 +1236,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                       full_join(.,
                                 dplyr::select(master$surgery_and_post_operative_pathology,
                                               individual_id, site, event_name, ## event_date, database_id,
+                                              surgery_dt,
                                               general_local,
                                               which_breast_right_surgery,
                                               which_breast_left_surgery,
@@ -1333,6 +1349,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
                       full_join(.,
                                 dplyr::select(master$trastuzumab,
                                               individual_id, site, event_name, ## event_date, database_id,
+                                              assessment_dt_trastuzumab,
                                               trast_received, infusion_no, trast_aes, t_cardiac_fail,
                                               t_flu_like, t_nausea, t_diarrhoea, t_headache, t_allergy),
                                 by = c('individual_id', 'site', 'event_name')) ## %>%
@@ -2121,7 +2138,9 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
 ###################################################################################
 age_gap <- age_gap %>%
            group_by(individual_id) %>%
-           fill(## Baseline tumour assessments
+           fill(## Key identifier
+                enrolment_no,
+                ## Baseline tumour assessments
                 allred_baseline,
                 h_score_baseline,
                 pgr_score_baseline,
@@ -2147,6 +2166,11 @@ age_gap <- age_gap %>%
                 age_cat,
                 primary_treatment,
                 er_tumour)
+
+## Finally make copies of age_gap to master$ and then remove those who were not enrolled
+master$master <- age_gap
+age_gap <- age_gap %>%
+           dplyr::filter(!is.na(enrolment_no))
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
@@ -2270,7 +2294,10 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('Derived', '', 'pgr_score_baseline', 'Overall '),
                                c('Derived', '', 'her_2_score_baseline', 'Overall '),
                                c('Derived', '', 'er_tumour', 'Estrogen Receptor binary classifcation (based on allred_baseline)'),
-                               c('Derived', '', '' ,''))
+                               c('Derived', '', 'assessment_dt_chemotherapy' ,'Date of Chemotherapy form completion (derived from assessment_dt on Chemotherapy form, renamed to avoid conflicts)'),
+                               c('Derived', '', 'assessment_dt_radiotherapy' ,'Date of Radiotherapy form completion (derived from assessment_dt on Radiotherapy form, renamed to avoid conflicts)'),
+                               c('Derived', '', 'assessment_dt_endocrine' ,'Date of Endocrine Therapy form completion (derived from assessment_dt on Endocrine Therapy form, renamed to avoid conflicts)'),
+                               c('Derived', '', 'assessment_dt_trastuzumab' ,'Date of Trastuzumab form completion (derived from assessment_dt on Trastuzumab form, renamed to avoid conflicts)'))
 
 
 
@@ -2340,6 +2367,9 @@ master$README <- master$README %>%
                                       no         = form),
                         form = ifelse(data_frame == 'duplicates',
                                       yes        = 'Data Frame indicating duplicates.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'master',
+                                      yes        = 'Master Data Frame including those not enrolled but with Baseline data.',
                                       no         = form))
 
 ###################################################################################
