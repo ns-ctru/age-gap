@@ -28,7 +28,51 @@ treatment_event$endocrine_surgery_6week <-   treatment_event$df %>%
 treatment_event$endocrine_radiotherapy_surgery_6week <-   treatment_event$df %>%
                                    dplyr::filter(event_name == '6 weeks' & treatment_profile == 'Endocrine + Radiotherapy + Surgery') %>%
                                    nrow()
-
+## 2017-11-20 - Derive a dataset of individuals who have each of the treatment profiles for sharing with Lynda
+to_share <- age_gap %>%
+            dplyr::filter(event_name %in% events) %>%
+            dplyr::select(-database_id) %>%
+            dplyr::arrange(enrolment_no, event_name) %>%
+            dplyr::filter(!treatment_profile %in% c('None', 
+                                                    'Chemotherapy',
+                                                    'Chemotherapy + Surgery',
+                                                    'Endocrine',
+                                                    'Endocrine + Radiotherapy',
+                                                    'Endocrine + Surgery',
+                                                    'Radiotherapy + Surgery',
+                                                    'Surgery'))
+## Derive indicators of whether they are missing forms for a given treatment...
+missing_forms <- age_gap %>%
+                 mutate(missing_surgery      = case_when(surgery           == 'Yes' & 
+                                                         is.na(surgery_dt) ~ 'Missing'),
+                        missing_endocrine    = case_when(endocrine_therapy == 'Yes' & 
+                                                         is.na(assessment_dt_endocrine) ~ 'Missing'),
+                        missing_radiotherapy = case_when(radiotherapy      == 'Yes' & 
+                                                         is.na(assessment_dt_radiotherapy) ~ 'Missing'),
+                        missing_chemotherapy = case_when(chemotherapy      == 'Yes' & 
+                                                         is.na(assessment_dt_chemotherapy) ~ 'Missing'),
+                        missing_trastuzumab  = case_when(trastuzumab       == 'Yes' & 
+                                                         is.na(assessment_dt_trastuzumab) ~ 'Missing')) %>%
+                 dplyr::filter(missing_surgery     == 'Missing' |
+                               missing_endocrine    == 'Missing' |
+                               missing_radiotherapy == 'Missing' |
+                               missing_chemotherapy == 'Missing' |
+                               missing_trastuzumab  == 'Missing')
+write.table(to_share,
+            file = '../../data/csv/age_gap_review.csv',
+            row.names = FALSE,
+            col.names = TRUE,
+            sep = ',')
+write.table(missing_forms,
+            file = '../../data/csv/missing_forms.csv',
+            row.names = FALSE,
+            col.names = TRUE,
+            sep = ',')
+write.table(master$lookup_fields,
+            file = '../../data/csv/age_gap_dictionary.csv',
+            row.names = FALSE,
+            col.names = TRUE,
+            sep = ',')
 
 ```
 
