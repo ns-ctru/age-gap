@@ -1,5 +1,37 @@
 Adverse events are summarised below.
 
 ```{r results_adverse_events, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+master$adverse_events_ae %>%
+    mutate(ae_event = tolower(ae_event)) %$%
+    table(ae_event) %>%
+    as.data.frame() %>%
+    kable(colnames = c('Adverse Event (as recorded)', 'Frequency'),
+          caption = 'Adverse Events as recorded with their frequency.')
 
 ```
+
+When Adverse Events are recorded a `start_dt` and `end_dt` are recorded along with an `ongoing` field (binary ticked or not), thus it is possible to determine how many events are still considered to be being experienced by study participants by looking at whether `ongoing` has been ticked and/or whether an `end_dt` (end date) has been recorded.
+
+
+```{r results_adverse_events_ongoing, echo = FALSE, warning = FALSE, message = FALSE, results = 'show', cache = FALSE, fig_width = 10, fig_height = 20, eval = TRUE}
+master$adverse_events_ae %>%
+    mutate(has_end_dt = ifelse(!is.na(end_dt),
+                               yes = TRUE,
+                               no  = FALSE)) %$%
+    table(ongoing, has_end_dt) %>%
+    kable(colnames = c('Ongoing', 'No End Date', 'End Date'),
+          caption = 'Reconciling end dates with on-going status')
+
+n_not_ongoing_missing_end_date <- master$adverse_events_ae %>%
+                                  mutate(has_end_dt = ifelse(!is.na(end_dt),
+                                                             yes = TRUE,
+                                                             no  = FALSE)) %>%
+                                  dplyr::filter(ongoing == 'Not Ticked' & has_end_dt == TRUE) %>%
+                                  nrow()
+
+```
+
+As can be seen there are no instances where adverse events have been recorded as `ongoing` (i.e. `Ticked`) that have had an end date recorded against them, however there are `r n_not_ongoing_missing_end_date` instances where the `ongoing`field has *not*  been ticked (i.e. `Not Ticked`) suggesting that the Adverse Event is not ongoing when it was recorded, but no end date has been recorded.
+
+
+It may be of interest to look at Adverse Events by one or more grouping factor.  The Statistical Analysis Plan
