@@ -3,6 +3,7 @@
 ## Description : Imports the CSV files exported from the Prospect database
 ##               and recreates a lot of the links that existed there to
 ##               produce one single data set for analysis
+library(ctru)
 
 ###################################################################################
 ## Script specific functions (unlikely to ever be needed elsewhere)              ##
@@ -46,10 +47,11 @@ names(master$lookups_form) <- names(master$lookups_form) %>% tolower()
 ## names(master$sites) <- names(master$sites) %>% tolower()
 ## names(master$sites) <- gsub('\\.', '_', names(master$sites))
 ## names(master$sites) <- gsub('name', 'site', names(master$sites))
-## File   : Age Gap database specification - Forms.csv
+## File   : Age Gap database specification - Fields.csv
 ## Source : https://goo.gl/oFBs4j
 master$lookups_fields <- read.csv(file = 'Age Gap database specification - Fields.csv',
-                                  header = TRUE)
+                                  header = TRUE,
+                                  stringsAsFactors = FALSE)
 master$lookups_fields <- master$lookups_fields %>%
                          dplyr::select(Form, Subform, Identifier, Label)
 names(master$lookups_fields) <- names(master$lookups_fields) %>% tolower()
@@ -1658,15 +1660,25 @@ age_gap <- age_gap %>%
                                                 is.na(chemotherapy) |
                                                 is.na(trastuzumab) |
                                                 is.na(surgery) ~ 'One or more missing treatment')) %>%
-           dplyr::select(-endocrine_therapy_t, -radiotherapy_t, -chemotherapy_t, -trastuzumab_t, -surgery_t) %>%
+    dplyr::select(-endocrine_therapy_t, -radiotherapy_t, -chemotherapy_t, -trastuzumab_t, -surgery_t) %>%
+########################################################################
+## Treatment                                                          ##
+########################################################################
 ## Derive an indicator of the primary treatment received based on
 ## notes from meeting with Lynda Wylde 2017-10-23 @ 09:00-11:00
+##
+## 2017-12-11 : Lynda will be going through a list of some 400 or so to manually
+##              check/indicate what treatment they have received.
+##
+##              Its unclear to me why these rules can not be written down
+##              by Lynda for me to translate into code?
 mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Endocrine',
                                      ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Adjuvant' ~ ,
                                      ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Neoadjuvant' ~ ,
                                      surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
                                      surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
-                                     chemotherapy == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Endocrine',
+                                     endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
+                                     endocrine_therapy == 'No' & surgery == 'No' & radiotherapy == 'Yes' ~ 'Chemotherapy',
                                      radiotherapy == 'Yes' ~ 'Radiotherapy',
                                      ## radiotherapy == 'No'  ~ '',
                                      trastuzumab  == 'Yes' ~ 'Trastuzumab')) %>% ## ,
