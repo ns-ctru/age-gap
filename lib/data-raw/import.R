@@ -1134,12 +1134,14 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             by = c('individual_id', 'site', 'event_name')) %>%
 ## Study completion discontinuation form (deaths/censoring)
                   full_join(.,
-                            dply::select(master$study_completion_discontinuation_form,
-                                         disc_death_dt,
-                                         disc_rsn,
-                                         death_cause_1,
-                                         death_cause_2,
-                                         death_cause_3))
+                            dplyr::select(master$study_completion_discontinuation_form,
+                                          individual_id, site, event_name, ## event_date, database_id,
+                                          disc_death_dt,
+                                          disc_rsn,
+                                          death_cause_1,
+                                          death_cause_2,
+                                          death_cause_3),
+                            by = c('individual_id', 'site', 'event_name'))
 
 ## Site Randomisation
                   ## full_join(.,
