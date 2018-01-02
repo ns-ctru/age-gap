@@ -1131,7 +1131,16 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             dplyr::select(master$ecog_performance_status_score,
                                           individual_id, site, event_name, ## event_date, database_id,
                                           ecog_grade),
-                            by = c('individual_id', 'site', 'event_name')) ## %>%
+                            by = c('individual_id', 'site', 'event_name')) %>%
+## Study completion discontinuation form (deaths/censoring)
+                  full_join(.,
+                            dply::select(master$study_completion_discontinuation_form,
+                                         disc_death_dt,
+                                         disc_rsn,
+                                         death_cause_1,
+                                         death_cause_2,
+                                         death_cause_3))
+
 ## Site Randomisation
                   ## full_join(.,
                   ##           dplyr::select(master$sites,
@@ -1727,7 +1736,7 @@ mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuva
                                                 is.na(surgery_ever) ~ 'One or more missing treatment')) %>%
            dplyr::select(-endocrine_therapy_t, -radiotherapy_t, -chemotherapy_t, -trastuzumab_t, -surgery_t) %>%
 # Age based on Date of Birth
-           mutate(age_exact = new_interval(start = dob,
+           mutate(age_exact = lubridate::new_interval(start = dob,
                                            end = consent_dt) / duration(num = 1, units = 'years'),
                   age_cat = case_when(age_exact >= 70 & age_exact < 75 ~ '70-74',
                                       age_exact >= 75 & age_exact < 80 ~ '75-79',
