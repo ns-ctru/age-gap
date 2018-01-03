@@ -25,6 +25,10 @@ system(cmd)
 ```{r child='results_cohort/baseline.Rmd', eval = FALSE}
 ```
 
+### Survival {.tabset .tabset-fade .tabset-pills}
+```{r child='results_cohort/survival.Rmd', eval = FALSE}
+```
+
 ### EQ5D {.tabset .tabset-fade .tabset-pills}
 ```{r child='results_cohort/summary_eq5d.Rmd', eval = TRUE}
 ```
