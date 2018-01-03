@@ -1141,7 +1141,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                           death_cause_1,
                                           death_cause_2,
                                           death_cause_3),
-                            by = c('individual_id', 'site', 'event_name'))
+                            by = c('individual_id', 'site'))
 
 ## Site Randomisation
                   ## full_join(.,
