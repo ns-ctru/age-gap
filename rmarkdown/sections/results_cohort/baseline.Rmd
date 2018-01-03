@@ -1,3 +1,5 @@
-```{r results_cohort_eq5d, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+Baseline variables are summarised below.  No formatl statistical tests are performed or presented for differences between groups as doing so does not provide any insight into the cohorts, what is of interest is differences in their outcomes, and comparing these directly at follow whilst adjusting for differences in baseline measurements or factors which are known or thought to invluence the outcome is the recomended method of adjustment rather than multiple tests for imbalance at baseline guiding what adjustments should be made [@altman1985, @senn1994, @senn1995, @roberts1999, @bland2011] or calculating change from baseline and comparing that [@vickers2001b].
+
+```{r results_cohort_baseline, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
 
 ```
