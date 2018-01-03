@@ -1,0 +1,34 @@
+It is desirable to assess the survival of patients based on the primary treatment they received.  Originally two year survival using data from cancer(?) registeries and provided via NHS Digital.  Unfortunately a change in governance has made obtaining this data problematic and so the work currently presented below is based on the available data recorded within the study on the *Study Completion / Discontinuation* Case Report Forms (CRFs).  Access to the planned data has been appealed by the Cheif Invesigator [Lynda Wyld](mailto:l.wyld@sheffield.ac.uk) or there is the possibility of obtaining more complete follow-up data on deaths from study sites directly, thus there is scope for the work presented below to be revised at a future date.
+
+#### Summary
+
+A brief summary of follow-up data is provided.
+
+```{r results_cohort_survival_summary, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```
+
+#### Kaplan-Meier Survival Curves
+
+[Kapal-Meier curves](https://en.wikipedia.org/wiki/Kaplan%E2%80%93Meier_estimator) provide a graphical representation of the survival function and allow direct visual comparison between different treatments.
+
+```{r results_cohort_survival_kaplan_meier, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```
+
+
+#### Cox Proportional Hazards (Non-Parametric)
+
+[Cox-Proportional Hazard](https://en.wikipedia.org/wiki/Proportional_hazards_model)
+
+```{r results_cohort_survival_cox_ph, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```
+
+#### Parametric Models
+
+[Parametric survival](https://en.wikipedia.org/wiki/Survival_function) modelling affords the researcher the ability to make predictions beyond the observed time frame.
+
+```{r results_cohort_survival_parametric, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```
