@@ -1135,7 +1135,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
 ## Study completion discontinuation form (deaths/censoring)
                   full_join(.,
                             dplyr::select(master$study_completion_discontinuation_form,
-                                          individual_id, site, event_name, ## event_date, database_id,
+                                          individual_id, site, ## event_name, event_date, database_id,
                                           disc_death_dt,
                                           disc_rsn,
                                           death_cause_1,
