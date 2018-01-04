@@ -2619,11 +2619,13 @@ continuous_vars$clinical_assessment_pet <- quos(r_breast_fractions, r_axilla_fra
 ## 1. Find out what variables are to be included, this depends on input from     ##
 ##    the CI at least, likely some sort of consensus from others.                ##
 ##                                                                               ##
-## 2. Decide what modelling approach to use.                                     ##
+## 2. Assess how much missing daata there is.                                    ##
 ##                                                                               ##
-## 3. What package to use, mice, amelia or mi, mitools? (Likely not one but many)##
+## 3. Decide what modelling approach to use.                                     ##
 ##                                                                               ##
-## 4. How to assess whether data is MCAR/MAR/NMAR?                               ##
+## 4. What package to use, mice, amelia or mi, mitools? (Likely not one but many)##
+##                                                                               ##
+## 5. How to assess whether data is MCAR/MAR/NMAR?                               ##
 ##                                                                               ##
 ##    - Could plot a heat-map of event (x) and response (y) with colour          ##
 ##      indicating the proportion of missing data?                               ##
@@ -2637,7 +2639,8 @@ continuous_vars$clinical_assessment_pet <- quos(r_breast_fractions, r_axilla_fra
 ##                                                                               ##
 ## Notes...                                                                      ##
 ##                                                                               ##
-## Generally not advisable to impute categorical variables                       ##
+## * Generally not advisable to impute categorical variables                     ##
+## * Paper : https://goo.gl/8d9HFR                                               ##
 ##                                                                               ##
 ###################################################################################
 
