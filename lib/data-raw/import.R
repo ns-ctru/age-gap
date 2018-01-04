@@ -2201,13 +2201,7 @@ dplyr::select(age_gap,
 ## There appear some duplicates have crept into the dataset, at a bare minimum
 ## individual_id == 47817 is in there twice, lest work out why.
 ##
-## Handily I've already collated a list of duplicates, lets look at the events...
-dplyr::filter(master$duplicates, n > 1) %$%
-    table(event_name)
-## Ahha! Some people have had multiple surgeries, and since the date of Surgery
-## has not been recorded its impossible to distinguish them.
-
-dplyr::select(individual_id, site, event_name)
+## dplyr::select(individual_id, site, event_name)
 
 ###################################################################################
 ## Bulk out data                                                                 ##
@@ -2253,7 +2247,7 @@ age_gap <- age_gap %>%
                 death_cause_2,
                 death_cause_3,
                 censor,
-                death_dt)
+                last_seen)
 
 ## Finally make copies of age_gap to master$ and then remove those who were not enrolled
 master$master <- age_gap
