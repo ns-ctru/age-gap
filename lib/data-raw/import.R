@@ -2177,31 +2177,6 @@ age_gap <- age_gap %>%
            ungroup() %>%
            mutate(survival = last_seen - recruited)
 
-dplyr::select(age_gap,
-              individual_id,
-              event_name,
-              event_date,
-              recruited,
-              last_seen,
-              survival,
-              disc_death_dt,
-              censor) %>%
-    arrange(individual_id, event_date) %>%
-    ## Check a few types of people...
-    ## Those with a discontinuation/death date
-    ## dplyr::filter(!is.na(disc_death_dt)) %>% as.data.frame() %>% head(n = 30)
-    ## Some without discontinuation/death date
-    dplyr::filter(is.na(disc_death_dt)) %>% as.data.frame() %>% head(n = 30)
-    ## A few random people...
-    ## dplyr::filter(individual_id %in% c(47728, 47731))
-
-
-## ToDo - Duplicates!!
-##
-## There appear some duplicates have crept into the dataset, at a bare minimum
-## individual_id == 47817 is in there twice, lest work out why.
-##
-## dplyr::select(individual_id, site, event_name)
 
 ###################################################################################
 ## Bulk out data                                                                 ##
