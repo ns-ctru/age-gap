@@ -2153,6 +2153,57 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
               -l_axillary_type_str, -r_axillary_type_str)
 
 ###################################################################################
+## Survival                                                                      ##
+###################################################################################
+## Derive variables required for survival here                                   ##
+##                                                                               ##
+## This will likely all change when actual data becomes available!!!             ##
+###################################################################################
+age_gap <- age_gap %>%
+           mutate(censor    = ifelse(is.na(disc_rsn) | disc_rsn != 'Participant died',
+                                     yes = 0,
+                                     no  = 1)) %>%
+           group_by(individual_id) %>%
+           arrange(event_date) %>%
+           mutate(recruited = min(event_date, na.rm = TRUE),
+                  last_seen = case_when(censor == 1 ~ max(disc_death_dt, na.rm = TRUE),
+                                        censor == 0 ~ max(event_date, na.rm = TRUE))) %>%
+           ungroup() %>%
+           mutate(survival = last_seen - recruited)
+
+dplyr::select(age_gap,
+              individual_id,
+              event_name,
+              event_date,
+              recruited,
+              last_seen,
+              survival,
+              disc_death_dt,
+              censor) %>%
+    arrange(individual_id, event_date) %>%
+    ## Check a few types of people...
+    ## Those with a discontinuation/death date
+    ## dplyr::filter(!is.na(disc_death_dt)) %>% as.data.frame() %>% head(n = 30)
+    ## Some without discontinuation/death date
+    dplyr::filter(is.na(disc_death_dt)) %>% as.data.frame() %>% head(n = 30)
+    ## A few random people...
+    ## dplyr::filter(individual_id %in% c(47728, 47731))
+
+
+## ToDo - Duplicates!!
+##
+## There appear some duplicates have crept into the dataset, at a bare minimum
+## individual_id == 47817 is in there twice, lest work out why.
+##
+## Handily I've already collated a list of duplicates, lets look at the events...
+dplyr::filter(master$duplicates, n > 1) %$%
+    table(event_name)
+## Ahha! Some people have had multiple surgeries, and since the date of Surgery
+## has not been recorded its impossible to distinguish them.
+
+dplyr::select(individual_id, site, event_name)
+
+###################################################################################
 ## Bulk out data                                                                 ##
 ###################################################################################
 ## Some variables are derived at a single time point, but are required to be     ##
@@ -2188,7 +2239,15 @@ age_gap <- age_gap %>%
                 age_exact,
                 age_cat,
                 primary_treatment,
-                er_tumour)
+                er_tumour,
+                ## Survival variables
+                disc_death_dt,
+                disc_rsn,
+                death_cause_1,
+                death_cause_2,
+                death_cause_3,
+                censor,
+                death_dt)
 
 ## Finally make copies of age_gap to master$ and then remove those who were not enrolled
 master$master <- age_gap
