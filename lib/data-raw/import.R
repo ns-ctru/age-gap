@@ -758,6 +758,12 @@ names(master$surgery_and_post_operative_pathology) <- gsub('which_breast_right',
 names(master$surgery_and_post_operative_pathology) <- gsub('which_breast_left',
                                                            'which_breast_left_surgery',
                                                            names(master$surgery_and_post_operative_pathology))
+## 2018-01-04 - Some people have had multiple surgical procedures, but since the dates
+##              are not recorded its impossible to say which came first.  However, to avoid
+##              duplicates creeping in we must now uniquely name their event_name
+master$surgery_and_post_operative_pathology <- master$surgery_and_post_operative_pathology %>%
+                                               group_by(individual_id) %>%
+                                               mutate(event_name = paste0(event_name, ' ', 1:n()))
 ## File : The Brief Illness Perception Questionnaire (BIPQ).csv
 master$the_brief_illness_perception_questionnaire <- read_prospect(file = 'The Brief Illness Perception Questionnaire (BIPQ).csv',
                          header              = TRUE,
