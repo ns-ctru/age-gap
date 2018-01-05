@@ -1035,6 +1035,75 @@ master$db_spec_forms <- master$db_spec_forms %>%
 ## Data Frame                                                                    ##
 ###################################################################################
 ## Derive a single data frame for all data components
+
+###################################################################################
+## Extract event_date for merging later, this is required because some           ##
+## individualsa do not have an event_date for eortc_qlq_c30 which was originally ##
+## the source of inclusion, hence when then merging the event_date was always    ##
+## missing                                                                       ##
+###################################################################################
+common <- c('individual_id', 'site', 'event_name', 'event_date')
+master$event_date <- rbind(master$abridged_patient_assessment[, common],
+                           master$activities_daily_living[, common],
+                           master$adverse_events_ae[, common],
+                           master$adverse_events[, common],
+                           master$baseline_medications[, common],
+                           master$baseline_medications_med[, common],
+                           master$baseline_tumour_assessment[, common],
+                           master$breast_cancer_treatment_choices_chemo_no_chemo[, common],
+                           master$breast_cancer_treatment_choices_surgery_pills[, common],
+                           master$brief_cope[, common],
+                           master$change_in_participation[, common],
+                           master$chemotherapy_chemotherapy[, common],
+                           master$chemotherapy[, common],
+                           master$clinical_assessment_non_pet[, common],
+                           master$clinical_assessment_pet[, common],
+                           master$collaborate[, common],
+                           master$consent_form[, common],
+                           master$decision_making_preferences[, common],
+                           master$decision_regret_scale[, common],
+                           master$discussing_treatment_options[, common],
+                           master$ecog_performance_status_score[, common],
+                           master$eligibility_checklist[, common],
+                           master$endocrine_therapy[, common],
+                           master$eortc_qlq_br23[, common],
+                           master$eortc_qlq_c30[, common],
+                           master$eortc_qlq_eld15[, common],
+                           master$eq5d[, common],
+                           master$instrumental_activities_daily_living[, common],
+                           master$mini_mental_state_examination[, common],
+                           master$modified_charlson_comorbidity[, common],
+                           master$process_evaluation_log[, common],
+                           master$process_evaluation[, common],
+                           master$qol_lol_questionnaire[, common],
+                           master$radiotherapy[, common], #
+                           master$screening_form[, common],
+                           master$spielberger_state_trait_anxiety[, common],
+                           master$study_completion_discontinuation_form[, common],
+                           ## master$surgery_and_post_operative_pathology[, common],
+                           master$the_brief_illness_perception_questionnaire[, common],
+                           master$therapy_assessment[, common],
+                           master$trastuzumab[, common],
+                           master$treatment_decision[, common],
+                           master$treatment_decision_support_consultations[, common]) %>%
+    ## Remove duplicates and instances with missing dates
+    unique() %>%
+    dplyr::filter(!is.na(event_date)) %>%
+    dplyr::filter(event_name != 'RCT 6 weeks') %>%
+    dplyr::filter(event_name != 'Screening') %>%
+    mutate(event_name = factor(event_name,
+                               levels = c('Baseline',
+                                          ## 'RCT baseline',
+                                          ## 'RCT treatment',
+                                          '6 weeks',
+                                          ## 'RCT 6 weeks',
+                                          '6 months',
+                                          ## 'RCT 6 months',
+                                          '12 months',
+                                          '18 months',
+                                          '24 months'))) %>%
+    arrange(individual_id, event_date)
+
 ## Consent and Baseline Tumor Assessment
 ## NB - 'event_name' is NOT used from master$consent_form since these are all 'Screening' and
 ##      all that is required is pulling in the four non-matching variables with the baseline
@@ -1046,7 +1115,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                                            enrolment_no,
                                            site,
                                            event_name,
-                                           event_date,
+                                           ## event_date,
                                            ## database_id,
                                            uni_bilateral_baseline,
                                            primary_tumour_baseline,
@@ -1160,12 +1229,13 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
 ##                                    individual_id, site, event_name, event_date, ## database_id,
 ##                                    )) %>%
 
+
 ###################################################################################
 ## Combine questionnaires and therapy assessments made at multiple time points   ##
 ###################################################################################
 ## EORTC-QLQ-C30 and EORTC-QLQ-BR23
 master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
-                                              individual_id, site, event_name, event_date, database_id,
+                                              individual_id, site, event_name, database_id, ## event_date,
                                               c30_q1,  c30_q2,  c30_q3,  c30_q4,  c30_q5,
                                               c30_q6,  c30_q7,  c30_q8,  c30_q9,  c30_q10,
                                               c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
@@ -1383,7 +1453,7 @@ master$therapy_qol <- full_join(dplyr::select(master$eortc_qlq_c30,
 ###################################################################################
 ## Treatment Decision Support Consultations + Treatment Decision
 master$rct <- full_join(dplyr::select(master$treatment_decision_support_consultations,
-                                      individual_id, site, event_name, event_date, ## database_id,
+                                      individual_id, site, event_name, ## event_date, database_id,
                                       surg_pet_consult, surg_pet_consult_dt, surg_pet_offer,
                                       surg_pet_follow, chemo_no_consult, chemo_no_consult_dt,
                                       chemo_no_offer, chemo_no_follow),
@@ -1554,10 +1624,15 @@ master$rct <- full_join(dplyr::select(master$treatment_decision_support_consulta
 ###################################################################################
 age_gap <- full_join(master$therapy_qol,
                      master$baseline,
-                     by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+                     by = c('individual_id', 'site', 'event_name')) %>%
            full_join(.,
                      master$rct,
-                     by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+                     by = c('individual_id', 'site', 'event_name')) %>%
+## Merge in the event_date (use left_join() so that all data is retained, but exclude instances
+## where there is an individual_id/site/event_name without any data)
+           left_join(.,
+                     master$event_date,
+                     by = c('individual_id', 'site', 'event_name')) %>%
 ## Convert event_name to a factor so that it will plot in the correct order in all
 ## subsequent uses
            mutate(event_name = factor(event_name,
@@ -2379,6 +2454,9 @@ master$README <- master$README %>%
                                       no         = form),
                         form = ifelse(data_frame == 'lookups_fields',
                                       yes        = 'Field Lookups (from Database Specification).',
+                                      no         = form),
+                        form = ifelse(data_frame == 'event_date',
+                                      yes        = 'Unique Event Dates',
                                       no         = form),
                         form = ifelse(data_frame == 'adverse_events_ae',
                                       yes        = 'Adverse Events - AeEvent.',
