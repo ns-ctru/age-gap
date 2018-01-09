@@ -2250,7 +2250,9 @@ age_gap <- age_gap %>%
                   last_seen = case_when(censor == 1 ~ max(disc_death_dt, na.rm = TRUE),
                                         censor == 0 ~ max(event_date, na.rm = TRUE))) %>%
            ungroup() %>%
-           mutate(survival = last_seen - recruited)
+           mutate(survival      = last_seen - recruited,
+                  age_last_seen = lubridate::new_interval(start = dob,
+                                           end = last_seen) / duration(num = 1, units = 'years'))
 
 
 ###################################################################################
