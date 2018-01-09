@@ -2252,7 +2252,8 @@ age_gap <- age_gap %>%
            ungroup() %>%
            mutate(survival      = last_seen - recruited,
                   age_last_seen = lubridate::new_interval(start = dob,
-                                           end = last_seen) / duration(num = 1, units = 'years'))
+                                                          end = last_seen) / duration(num = 1, units = 'years'))
+
 
 
 ###################################################################################
