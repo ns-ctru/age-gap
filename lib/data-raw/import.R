@@ -1206,17 +1206,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             dplyr::select(master$ecog_performance_status_score,
                                           individual_id, site, event_name, ## event_date, database_id,
                                           ecog_grade),
-                            by = c('individual_id', 'site', 'event_name')) %>%
-## Study completion discontinuation form (deaths/censoring)
-                  full_join(.,
-                            dplyr::select(master$study_completion_discontinuation_form,
-                                          individual_id, site, ## event_name, event_date, database_id,
-                                          disc_death_dt,
-                                          disc_rsn,
-                                          death_cause_1,
-                                          death_cause_2,
-                                          death_cause_3),
-                            by = c('individual_id', 'site'))
+                            by = c('individual_id', 'site', 'event_name')) ## %>%
 
 ## Site Randomisation
                   ## full_join(.,
@@ -1628,6 +1618,16 @@ age_gap <- full_join(master$therapy_qol,
            full_join(.,
                      master$rct,
                      by = c('individual_id', 'site', 'event_name')) %>%
+## Study completion discontinuation form (deaths/censoring)
+           left_join(.,
+                     dplyr::select(master$study_completion_discontinuation_form,
+                                   individual_id, site, ## event_name, event_date, database_id,
+                                   disc_death_dt,
+                                   disc_rsn,
+                                   death_cause_1,
+                                   death_cause_2,
+                                   death_cause_3),
+                     by = c('individual_id', 'site')) %>%
 ## Merge in the event_date (use left_join() so that all data is retained, but exclude instances
 ## where there is an individual_id/site/event_name without any data)
            left_join(.,
@@ -2241,14 +2241,14 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
 ## This will likely all change when actual data becomes available!!!             ##
 ###################################################################################
 age_gap <- age_gap %>%
-           mutate(censor    = ifelse(is.na(disc_rsn) | disc_rsn != 'Participant died',
-                                     yes = 0,
-                                     no  = 1)) %>%
+           mutate(death    = ifelse(is.na(disc_rsn) | disc_rsn != 'Participant died',
+                                    yes = 0,
+                                    no  = 1)) %>%
            group_by(individual_id) %>%
            arrange(event_date) %>%
            mutate(recruited = min(event_date, na.rm = TRUE),
-                  last_seen = case_when(censor == 1 ~ max(disc_death_dt, na.rm = TRUE),
-                                        censor == 0 ~ max(event_date, na.rm = TRUE))) %>%
+                  last_seen = case_when(death == 1 ~ max(disc_death_dt, na.rm = TRUE),
+                                        death == 0 ~ max(event_date, na.rm = TRUE))) %>%
            ungroup() %>%
            mutate(survival      = last_seen - recruited,
                   age_last_seen = lubridate::new_interval(start = dob,
@@ -2264,7 +2264,9 @@ age_gap <- age_gap %>%
 ## bulked out here                                                               ##
 ###################################################################################
 age_gap <- age_gap %>%
-           group_by(individual_id) %>%
+    group_by(individual_id) %>%
+    ## Because study completion data has been coerced to align with Baseline (since the
+    ## event_name 'Study Completion' doesn't align with any others)
            fill(## Key identifier
                 enrolment_no,
                 ## Baseline tumour assessments
@@ -2299,8 +2301,9 @@ age_gap <- age_gap %>%
                 death_cause_1,
                 death_cause_2,
                 death_cause_3,
-                censor,
-                last_seen)
+                death,
+                last_seen,
+                age_last_seen)
 
 ## Finally make copies of age_gap to master$ and then remove those who were not enrolled
 master$master <- age_gap
@@ -2432,7 +2435,12 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('Derived', '', 'assessment_dt_chemotherapy' ,'Date of Chemotherapy form completion (derived from assessment_dt on Chemotherapy form, renamed to avoid conflicts)'),
                                c('Derived', '', 'assessment_dt_radiotherapy' ,'Date of Radiotherapy form completion (derived from assessment_dt on Radiotherapy form, renamed to avoid conflicts)'),
                                c('Derived', '', 'assessment_dt_endocrine' ,'Date of Endocrine Therapy form completion (derived from assessment_dt on Endocrine Therapy form, renamed to avoid conflicts)'),
-                               c('Derived', '', 'assessment_dt_trastuzumab' ,'Date of Trastuzumab form completion (derived from assessment_dt on Trastuzumab form, renamed to avoid conflicts)'))
+                               c('Derived', '', 'assessment_dt_trastuzumab' ,'Date of Trastuzumab form completion (derived from assessment_dt on Trastuzumab form, renamed to avoid conflicts)'),
+                               c('Derived', '', 'death' ,'Death (currently based on Study Discontinuation Form)'),
+                               c('Derived', '', 'recruited' ,'Date of recruitment, a proxy for diagnosis from which survival is calculated'),
+                               c('Derived', '', 'last_seen' ,'Date of last contact'),
+                               c('Derived', '', 'survival' ,'Length of Survival (last_seen - recruited)'),
+                               c('Derived', '', 'age_last_seen' ,'Age at last contact (based on Date of Birth)'))
 
 
 
