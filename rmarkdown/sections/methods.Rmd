@@ -42,41 +42,41 @@ primary_treatment_numbers$n_baseline <- dplyr::filter(age_gap, event_name == 'Ba
 | Time Point | Treatment (Any) | Surgery | Primary Endocrine | Adjuvant Endocrine | Chemotherapy | Radiotherapy |  None |
 |:----------:|:---------------:|:-------:|:-----------------:|:------------------:|:------------:|:------------:|:-----:|
 | Baseline   | 0               | 0       | 0                 | 0                  | 0            | 0            | `rprimary_treatment_numbers$n_baseline` |
-| 6 Weeks    | `r primary_treatment$n_6weeks_any` |
-               `r primary_treatment$n_6weeks_surgery` |
-               `r primary_treatment$n_6weeks_primary_endocrine` | 
-               `r primary_treatment$n_6weeks_adjuvant_endocrine` | 
-               `r primary_treatment$n_6weeks_chemotherapy` | 
-               `r primary_treatment$n_6weeks_radiotherapy` | 
-               `r primary_treatment$n_6weeks_none` |
-| 6 Month    | `r primary_treatment$n_6months_any` |
-               `r primary_treatment$n_6months_surgery` |
-               `r primary_treatment$n_6months_primary_endocrine` | 
-               `r primary_treatment$n_6months_adjuvant_endocrine` | 
-               `r primary_treatment$n_6months_chemotherapy` | 
-               `r primary_treatment$n_6months_radiotherapy` | 
-               `r primary_treatment$n_6months_none` |
-| 12 Month   | `r primary_treatment$n_12months_any` |
-               `r primary_treatment$n_12months_surgery` |
-               `r primary_treatment$n_12months_primary_endocrine` | 
-               `r primary_treatment$n_12months_adjuvant_endocrine` | 
-               `r primary_treatment$n_12months_chemotherapy` | 
-               `r primary_treatment$n_12months_radiotherapy` | 
-               `r primary_treatment$n_12months_none` |
-| 18 Month   | `r primary_treatment$n_18months_any` |
-               `r primary_treatment$n_18months_surgery` |
-               `r primary_treatment$n_18months_primary_endocrine` | 
-               `r primary_treatment$n_18months_adjuvant_endocrine` | 
-               `r primary_treatment$n_18months_chemotherapy` | 
-               `r primary_treatment$n_18months_radiotherapy` | 
-               `r primary_treatment$n_18months_none` |
-| 24 Month   | `r primary_treatment$n_24months_any` |
-               `r primary_treatment$n_24months_surgery` |
-               `r primary_treatment$n_24months_primary_endocrine` | 
-               `r primary_treatment$n_24months_adjuvant_endocrine` | 
-               `r primary_treatment$n_24months_chemotherapy` | 
-               `r primary_treatment$n_24months_radiotherapy` | 
-               `r primary_treatment$n_24months_none` |
+| 6 Weeks    | `r primary_treatment_numbers$n_6weeks_any` |
+               `r primary_treatment_numbers$n_6weeks_surgery` |
+               `r primary_treatment_numbers$n_6weeks_primary_endocrine` |
+               `r primary_treatment_numbers$n_6weeks_adjuvant_endocrine` |
+               `r primary_treatment_numbers$n_6weeks_chemotherapy` |
+               `r primary_treatment_numbers$n_6weeks_radiotherapy` |
+               `r primary_treatment_numbers$n_6weeks_none` |
+| 6 Month    | `r primary_treatment_numbers$n_6months_any` |
+               `r primary_treatment_numbers$n_6months_surgery` |
+               `r primary_treatment_numbers$n_6months_primary_endocrine` |
+               `r primary_treatment_numbers$n_6months_adjuvant_endocrine` |
+               `r primary_treatment_numbers$n_6months_chemotherapy` |
+               `r primary_treatment_numbers$n_6months_radiotherapy` |
+               `r primary_treatment_numbers$n_6months_none` |
+| 12 Month   | `r primary_treatment_numbers$n_12months_any` |
+               `r primary_treatment_numbers$n_12months_surgery` |
+               `r primary_treatment_numbers$n_12months_primary_endocrine` |
+               `r primary_treatment_numbers$n_12months_adjuvant_endocrine` |
+               `r primary_treatment_numbers$n_12months_chemotherapy` |
+               `r primary_treatment_numbers$n_12months_radiotherapy` |
+               `r primary_treatment_numbers$n_12months_none` |
+| 18 Month   | `r primary_treatment_numbers$n_18months_any` |
+               `r primary_treatment_numbers$n_18months_surgery` |
+               `r primary_treatment_numbers$n_18months_primary_endocrine` |
+               `r primary_treatment_numbers$n_18months_adjuvant_endocrine` |
+               `r primary_treatment_numbers$n_18months_chemotherapy` |
+               `r primary_treatment_numbers$n_18months_radiotherapy` |
+               `r primary_treatment_numbers$n_18months_none` |
+| 24 Month   | `r primary_treatment_numbers$n_24months_any` |
+               `r primary_treatment_numbers$n_24months_surgery` |
+               `r primary_treatment_numbers$n_24months_primary_endocrine` |
+               `r primary_treatment_numbers$n_24months_adjuvant_endocrine` |
+               `r primary_treatment_numbers$n_24months_chemotherapy` |
+               `r primary_treatment_numbers$n_24months_radiotherapy` |
+               `r primary_treatment_numbers$n_24months_none` |
 
 
 #### Summary
