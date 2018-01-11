@@ -38,6 +38,14 @@ primary_treatment_numbers$n_baseline <- dplyr::filter(age_gap, event_name == 'Ba
 
 
 ```
+1. Take 6 week contact data.
+2. If Endocrine Therapy is recorded as `Primary` assign to `Primary Endocrine`, regardless of other treatments.
+3. If Encodrine Therapy is recorded as `Adjuvant` assign to `Adjuvant Endocrine`, regardless of other treatments.
+4. If no Endocrine Therapy is recorded and Surgery is recorded assign to `Surgery`.
+5. If no Endocrine Therapy and no Surgery is recorded and Chemotherapy is recorded assign to `Chemotherapy`.
+6. If no Endocrine Therapy, no Surgery and no Chemotherapy is recorded and Radiotherapy is recorded assign to `Radiotherapy`.
+
+Not everyone has treatment recorded by six weeks though in those cases the above rules were applied to data collected at six months, similarly not everyone has treatment at six months in which case 12 month data was used, then 18 month, then 24 month.
 
 | Time Point | Treatment (Any) | Surgery | Primary Endocrine | Adjuvant Endocrine | Chemotherapy | Radiotherapy |  None |
 |:----------:|:---------------:|:-------:|:-----------------:|:------------------:|:------------:|:------------:|:-----:|
