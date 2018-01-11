@@ -9,12 +9,12 @@ load('~/work/scharr/age-gap/lib/data/age-gap.RData')
 
 The Cluster Randomised Control Trial (cRCT) component of the study is the main focus of the work and results presented here.  The Cohort study is analysed seperately by another statistician (originally assigned to Oscar Bortolami, but he has since left the CTRU and its unclear who is conducting these analyses), however as the Quality Control (QC) statistician assigned to check the analyses of the Cohort study a portion of that QC process is presented within.
 
-Detailed guidelines of the work required for both studies is provided in two Statistical Analysis Plans written by Oscar Bortolami and approved by the senior statistician [Stephen Walters](mailto:s.j.walters@sheffield.ac.uk) and chief investigator [Lynda Wyld](mailto:l.wyld@sheffield.ac.uk).  These are not (yet) available online...
+Detailed guidelines of the work required for both studies was initially written in two Statistical Analysis Plans developed by Oscar Bortolami...
 
 * Bridging The Age Gap Cohort Statistical Analysis Plan v1.1 2017-02-02
 * Bridging The Age Gap cRCT Statistical Analysis Plan v4 2017-02-02
 
-Abridged details of the analyses and methods to be performed as part of this study are detailed below, but readers are referred to the above Statistical Analysis Plans for full details.
+...however, these were not complete and having had meetings with Lynda Wyld it seems the planned analyses are not necessarily reflected by these documents as it is desirable to have some 22 individual papers written and published, only some of which require direct input from a CTRU statistician, rather than the more commonly encountered practice in the CTRU of providing a comprehensive funders report and then writing peer-reviewed journals.  To which end this report will endeavour to document the work required, and incorporate all results here, but stand-alone documents will be written and produced for each specific piece of work.
 
 ### Recruitment
 
@@ -22,6 +22,66 @@ Screening and recruitment rates are summarised by time/month in tabular and grap
 
 
 ### Cohort Study
+
+#### Defining Primary Treatment
+
+Breast cancer treatment strategies are complex and do not involve a single treatment, rather a series of complimentary treatments will be used/accepted by the patient based on disease progression and response to previouis treatments.  To this end comparisons within this study are to be made baed on the *primary* treatment that individuals received.  Unforunately the Case Report Forms captured at follow-up events of 6 weeks and 6/12/18/24 months generally do *not* record the date on which treatments were received rather the date of these events is recorded against the treatment.  There is one exception which  Surgery where the dates are recorded but without dates for other treatments these are somewhat redudant (see email from [n.shephard@Sheffield.ac.uk](mailto:n.shephard@sheffield.ac.uk) to [t.chater@sheffield.ac.uk](mailto:t.chater@sheffield.ac.uk) and [k.pemberton@sheffield.ac.uk](mailto:k.pemberton@sheffield.ac.uk) **Subject** : [AGEGAP] Date of Therapy for details and confirmation from Data Management that this is the case).
+
+To this end a method of defining primary treatment based on clinical knowledge has been sought from Chief Investigator Lynda Wyld.  Details from a meeting can be found in [this document](https://docs.google.com/document/d/1EftKI9WGU3MmP-McW7QuWNPi85l4RBt2Qngp7XsYnF4/edit?usp=sharing) (restricted to those with University of Sheffield accounts) and have been simplified into an algorithm described below for reference and use in Quality Control of this work.
+
+```{r methods_primary_treatment, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## List for storing numbers
+primary_treatment <- list()
+## Number with baseline
+primary_treatment$n_baseline <- dplyr::filter(age_gap, event_name == 'Baseline') %>%
+                                nrow()
+## Derive numbers for use in each step of the algorithm below
+tmp <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
+       dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
+                     endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant)
+primary_treatment$n_6weeks <- nrow(tmp)
+primary_treatment$n_6weeks_none <- dplyr::filter(tmp, treatment_profile == 'None') %>%
+                                   nrow()
+## Obtain numbers for each treatment
+## Derive numbers for 6 weeks
+primary_treatment$n_6weeks_surgery <- dplyr::filter(tmp, primary_treatment == 'Surgery')  %>%
+                                      nrow()
+primary_treatment$n_6weeks_chemotherapy <- dplyr::filter(tmp, primary_treatment == 'Chemotherapy')  %>%
+                                           nrow()
+primary_treatment$n_6weeks_radiotherapy <- dplyr::filter(tmp, primary_treatment == 'Radiotherapy')  %>%
+                                           nrow()
+primary_treatment$n_6weeks_endocrine <- dplyr::filter(tmp, primary_treatment == 'Primary Endocrine')  %>%
+                                        nrow()
+primary_treatment$n_6weeks_trastuzumab <- dplyr::filter(tmp, primary_treatment == 'Trastuzumab')  %>%
+                                        nrow()
+## Repeat for 6 months
+tmp <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
+       dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
+                     endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant)
+primary_treatment$n_6weeks <- nrow(tmp)
+primary_treatment$n_6weeks_none <- dplyr::filter(tmp, treatment_profile == 'None') %>%
+                                   nrow()
+## Obtain numbers for each treatment
+## Derive numbers for 6 weeks
+primary_treatment$n_6weeks_surgery <- dplyr::filter(tmp, primary_treatment == 'Surgery')  %>%
+                                      nrow()
+primary_treatment$n_6weeks_chemotherapy <- dplyr::filter(tmp, primary_treatment == 'Chemotherapy')  %>%
+                                           nrow()
+primary_treatment$n_6weeks_radiotherapy <- dplyr::filter(tmp, primary_treatment == 'Radiotherapy')  %>%
+                                           nrow()
+primary_treatment$n_6weeks_endocrine <- dplyr::filter(tmp, primary_treatment == 'Primary Endocrine')  %>%
+                                        nrow()
+primary_treatment$n_6weeks_trastuzumab <- dplyr::filter(tmp, primary_treatment == 'Trastuzumab')  %>%
+                                        nrow()
+
+
+
+```
+
+| Time Point | Treatment (Any) | Surgery | Endocrine | Chemotherapy | Radiotherapy | Trastuzumab | None |
+|:----------:|:---------------:|:-------:|:---------:|:------------:|:------------:|:-----------:|:----:|
+| Baseline   | 0               | 0       | 0         | 0            | 0            |             | `r primary_treatment$n_baseline` |
+| 6 Weeks    | `r primary_treatment$n_6weeks` | `r primary_treatment$n_6weeks_surgery` | `r primary_treatment$n_6weeks_endocrine` |  `r primary_treatment$n_6weeks_chemotherapy` |  `r primary_treatment$n_6weeks_radiotherapy` |  `r primary_treatment$n_6weeks_trastuzumab` |  `r primary_treatment$n_6weeks_none` |
 
 #### Summary
 
