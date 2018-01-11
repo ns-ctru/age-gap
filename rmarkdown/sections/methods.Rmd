@@ -30,63 +30,53 @@ Breast cancer treatment strategies are complex and do not involve a single treat
 To this end a method of defining primary treatment based on clinical knowledge has been sought from Chief Investigator Lynda Wyld.  Details from a meeting can be found in [this document](https://docs.google.com/document/d/1EftKI9WGU3MmP-McW7QuWNPi85l4RBt2Qngp7XsYnF4/edit?usp=sharing) (restricted to those with University of Sheffield accounts) and have been simplified into an algorithm described below for reference and use in Quality Control of this work.
 
 ```{r methods_primary_treatment, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
-## List for storing numbers
-primary_treatment <- list()
+## Already have most of the numbers required from ~/lib/data-raw/import.R
 ## Number with baseline
-primary_treatment$n_baseline <- dplyr::filter(age_gap, event_name == 'Baseline') %>%
-                                nrow()
-## Derive numbers for use in each step of the algorithm below
-tmp <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
-       dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
-                     endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant)
-## Obtain numbers for each treatment
-## Derive numbers for 6 weeks
-primary_treatment$n_6weeks_none <- dplyr::filter(tmp, primary_treatment == 'None') %>%
-                                   nrow()
-primary_treatment$n_6weeks_any <- dplyr::filter(tmp, primary_treatment != 'None') %>%
-                                   nrow()
-primary_treatment$n_6weeks_surgery <- dplyr::filter(tmp, primary_treatment == 'Surgery')  %>%
-                                      nrow()
-primary_treatment$n_6weeks_chemotherapy <- dplyr::filter(tmp, primary_treatment == 'Chemotherapy')  %>%
-                                           nrow()
-primary_treatment$n_6weeks_radiotherapy <- dplyr::filter(tmp, primary_treatment == 'Radiotherapy')  %>%
-                                           nrow()
-primary_treatment$n_6weeks_endocrine <- dplyr::filter(tmp, primary_treatment == 'Primary Endocrine')  %>%
-                                        nrow()
-primary_treatment$n_6weeks_trastuzumab <- dplyr::filter(tmp, primary_treatment == 'Trastuzumab')  %>%
-                                        nrow()
-## Repeat for 6 months, but need to ignore primary_treatment as this has already been
-## derived globally (this uses code from ~/lib/data-raw/import.R which reconciles treatments
-## received between 6 weeks and 6 months for those who had no treatment in the first
-## 6 weeks)
-tmp <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
-       dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
-                     endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant)
-primary_treatment$n_6weeks <- nrow(tmp)
-primary_treatment$n_6weeks_none <- dplyr::filter(tmp, treatment_profile == 'None') %>%
-                                   nrow()
-## Obtain numbers for each treatment
-## Derive numbers for 6 weeks
-primary_treatment$n_6weeks_surgery <- dplyr::filter(tmp, primary_treatment == 'Surgery')  %>%
-                                      nrow()
-primary_treatment$n_6weeks_chemotherapy <- dplyr::filter(tmp, primary_treatment == 'Chemotherapy')  %>%
-                                           nrow()
-primary_treatment$n_6weeks_radiotherapy <- dplyr::filter(tmp, primary_treatment == 'Radiotherapy')  %>%
-                                           nrow()
-primary_treatment$n_6weeks_endocrine <- dplyr::filter(tmp, primary_treatment == 'Primary Endocrine')  %>%
-                                        nrow()
-primary_treatment$n_6weeks_trastuzumab <- dplyr::filter(tmp, primary_treatment == 'Trastuzumab')  %>%
+primary_treatment_numbers$n_baseline <- dplyr::filter(age_gap, event_name == 'Baseline') %>%
                                         nrow()
 
 
 
 ```
 
-| Time Point | Treatment (Any) | Surgery | Endocrine | Chemotherapy | Radiotherapy | Trastuzumab | None |
-|:----------:|:---------------:|:-------:|:---------:|:------------:|:------------:|:-----------:|:----:|
-| Baseline   | 0               | 0       | 0         | 0            | 0            |             | `r primary_treatment$n_baseline` |
-| 6 Weeks    | `r primary_treatment$n_6weeks_any` | `r primary_treatment$n_6weeks_surgery` | `r primary_treatment$n_6weeks_endocrine` |  `r primary_treatment$n_6weeks_chemotherapy` |  `r primary_treatment$n_6weeks_radiotherapy` |  `r primary_treatment$n_6weeks_trastuzumab` |  `r primary_treatment$n_6weeks_none` |
-| 6 Months   | `r primary_treatment$n_6weeks_any` | `r primary_treatment$n_6weeks_surgery` | `r primary_treatment$n_6weeks_endocrine` |  `r primary_treatment$n_6weeks_chemotherapy` |  `r primary_treatment$n_6weeks_radiotherapy` |  `r primary_treatment$n_6weeks_trastuzumab` |  `r primary_treatment$n_6weeks_none` |
+| Time Point | Treatment (Any) | Surgery | Primary Endocrine | Adjuvant Endocrine | Chemotherapy | Radiotherapy |  None |
+|:----------:|:---------------:|:-------:|:-----------------:|:------------------:|:------------:|:------------:|:-----:|
+| Baseline   | 0               | 0       | 0                 | 0                  | 0            | 0            | `rprimary_treatment_numbers$n_baseline` |
+| 6 Weeks    | `r primary_treatment$n_6weeks_any` |
+               `r primary_treatment$n_6weeks_surgery` |
+               `r primary_treatment$n_6weeks_primary_endocrine` | 
+               `r primary_treatment$n_6weeks_adjuvant_endocrine` | 
+               `r primary_treatment$n_6weeks_chemotherapy` | 
+               `r primary_treatment$n_6weeks_radiotherapy` | 
+               `r primary_treatment$n_6weeks_none` |
+| 6 Month    | `r primary_treatment$n_6months_any` |
+               `r primary_treatment$n_6months_surgery` |
+               `r primary_treatment$n_6months_primary_endocrine` | 
+               `r primary_treatment$n_6months_adjuvant_endocrine` | 
+               `r primary_treatment$n_6months_chemotherapy` | 
+               `r primary_treatment$n_6months_radiotherapy` | 
+               `r primary_treatment$n_6months_none` |
+| 12 Month   | `r primary_treatment$n_12months_any` |
+               `r primary_treatment$n_12months_surgery` |
+               `r primary_treatment$n_12months_primary_endocrine` | 
+               `r primary_treatment$n_12months_adjuvant_endocrine` | 
+               `r primary_treatment$n_12months_chemotherapy` | 
+               `r primary_treatment$n_12months_radiotherapy` | 
+               `r primary_treatment$n_12months_none` |
+| 18 Month   | `r primary_treatment$n_18months_any` |
+               `r primary_treatment$n_18months_surgery` |
+               `r primary_treatment$n_18months_primary_endocrine` | 
+               `r primary_treatment$n_18months_adjuvant_endocrine` | 
+               `r primary_treatment$n_18months_chemotherapy` | 
+               `r primary_treatment$n_18months_radiotherapy` | 
+               `r primary_treatment$n_18months_none` |
+| 24 Month   | `r primary_treatment$n_24months_any` |
+               `r primary_treatment$n_24months_surgery` |
+               `r primary_treatment$n_24months_primary_endocrine` | 
+               `r primary_treatment$n_24months_adjuvant_endocrine` | 
+               `r primary_treatment$n_24months_chemotherapy` | 
+               `r primary_treatment$n_24months_radiotherapy` | 
+               `r primary_treatment$n_24months_none` |
 
 
 #### Summary
