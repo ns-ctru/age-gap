@@ -39,11 +39,12 @@ primary_treatment$n_baseline <- dplyr::filter(age_gap, event_name == 'Baseline')
 tmp <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
        dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
                      endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant)
-primary_treatment$n_6weeks <- nrow(tmp)
-primary_treatment$n_6weeks_none <- dplyr::filter(tmp, treatment_profile == 'None') %>%
-                                   nrow()
 ## Obtain numbers for each treatment
 ## Derive numbers for 6 weeks
+primary_treatment$n_6weeks_none <- dplyr::filter(tmp, primary_treatment == 'None') %>%
+                                   nrow()
+primary_treatment$n_6weeks_any <- dplyr::filter(tmp, primary_treatment != 'None') %>%
+                                   nrow()
 primary_treatment$n_6weeks_surgery <- dplyr::filter(tmp, primary_treatment == 'Surgery')  %>%
                                       nrow()
 primary_treatment$n_6weeks_chemotherapy <- dplyr::filter(tmp, primary_treatment == 'Chemotherapy')  %>%
@@ -54,7 +55,10 @@ primary_treatment$n_6weeks_endocrine <- dplyr::filter(tmp, primary_treatment == 
                                         nrow()
 primary_treatment$n_6weeks_trastuzumab <- dplyr::filter(tmp, primary_treatment == 'Trastuzumab')  %>%
                                         nrow()
-## Repeat for 6 months
+## Repeat for 6 months, but need to ignore primary_treatment as this has already been
+## derived globally (this uses code from ~/lib/data-raw/import.R which reconciles treatments
+## received between 6 weeks and 6 months for those who had no treatment in the first
+## 6 weeks)
 tmp <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
        dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
                      endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant)
@@ -81,7 +85,9 @@ primary_treatment$n_6weeks_trastuzumab <- dplyr::filter(tmp, primary_treatment =
 | Time Point | Treatment (Any) | Surgery | Endocrine | Chemotherapy | Radiotherapy | Trastuzumab | None |
 |:----------:|:---------------:|:-------:|:---------:|:------------:|:------------:|:-----------:|:----:|
 | Baseline   | 0               | 0       | 0         | 0            | 0            |             | `r primary_treatment$n_baseline` |
-| 6 Weeks    | `r primary_treatment$n_6weeks` | `r primary_treatment$n_6weeks_surgery` | `r primary_treatment$n_6weeks_endocrine` |  `r primary_treatment$n_6weeks_chemotherapy` |  `r primary_treatment$n_6weeks_radiotherapy` |  `r primary_treatment$n_6weeks_trastuzumab` |  `r primary_treatment$n_6weeks_none` |
+| 6 Weeks    | `r primary_treatment$n_6weeks_any` | `r primary_treatment$n_6weeks_surgery` | `r primary_treatment$n_6weeks_endocrine` |  `r primary_treatment$n_6weeks_chemotherapy` |  `r primary_treatment$n_6weeks_radiotherapy` |  `r primary_treatment$n_6weeks_trastuzumab` |  `r primary_treatment$n_6weeks_none` |
+| 6 Months   | `r primary_treatment$n_6weeks_any` | `r primary_treatment$n_6weeks_surgery` | `r primary_treatment$n_6weeks_endocrine` |  `r primary_treatment$n_6weeks_chemotherapy` |  `r primary_treatment$n_6weeks_radiotherapy` |  `r primary_treatment$n_6weeks_trastuzumab` |  `r primary_treatment$n_6weeks_none` |
+
 
 #### Summary
 
