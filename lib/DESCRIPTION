@@ -1,6 +1,6 @@
 Package: agegap
 Title: Package for Bridging The Age Gap Randomised Control Trial
-Version: 0.20180111
+Version: 0.20180125
 Authors@R: person("Neil", "Shephard", email = "n.shephard@sheffield.ac.uk", role = c("aut", "cre"))
 Description:
 Depends:
@@ -14,6 +14,7 @@ Depends:
     gee (>= 4.13-19),
     geepack (>= 1.2-1),
     ggfortify (>= 0.4.1),
+    ggkm (>= 0.6.0),
     haven (>= 1.0.0),
     Hmisc (>= 4.0-3),
     magrittr (>= 1.5),
