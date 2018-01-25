@@ -22,6 +22,7 @@ You can now clone the study repository which includes all of the code for produc
 You will then need to obtain the raw data from the studies project folder and add it to the `lib/data-raw/` directory and run the `lib/data-raw/import.R` file in order to read and clean the data.  Once this has been done you can use the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package to `document()`, `build()` and `install()` the package using the following (since Vignettes consistently fail to build and need to be built seperately).
 
     install.packages('devtools')
+	setwd('/path/to/cloned/age-gap/lib')
 	devtools::document()
 	devtools::build(vignettes = FALSE)
 	devtools::install()
