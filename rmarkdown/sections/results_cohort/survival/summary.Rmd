@@ -1,0 +1,28 @@
+A brief summary of follow-up data is provided.  At present the only data available on deaths is catpured in the *Study completion / discontinuation form* Case Report Form (CRF) which does not exclusively record deaths but also patients desire to withdraw.  Such instances result in [right-censoring](https://en.wikipedia.org/wiki/Survival_analysis#Censoring) as it prevents the researcher from observing the participant for the intended follow-up period.
+
+```{r results_cohort_survival_summary, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+## Tabulate the causes of death by the primary treatments
+age_gap %>%
+    dplyr::filter(event_name == 'Baseline') %$%
+    table(disc_rsn, primary_treatment, useNA = 'ifany')
+
+## Plot bar-chart (with scattered dots) of the age at death
+age_gap %>%
+    dplyr::filter(event_name == 'Baseline') %>%
+    ggplot(aes(primary_treatment, age_last_seen, fill = primary_treatment)) +
+    geom_boxplot() +
+    ylab('Age at Last Contact (Years)') +
+    xlab('Primary Treatment Group') +
+    theme(legend.position = 'none')
+
+## Plot bar-chart of survival from study recruitment/diagnosis)
+age_gap %>%
+    dplyr::filter(event_name == 'Baseline') %>%
+##    dplyr::mutate()
+    ggplot(aes(primary_treatment, survival, fill = primary_treatment)) +
+    geom_boxplot() +
+    ylab('Survival (Days)') +
+    xlab(' APrimary Treatment Group') +
+    theme(legend.position = 'none')
+
+```
