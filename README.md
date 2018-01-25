@@ -19,4 +19,19 @@ You can now clone the study repository which includes all of the code for produc
 
     git clone git@github.com/ns-ctru/age-gap
 
-You will then need to obtain the raw data from the studies project folder and add it to the `lib/data-raw/` directory and run the `lib/data-raw/import.R` file in order to read and clean the data.
+You will then need to obtain the raw data from the studies project folder and add it to the `lib/data-raw/` directory and run the `lib/data-raw/import.R` file in order to read and clean the data.  Once this has been done you can use the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package to `document()`, `build()` and `install()` the package using the following (since Vignettes consistently fail to build and need to be built seperately).
+
+    install.packages('devtools')
+	devtools::document()
+	devtools::build(vignettes = FALSE)
+	devtools::install()
+	devtools::build_vignettes()
+
+
+#### Dependencies
+
+This project makes use of some convenience packages/functions that are not hosted on [CRAN](https://cran.r-project.org/) but are instead developed and maintained on users [GitHub](https://github.com/) accounts.  If a function can not be installed from CRAN on installing the ''age-gap''.  These dependencies are...
+
+| Package                | Description               |
+|:-----------------------|:--------------------------|
+| ''[ggkm](https://github.com/sachsmc/ggkm)'' | Simplifies drawing [Kaplan-Meir survival curves](https://en.wikipedia.org/wiki/Kaplan%E2%80%93Meier_estimator) using [ggplot](http://ggplot2.tidyverse.org/reference/) |
