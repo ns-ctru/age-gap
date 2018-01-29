@@ -745,6 +745,11 @@ master$study_completion_discontinuation_form <- read_prospect(file = 'Study comp
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+## 2018-01-29 : Rename the event_date which is required because the study completion and
+##              discontinuation form is NOT always completed at 2 year follow up, it is
+##              very often recorded _after_
+master$study_completion_discontinuation_form <- master$study_completion_discontinuation_form %>%
+                                                mutate(study_completion_dt = event_date)
 ## File : Surgery and Post Operative Pathology.csv
 master$surgery_and_post_operative_pathology <- read_prospect(file = 'Surgery and Post Operative Pathology.csv',
                          header              = TRUE,
@@ -1622,6 +1627,7 @@ age_gap <- full_join(master$therapy_qol,
            left_join(.,
                      dplyr::select(master$study_completion_discontinuation_form,
                                    individual_id, site, ## event_name, event_date, database_id,
+                                   study_completion_dt,
                                    disc_death_dt,
                                    disc_rsn,
                                    death_cause_1,
@@ -1754,27 +1760,8 @@ age_gap <- age_gap %>%
                                                 is.na(surgery) ~ 'One or more missing treatment')) %>%
     dplyr::select(-endocrine_therapy_t, -radiotherapy_t, -chemotherapy_t, -trastuzumab_t, -surgery_t) %>%
 ########################################################################
-## Treatment                                                          ##
+## Treatment Profile                                                  ##
 ########################################################################
-## Derive an indicator of the primary treatment received based on
-## notes from meeting with Lynda Wylde 2017-10-23 @ 09:00-11:00
-##
-## 2017-12-11 : Lynda will be going through a list of some 400 or so to manually
-##              check/indicate what treatment they have received.
-##
-##              Its unclear to me why these rules can not be written down
-##              by Lynda for me to translate into code?
-mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Endocrine',
-                                     ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Adjuvant' ~ ,
-                                     ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Neoadjuvant' ~ ,
-                                     surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
-                                     surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
-                                     endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
-                                     endocrine_therapy == 'No' & surgery == 'No' & radiotherapy == 'Yes' ~ 'Chemotherapy',
-                                     radiotherapy == 'Yes' ~ 'Radiotherapy',
-                                     ## radiotherapy == 'No'  ~ '',
-                                     trastuzumab  == 'Yes' ~ 'Trastuzumab')) %>% ## ,
-                                     ## trastuzumab  == 'No'  ~ '')) %>%
 ## Derive an indicator of all of the possible combinations of treatment ever received
            mutate(endocrine_therapy_t = ifelse(endocrine_therapy_ever == 'Yes',
                                                yes = 'Endocrine + ',
@@ -2233,6 +2220,205 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
               -l_surgery_type_str, -r_surgery_type_str,
               -l_axillary_type_str, -r_axillary_type_str)
 
+
+###################################################################################
+## Primary Treatment                                                             ##
+###################################################################################
+## Derive an indicator of the primary treatment received based on
+## notes from meeting with Lynda Wylde 2017-10-23 @ 09:00-11:00
+##
+## 2017-12-11 : Lynda will be going through a list of some 400 or so to manually
+##              check/indicate what treatment they have received.
+##
+##              Its unclear to me why these rules can not be written down
+##              by Lynda for me to translate into code?
+##
+## 2018-01-10 : Code not quite right, produces event_name specific categorisation, need overall
+##              Look to moving code elsewhere or collapsing/replacing things?
+##
+##              All but 61 individuals have received a treatment of some sort by 6 week
+##              assessment, therefore use that to derive primary, then fix the remaining
+##
+agegap_encode <- function(df = .,
+                          event = '6 weeks'){
+    df <- df %>%
+          dplyr::filter(event_name == event) %>%
+          dplyr::select(individual_id, site, event_name,
+                        treatment_profile,
+                        endocrine_therapy,
+                        radiotherapy,
+                        surgery,
+                        chemotherapy,
+                        trastuzumab,
+                        primary_adjuvant) %>%
+          mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Primary Endocrine',
+                                               endocrine_therapy == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Adjuvant Endocrine',
+                                               surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
+                                               surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
+                                               surgery == 'Yes' & is.na(primary_adjuvant) ~ 'Surgery',
+                                               endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
+                                               endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'No' & radiotherapy == 'Yes' ~ 'Radiotherapy',
+                                               radiotherapy == 'Yes' ~ 'Radiotherapy',
+                                               trastuzumab  == 'Yes' ~ 'Trastuzumab')) %>%
+        dplyr::select(individual_id, site, primary_treatment)
+    return(df)
+}
+## Get primary treatment at 6 weeks if available
+primary_6weeks <- agegap_encode(df    = age_gap,
+                                event = '6 weeks')
+## Get a list of those who do not have primary treatment then remove them from the primary_treatment df
+missing_6weeks <- dplyr::filter(primary_6weeks, is.na(primary_treatment))$individual_id %>% as.vector()
+primary_6weeks <- filter(primary_6weeks, !is.na(primary_treatment)) %>%
+                  unique()
+## Sort out those who had not received any treatment by 6 weeks by looking at their 6 month data
+primary_6months <- dplyr::filter(age_gap, individual_id %in% missing_6weeks) %>%
+                   agegap_encode(df    = .,
+                                 event = '6 months')
+## Get a list of those who do not have primary treatment then remove them from the primary_treatment df
+missing_6months <- dplyr::filter(primary_6months, is.na(primary_treatment))$individual_id %>% as.vector()
+primary_6months <- filter(primary_6months, !is.na(primary_treatment)) %>%
+                   unique()
+## Repeat at 12 months as there are still some who don't have any treatment recorded
+primary_12months <- dplyr::filter(age_gap, individual_id %in% missing_6months) %>%
+                    agegap_encode(df    = .,
+                                  event = '12 months')
+## Get a list of those who do not have primary treatment then remove them from the primary_treatment df
+missing_12months <- dplyr::filter(primary_12months, is.na(primary_treatment))$individual_id %>% as.vector()
+primary_12months <- filter(primary_12months, !is.na(primary_treatment)) %>%
+                    unique()
+## Repeat at 18 months as there are still some who don't have any treatment recorded
+primary_18months <- dplyr::filter(age_gap, individual_id %in% missing_12months) %>%
+                    agegap_encode(df    = .,
+                                event = '18 months')
+## Get a list of those who do not have primary treatment then remove them from the primary_treatment df
+missing_18months <- dplyr::filter(primary_18months, is.na(primary_treatment))$individual_id %>% as.vector()
+primary_18months <- filter(primary_18months, !is.na(primary_treatment)) %>%
+                    unique()
+## Repeat at 24 months as there are still some who don't have any treatment recorded
+primary_24months <- dplyr::filter(age_gap, individual_id %in% missing_18months) %>%
+                    agegap_encode(df    = .,
+                                event = '24 months')
+## Get a list of those who do not have primary treatment then remove them from the primary_treatment df
+missing_24months <- dplyr::filter(primary_24months, is.na(primary_treatment))$individual_id %>% as.vector()
+primary_24months <- filter(primary_24months, !is.na(primary_treatment)) %>%
+                    unique()
+## Store numbers for everything and save later for use in report
+primary_treatment_numbers <- list()
+primary_treatment_numbers$n_6weeks_any  <- nrow(primary_6weeks)
+primary_treatment_numbers$n_6weeks_surgery <- dplyr::filter(primary_6weeks,
+                                                            primary_treatment == 'Surgery') %>%
+                                              nrow()
+primary_treatment_numbers$n_6weeks_primary_endocrine <- dplyr::filter(primary_6weeks,
+                                                                      primary_treatment == 'Primary Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_6weeks_adjuvant_endocrine <- dplyr::filter(primary_6weeks,
+                                                                       primary_treatment == 'Adjuvant Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_6weeks_chemotherapy <- dplyr::filter(primary_6weeks,
+                                                                 primary_treatment == 'Chemotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_6weeks_radiotherapy <- dplyr::filter(primary_6weeks,
+                                                                 primary_treatment == 'Radiotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_6weeks_none <- length(missing_6weeks)
+primary_treatment_numbers$n_6months_any  <- nrow(primary_6months)
+primary_treatment_numbers$n_6months_surgery <- dplyr::filter(primary_6months,
+                                                            primary_treatment == 'Surgery') %>%
+                                              nrow()
+primary_treatment_numbers$n_6months_primary_endocrine <- dplyr::filter(primary_6months,
+                                                                      primary_treatment == 'Primary Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_6months_adjuvant_endocrine <- dplyr::filter(primary_6months,
+                                                                       primary_treatment == 'Adjuvant Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_6months_chemotherapy <- dplyr::filter(primary_6months,
+                                                                 primary_treatment == 'Chemotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_6months_radiotherapy <- dplyr::filter(primary_6months,
+                                                                 primary_treatment == 'Radiotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_6months_none <- length(missing_6months)
+primary_treatment_numbers$n_12months_any  <- nrow(primary_12months)
+primary_treatment_numbers$n_12months_surgery <- dplyr::filter(primary_12months,
+                                                            primary_treatment == 'Surgery') %>%
+                                              nrow()
+primary_treatment_numbers$n_12months_primary_endocrine <- dplyr::filter(primary_12months,
+                                                                      primary_treatment == 'Primary Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_12months_adjuvant_endocrine <- dplyr::filter(primary_12months,
+                                                                       primary_treatment == 'Adjuvant Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_12months_chemotherapy <- dplyr::filter(primary_12months,
+                                                                 primary_treatment == 'Chemotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_12months_radiotherapy <- dplyr::filter(primary_12months,
+                                                                 primary_treatment == 'Radiotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_12months_none <- length(missing_12months)
+primary_treatment_numbers$n_18months_any  <- nrow(primary_18months)
+primary_treatment_numbers$n_18months_surgery <- dplyr::filter(primary_18months,
+                                                            primary_treatment == 'Surgery') %>%
+                                              nrow()
+primary_treatment_numbers$n_18months_primary_endocrine <- dplyr::filter(primary_18months,
+                                                                      primary_treatment == 'Primary Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_18months_adjuvant_endocrine <- dplyr::filter(primary_18months,
+                                                                       primary_treatment == 'Adjuvant Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_18months_chemotherapy <- dplyr::filter(primary_18months,
+                                                                 primary_treatment == 'Chemotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_18months_radiotherapy <- dplyr::filter(primary_18months,
+                                                                 primary_treatment == 'Radiotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_18months_none <- length(missing_18months)
+primary_treatment_numbers$n_24months_any  <- nrow(primary_24months)
+primary_treatment_numbers$n_24months_surgery <- dplyr::filter(primary_24months,
+                                                            primary_treatment == 'Surgery') %>%
+                                              nrow()
+primary_treatment_numbers$n_24months_primary_endocrine <- dplyr::filter(primary_24months,
+                                                                      primary_treatment == 'Primary Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_24months_adjuvant_endocrine <- dplyr::filter(primary_24months,
+                                                                       primary_treatment == 'Adjuvant Endocrine') %>%
+                                              nrow()
+primary_treatment_numbers$n_24months_chemotherapy <- dplyr::filter(primary_24months,
+                                                                 primary_treatment == 'Chemotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_24months_radiotherapy <- dplyr::filter(primary_24months,
+                                                                 primary_treatment == 'Radiotherapy') %>%
+                                              nrow()
+primary_treatment_numbers$n_24months_none <- length(missing_24months)
+## Combine everything into one data frame, remove intermediates and bind into master age_gap
+primary_treatment <- rbind(primary_6weeks,
+                           primary_6months,
+                           primary_12months,
+                           primary_18months,
+                           primary_24months)
+rm(primary_6weeks, missing_6weeks,
+   primary_6months, missing_6months,
+   primary_12months, missing_12months,
+   primary_18months, missing_18months,
+   primary_24months, missing_24months)
+age_gap <- left_join(age_gap,
+                     primary_treatment,
+                     by = c('individual_id', 'site')) %>%
+           mutate(primary_treatment = factor(primary_treatment))
+
+## Old Code for Reference
+## mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Endocrine',
+##                                      ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Adjuvant' ~ ,
+##                                      ## endocrine_therapy == 'Yes' & priary_adjuvant == 'Neoadjuvant' ~ ,
+##                                      surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
+##                                      surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
+##                                      endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
+##                                      endocrine_therapy == 'No' & surgery == 'No' & radiotherapy == 'Yes' ~ 'Chemotherapy',
+##                                      radiotherapy == 'Yes' ~ 'Radiotherapy',
+##                                      ## radiotherapy == 'No'  ~ '',
+##                                      trastuzumab  == 'Yes' ~ 'Trastuzumab')) %>% ## ,
+##                                      ## trastuzumab  == 'No'  ~ '')) %>%
+
+
 ###################################################################################
 ## Survival                                                                      ##
 ###################################################################################
@@ -2244,11 +2430,19 @@ age_gap <- age_gap %>%
            mutate(death    = ifelse(is.na(disc_rsn) | disc_rsn != 'Participant died',
                                     yes = 0,
                                     no  = 1)) %>%
+           arrange(individual_id, event_date) %>%
            group_by(individual_id) %>%
-           arrange(event_date) %>%
-           mutate(recruited = min(event_date, na.rm = TRUE),
-                  last_seen = case_when(death == 1 ~ max(disc_death_dt, na.rm = TRUE),
-                                        death == 0 ~ max(event_date, na.rm = TRUE))) %>%
+       mutate(recruited = min(event_date, na.rm = TRUE),
+                  ## These need to be far more complex and conditional on the event_name
+                  ## last_seen = case_when(death == 1 ~ max(disc_death_dt, na.rm = TRUE),
+                  ##                       ## death == 0 ~ max(event_date, na.rm = TRUE))) %>%
+                  ##                       death == 0 ~ max(study_completion_dt, na.rm = TRUE)),
+                  ## First replace last_seen with event_date if this is 6 week/6 month/12 month/
+                  ## 18 month follow up date
+              last_seen = case_when(death == 1 & !is.na(study_completion_dt) ~ study_completion_dt,
+                                 death == 0 & is.na(study_completion_dt)  ~ event_date,
+                                 death == 0 & !is.na(study_completion_dt) ~ study_completion_dt,
+                                 death == 0 & is.na(study_completion_dt)  ~ max(event_date, na.rm = TRUE))) %>%
            ungroup() %>%
            mutate(survival      = last_seen - recruited,
                   age_last_seen = lubridate::new_interval(start = dob,
@@ -2440,7 +2634,8 @@ master$lookups_fields <- rbind(master$lookups_fields,
                                c('Derived', '', 'recruited' ,'Date of recruitment, a proxy for diagnosis from which survival is calculated'),
                                c('Derived', '', 'last_seen' ,'Date of last contact'),
                                c('Derived', '', 'survival' ,'Length of Survival (last_seen - recruited)'),
-                               c('Derived', '', 'age_last_seen' ,'Age at last contact (based on Date of Birth)'))
+                               c('Derived', '', 'age_last_seen' ,'Age at last contact (based on Date of Birth)'),
+                               c('Derived', '', 'study_completion_dt' ,'Date on which Study Completion and Discontinuation Form was completed (based on event_date from that form, required as not always at two year follow-up visit)'))
 
 
 
@@ -2515,7 +2710,13 @@ master$README <- master$README %>%
                                       yes        = 'Data Frame indicating duplicates.',
                                       no         = form),
                         form = ifelse(data_frame == 'master',
+                                      yes        = 'List of all of Data Frame including those not enrolled but with Baseline data.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'age_gap',
                                       yes        = 'Master Data Frame including those not enrolled but with Baseline data.',
+                                      no         = form),
+                        form = ifelse(data_frame == 'primary_treatment_numbers',
+                                      yes        = 'List of the number of individuals primary treatment derived at each time point (not everyone has had treatment by 6 weeks so 6 month data is then used etc.)',
                                       no         = form))
 
 ###################################################################################
@@ -2736,7 +2937,7 @@ continuous_vars$clinical_assessment_pet <- quos(r_breast_fractions, r_axilla_fra
 ###################################################################################
 ## Save and Export                                                               ##
 ###################################################################################
-save(master, age_gap,
+save(master, age_gap, primary_treatment_numbers,
      all_var, factor_vars, continuous_vars,
      file = '../data/age-gap.RData',
      compression_level = 9)
