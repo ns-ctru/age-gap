@@ -15,6 +15,7 @@ Convert numeric string fields to Excel-friendly format  | No
 Include database IDs					| Yes
 Include event database IDs				| Yes
 Export blank strings as ""				| Yes
+Include event counter column                            | No
 Date format						| yyyy-mm-dd
 Boolean format						| 1 = Ticked; 0 = Not ticked
 File format						| CSV
