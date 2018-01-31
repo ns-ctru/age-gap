@@ -1,7 +1,13 @@
 ---
 title: Survival and Deaths in the Bridging The Age Gap Study
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 output: html
-bibliography: ../sections/bibliography.bib
+bibliography: bibliography.bib
 ---
 
 ```{r setup, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
