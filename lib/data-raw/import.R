@@ -2239,30 +2239,30 @@ dplyr::select(-l_tumour_grade_num, -r_tumour_grade_num,
 ##              All but 61 individuals have received a treatment of some sort by 6 week
 ##              assessment, therefore use that to derive primary, then fix the remaining
 ##
-agegap_encode <- function(df = .,
-                          event = '6 weeks'){
-    df <- df %>%
-          dplyr::filter(event_name == event) %>%
-          dplyr::select(individual_id, site, event_name,
-                        treatment_profile,
-                        endocrine_therapy,
-                        radiotherapy,
-                        surgery,
-                        chemotherapy,
-                        trastuzumab,
-                        primary_adjuvant) %>%
-          mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Primary Endocrine',
-                                               endocrine_therapy == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Adjuvant Endocrine',
-                                               surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
-                                               surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
-                                               surgery == 'Yes' & is.na(primary_adjuvant) ~ 'Surgery',
-                                               endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
-                                               endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'No' & radiotherapy == 'Yes' ~ 'Radiotherapy',
-                                               radiotherapy == 'Yes' ~ 'Radiotherapy',
-                                               trastuzumab  == 'Yes' ~ 'Trastuzumab')) %>%
-        dplyr::select(individual_id, site, primary_treatment)
-    return(df)
-}
+## agegap_encode <- function(df = .,
+##                           event = '6 weeks'){
+##     df <- df %>%
+##           dplyr::filter(event_name == event) %>%
+##           dplyr::select(individual_id, site, event_name,
+##                         treatment_profile,
+##                         endocrine_therapy,
+##                         radiotherapy,
+##                         surgery,
+##                         chemotherapy,
+##                         trastuzumab,
+##                         primary_adjuvant) %>%
+##           mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Primary Endocrine',
+##                                                endocrine_therapy == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Adjuvant Endocrine',
+##                                                surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
+##                                                surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
+##                                                surgery == 'Yes' & is.na(primary_adjuvant) ~ 'Surgery',
+##                                                endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
+##                                                endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'No' & radiotherapy == 'Yes' ~ 'Radiotherapy',
+##                                                radiotherapy == 'Yes' ~ 'Radiotherapy',
+##                                                trastuzumab  == 'Yes' ~ 'Trastuzumab')) %>%
+##         dplyr::select(individual_id, site, primary_treatment)
+##     return(df)
+## }
 ## Get primary treatment at 6 weeks if available
 primary_6weeks <- agegap_encode(df    = age_gap,
                                 event = '6 weeks')
@@ -2403,7 +2403,14 @@ rm(primary_6weeks, missing_6weeks,
 age_gap <- left_join(age_gap,
                      primary_treatment,
                      by = c('individual_id', 'site')) %>%
-           mutate(primary_treatment = factor(primary_treatment))
+           mutate(primary_treatment = factor(primary_treatment)
+           ## 2018-01-31 - Make event_name a factor with Baseline as the reference level
+           event_name = factor(event_name, levels = c('Baseline',
+                                                      '6 weeks',
+                                                      '6 months',
+                                                      '12 months',
+                                                      '18 months',
+                                                      '24 months')))
 
 ## Old Code for Reference
 ## mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Endocrine',
