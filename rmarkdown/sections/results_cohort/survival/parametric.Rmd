@@ -1,0 +1,5 @@
+[Parametric survival](https://en.wikipedia.org/wiki/Survival_function) modelling affords the researcher the ability to make predictions beyond the observed time frame.
+
+```{r results_cohort_survival_parametric, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```

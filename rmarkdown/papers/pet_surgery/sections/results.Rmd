@@ -1,0 +1,30 @@
+# Results.
+
+A total of `r N` women over age 70 were recruited to the study (median age `r age_median`, range `r age_min` to `r age_max`) between February 2013 and July 2017.  At the time of this analysis (XXXX) median follow up of the cohort is XX, (xx-xx).  Recruitment by site varied between XX and XX.
+
+The CONSORT flow diagram for the study is shown in Figure 1.
+
+```{r child = 'results/consort.Rmd', eval = FALSE}
+```
+
+In the entire cohort `r n_er_positive` (`r percent_er_positive`%) had ER positive tumours (defined as an Allred score of 3-8) and `r n_er_positive` (`r percent_er_positive`%) had ER negative tumours (Allred score 0-2).   Of these, `r percent_er_positive_surgery`% were treated with surgery and `r percent_er_positive_pet`% with primary endocrine therapy.   The characteristics of the Surgery or PET allocated patients are shown in Tables 1 and 2.
+
+```{r child = 'results/table1.Rmd', eval = FALSE}
+```
+
+The median age of the surgery group was `r median_age_surgery` (range `r min_age_surgery` to `r max_age_surgery`) and `r median_age_pet` in the PET therapy group (range `r min_age_surgery` to `r max_age_surgery`) (P<XXX).  Median CCI scores differed significantly between groups, as did the median frailty (ADL and IADL) and MMSE scores showing significantly less fit and frailer patients had PET. The stage of disease was compared between groups based on the baseline clinical or imaging assessment because pathological stage was only available for women undergoing surgery.   This showed that women offered PET had …….   The median ER receptor score between groups was xx in the surgery group, xx in the PET groups.  Her-2 positivity was frequently not assessed in this age group, especially in the older age cohorts and was more likely to be tested in fitter younger patients where surgery and adjuvant therapies were being considered.
+
+```{r child = 'results/figure2_box_plots.Rmd', eval = FALSE}
+```
+
+These differential characteristics are displayed below in a series of box and whisker plots.  Those for patient characteristics are shown in figure 2 a-f (Age, CCI, ADL, IADL, ECOG PS, MMSE) and those for tumour characteristics in  Figure 3 a-f, (ER, Her-2, overall TNM stage, T stage, N stage, Grade).
+
+In terms of overall disease/progression free survival outcomes from treatment, (progression free for PET patients and disease free for surgery patients) at a median follow up of (?2.5/3 years) are shown for unselected women (Figure 4 a and b).  Sub-group analysis of overall and disease or progression free survival according to baseline age, fitness (CCI score), frailty (ADL) and cognition (MMSE) in figure 5 a-d
+
+```{r child = 'results/figure3_survival_curves.Rmd', eval = FALSE}
+```
+
+
+For women treated with PET, rates of disease control were generally acceptable with few women requiring early change of management at this early stage of follow up (media 2.5-3 years) probably  due to selection of women with high rates of oestrogen sensitivity and higher rates of frailty.   Longer term follow will be required to assess whether change of management is required.    Overall survival rates, not surprisingly are significantly worse in the PET group due to the generally worse baseline fitness levels of this group.   Rates of breast cancer specific survival are however xxxxxx.
+
+Analysis of outcomes from surgery patients revealed no 30 day mortality (death due to surgery) out of XXXX surgical procedures, few systemic adverse events and moderate rates of local wound complications (XXXXX).   This suggests that surgery is well tolerated in this age group in patients deemed fit for surgery.   A more detailed analysis of surgical outcomes will be published separately.

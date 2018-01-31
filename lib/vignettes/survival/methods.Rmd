@@ -1,0 +1,32 @@
+## Methods
+
+The data was extracted from the [Prospect Database](https://www.ctru-prospect.shef.ac.uk) on 2018-01-30 and data from the 54 individual text files (one for each Case Report Form (CRF)) combined in the statistical programming language [R](https://www.r-project.org/).  A number of variables are derived by Prospect for scoring the various questionnaires and further reconcilation of data recorded on both body axes (i.e. left and right side) is performed when combining the files (although since this is not the focus of the current report no further discussion will be made of this).
+
+### Baseline Characteristics
+
+A multitude of baseline characteristics are summarised and reported for each of the treatment groups.  No formal test for statistically significant differences between these are made as it is not recommended **TODO** Senn citation on differences at baseline?
+
+### Primary Treatment
+
+As alluded to in the Introduction the allocation of individuals to primary treatment has not been straight-forward.  Based on clinical knowledge of treatment pathways provided by Lynda Wyld (meeting held 2017-10-23 09:00-11:00) notes were taken a hand-sketched schematic produced (see [this document](https://docs.google.com/document/d/1xSykX3mYtWoFng3gmf05Xjk7OX5WtfqV2RyRyvvvAcs/edit?usp=sharing) pg5-6, ignore table on pg4-5 which was not completed).  These have guided the implementation of an algorithm for classifying treatment as described below.
+
+**TODO** Fill in details based on actual code.
+
+This led to all but 400 individuals being classified to a primary treatment group.  Data on the remaining individuals who could not be classified was provided to Lynda Wyld 2017-11-21 (see email from [n.shephard@sheffield.ac.uk](mailto:n.shephard@sheffield.ac.uk) @ 16:40 **Subject** [AGEGAP] Data for review).  After review by Lynda these were allocated to a primary treatment and the allocation incorporated into the main dataset.  **NB** If this is not available then such individuals will in essence be excluded from all analyses as they can not unequivocally be allocated to a primary treatment group, although the option to include them as a group of their own under the category of `Other` exists.
+
+### Death Follow-up
+
+The following fields from the `Study Completion and Discontinuation Form` CRF are merged into the combined data set.  The date on which the `Study Completion and Discontinuation Form `is completed is required because it does not always align with the two-year follow-up (see results).
+
+| Field      | Description       |
+|:-----------|:------------------|
+| `study_completiong_dt`        | Date Study Completion form completed. Date not always on 24 month follow-up, even if study completed.    |
+| `disc_rsn` | Reason for discontinuation. |
+| `disc_death_dt` | Date of death if participant died. |
+| `death_cause_1` | Primary cause of death. |
+| `death_cause_2` | Secondary cause of death. |
+| `death_cause_3` | Tertiary cause of death. |
+
+#### Comparison of Survival
+
+[Kaplan-Meier]() plots will be generated to provide a graphical overview and crude unadjusted estimate of survivorship by treatment allocation.

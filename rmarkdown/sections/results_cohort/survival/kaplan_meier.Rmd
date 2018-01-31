@@ -1,0 +1,5 @@
+[Kapal-Meier curves](https://en.wikipedia.org/wiki/Kaplan%E2%80%93Meier_estimator) provide a graphical representation of the survival function and allow direct visual comparison between different treatments.
+
+```{r results_cohort_survival_kaplan_meier, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```

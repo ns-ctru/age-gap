@@ -1,0 +1,5 @@
+[Cox-Proportional Hazard](https://en.wikipedia.org/wiki/Proportional_hazards_model)
+
+```{r results_cohort_survival_cox_ph, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+
+```
