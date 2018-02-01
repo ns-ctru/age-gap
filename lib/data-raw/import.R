@@ -1115,6 +1115,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                              dplyr::select(master$baseline_tumour_assessment,
                                            individual_id,
                                            ## enrolment_no,
+                                           randomisation,
                                            site,
                                            event_name,
                                            ## event_date,
@@ -2467,6 +2468,7 @@ age_gap <- age_gap %>%
     ## event_name 'Study Completion' doesn't align with any others)
            fill(## Key identifier
                 ## enrolment_no,
+                randomisation,
                 ## Baseline tumour assessments
                 allred_baseline,
                 h_score_baseline,
