@@ -592,9 +592,6 @@ master$consent_form <- read_prospect(file = 'Consent Form.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
-## Contains TWO copies of 'enrollment_no', resolve now
-master$consent_form <- cbind(master$consent_form[1:2],
-                             master$consent_form[4:23])
 ## File : Decision Making Preferences.csv
 master$decision_making_preferences <- read_prospect(file = 'Decision Making Preferences.csv',
                          header              = TRUE,
@@ -1114,10 +1111,10 @@ master$event_date <- rbind(master$abridged_patient_assessment[, common],
 ##      all that is required is pulling in the four non-matching variables with the baseline
 master$baseline <- full_join(dplyr::select(master$consent_form,
                                            individual_id, site, ## event_name, event_date, database_id,
-                                           screening_no, dob, participation_lvl, consent_dt),
+                                           screening, dob, participation_lvl, consent_dt),
                              dplyr::select(master$baseline_tumour_assessment,
                                            individual_id,
-                                           enrolment_no,
+                                           ## enrolment_no,
                                            site,
                                            event_name,
                                            ## event_date,
@@ -2403,14 +2400,14 @@ rm(primary_6weeks, missing_6weeks,
 age_gap <- left_join(age_gap,
                      primary_treatment,
                      by = c('individual_id', 'site')) %>%
-           mutate(primary_treatment = factor(primary_treatment)
-           ## 2018-01-31 - Make event_name a factor with Baseline as the reference level
-           event_name = factor(event_name, levels = c('Baseline',
-                                                      '6 weeks',
-                                                      '6 months',
-                                                      '12 months',
-                                                      '18 months',
-                                                      '24 months')))
+           mutate(primary_treatment = factor(primary_treatment),
+                  ## 2018-01-31 - Make event_name a factor with Baseline as the reference level
+                  event_name = factor(event_name, levels = c('Baseline',
+                                                             '6 weeks',
+                                                             '6 months',
+                                                             '12 months',
+                                                             '18 months',
+                                                             '24 months')))
 
 ## Old Code for Reference
 ## mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Endocrine',
@@ -2469,7 +2466,7 @@ age_gap <- age_gap %>%
     ## Because study completion data has been coerced to align with Baseline (since the
     ## event_name 'Study Completion' doesn't align with any others)
            fill(## Key identifier
-                enrolment_no,
+                ## enrolment_no,
                 ## Baseline tumour assessments
                 allred_baseline,
                 h_score_baseline,
