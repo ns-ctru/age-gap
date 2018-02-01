@@ -10,9 +10,33 @@ A multitude of baseline characteristics are summarised and reported for each of 
 
 As alluded to in the Introduction the allocation of individuals to primary treatment has not been straight-forward.  Based on clinical knowledge of treatment pathways provided by Lynda Wyld (meeting held 2017-10-23 09:00-11:00) notes were taken a hand-sketched schematic produced (see [this document](https://docs.google.com/document/d/1xSykX3mYtWoFng3gmf05Xjk7OX5WtfqV2RyRyvvvAcs/edit?usp=sharing) pg5-6, ignore table on pg4-5 which was not completed).  These have guided the implementation of an algorithm for classifying treatment as described below.
 
-**TODO** Fill in details based on actual code.
+The algorithm, the term used for a set of rules which in this case are implemented in the programming language [R](https://www.r-project.org/) since the derivation of this is done *after* exporting the data from the [Prospect](https://www.ctru-prospect.shef.ac.uk/) database are described below.  It uses a series of `if (...) else if(...)` statements and as such the first condition that is met determines the Primary Treatment an individual is allocated to.  If none of the conditions are met then the Primary Treatment is missing and requires review.
 
-This led to all but 400 individuals being classified to a primary treatment group.  Data on the remaining individuals who could not be classified was provided to Lynda Wyld 2017-11-21 (see email from [n.shephard@sheffield.ac.uk](mailto:n.shephard@sheffield.ac.uk) @ 16:40 **Subject** [AGEGAP] Data for review).  After review by Lynda these were allocated to a primary treatment and the allocation incorporated into the main dataset.  **NB** If this is not available then such individuals will in essence be excluded from all analyses as they can not unequivocally be allocated to a primary treatment group, although the option to include them as a group of their own under the category of `Other` exists.
+    IF(endocrine_therapy == 'Yes' AND primary_adjuvant == 'Primary'  THEN 'Primary Endocrine')
+    ELSE IF(endocrine_therapy == 'Yes' AND primary_adjuvant == 'Adjuvant' THEN 'Adjuvant Endocrine')
+    ELSE IF(surgery == 'Yes' AND primary_adjuvant == 'Adjuvant' THEN 'Surgery')
+    ELSE IF(surgery == 'Yes' AND primary_adjuvant == 'Neoddjuvant' THEN 'Surgery')
+    ELSE IF(surgery == 'Yes' AND primary_adjuvant == '' THEN 'Surgery')
+    ELSE IF(endocrine_therapy == 'No' AND surgery == 'No' AND chemotherapy == 'Yes' THEN 'Chemotherapy')
+    ELSE IF(endocrine_therapy == 'No' AND surgery == 'No' AND chemotherapy == 'No' AND radiotherapy == 'Yes' THEN 'Radiotherapy')
+    ELSE IF(trastuzumab == 'Yes' THEN Trastuzumab')
+
+
+The terms to the left of the `==` are variables as described below...
+
+| Variable | Description | Case Report Form |
+|:---------|:------------|:-----------------|
+| `endocrine_therapy` | Indicator of Endocrine Therapy being received | `Therapy Assessment` |
+| `surgery` | Indicator of Surgery being received | `Therapy Assessment` |
+| `chemotherapy` | Indicator of Chemotherapy being received | `Therapy Assessment` |
+| `radiotherapy` | Indicator of Radiotherapy being received | `Therapy Assessment` |
+| `trastuzumab` | Indicator of Trastuzumab being received | `Therapy Assessment` |
+| `primary_adjuvant` | Indicator of the type of `endocrine_therapy` received | `Endocrine Therapy` |
+
+
+Data on individuals who could not be classified was provided to Lynda Wyld 2017-11-21 (see email from [n.shephard@sheffield.ac.uk](mailto:n.shephard@sheffield.ac.uk) @ 16:40 **Subject** [AGEGAP] Data for review) for review and classification to Primarty Treatment
+
+**NB** If this is not available, as is the case at the time of writing, then such individuals will in essence be excluded from all analyses as they can not unequivocally be allocated to a primary treatment group, although the option to include them as a group of their own under the category of `Other` exists.
 
 ### Death Follow-up
 
