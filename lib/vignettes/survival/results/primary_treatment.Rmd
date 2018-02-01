@@ -1,1 +1,21 @@
 ### Primary Treatment
+
+The lack of exact dates for treatments is incredibly unfortunate and means an inference as to the Primary Treatment study participants received has to be made based on knowledge of the expected pathways for treating breast cancer.  Hopefully this inference is not too inaccurate.  The number of individuals allocated to each primary treatment and the available data for each follow-up time-point is tabulated below.
+
+```{r primary_treatment, echo = FALSE, cache = FALSE, results = 'asis', eval = TRUE}
+## Tabulate primary_treatment by event_name
+age_gap %$%
+    table(event_name, primary_treatment, useNA = 'ifany') %>%
+    kable(caption = "Pimary Treatment allocations tabulated against data available data for each time point.")
+## Count the number of people without a primary treatment allocation, restrcited to baseline which
+## ignores the fact not everyone has had follow-up
+n_missing_primary_treatment <- age_gap %>%
+                               dplyr::filter(is.na(baseline) & event_name == "Baseline") %>%
+                               nrow()
+
+
+
+```
+
+
+This shows that there were `r n_missing_primary_treatment` individuals recruited for whom it is not possible using the algorithm described above to allocate to a Primary Treatment.
