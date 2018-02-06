@@ -9,6 +9,7 @@ age_gap %>%
     dplyr::filter(event_name == "Baseline") %>%
     dplyr::filter(!is.na(primary_treatment)) %>%
     dplyr::filter(age_exact != 0 & !is.na(age_exact)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
     ## Histograms by treatment group
     ggplot(aes(age_exact, fill = `Primary Treatment`)) +
     geom_histogram(bins = 60) +
@@ -20,18 +21,6 @@ age_gap %>%
     theme_bw() +
     theme(legend.position = "none")
 ## Table of summary statistics
-age_gap %>%
-    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
-    dplyr::filter(event_name == "Baseline") %>%
-    dplyr::filter(!is.na(primary_treatment)) %>%
-    dplyr::filter(age_exact != 0 & !is.na(age_exact)) %>%
-    ungroup() %>%
-    dplyr::select(primary_treatment, age_exact) %>%
-    group_by(primary_treatment) %$%
-    stargazer()
-    dust(age_exact, tidy_df = TRUE) %>%
-    sprinkle(cols  = c("mean", "sd", "median"),
-             round = 2)
 
 ```
 
