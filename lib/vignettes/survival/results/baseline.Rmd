@@ -145,11 +145,11 @@ eq5d_surgery <- dplyr::filter(eq5d, primary_treatment == "Surgery") %>%
                  dplyr::select(-individual_id) %>%
                  sjp.stackfrq(title = "Surgery",
                               prnt.plot = FALSE)
-eq5d_adjuvant
-eq5d_primary
-eq5d_chemotherapy
-eq5d_radiotherapy
-eq5d_surgery
+eq5d_adjuvant$plot
+eq5d_primary$plot
+eq5d_chemotherapy$plot
+eq5d_radiotherapy$plot
+eq5d_surgery$plot
 
 ```
 
@@ -396,11 +396,11 @@ c30_surgery <- dplyr::filter(c30, primary_treatment == "Surgery") %>%
                  dplyr::select(-individual_id) %>%
                  sjp.stackfrq(title = "Surgery",
                               prnt.plot = FALSE)
-br23_adjuvant
-br23_primary
-br23_chemotherapy
-br23_radiotherapy
-br23_surgery
+br23_adjuvant$plot
+br23_primary$plot
+br23_chemotherapy$plot
+br23_radiotherapy$plot
+br23_surgery$plot
 
 ```
 
@@ -553,5 +553,180 @@ br23_primary$plot
 br23_chemotherapy$plot
 br23_radiotherapy$plot
 br23_surgery$plot
+
+```
+
+```{r baseline_summary_demographics_eld15, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of ELD15 at Baseline...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  mo_scale,
+                  wao_scale,
+                  wo_scale,
+                  mp_scale,
+                  boi_scale,
+                  js_scale,
+                  fs_scale) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EORTC QLQ ELD15") +
+    ylab("N") +
+    ggtitle(label = "EORTC QLQ ELD15 Scaled Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+eld15 <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
+                      eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
+                      eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68,) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much"))) %>%
+        ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
+        dplyr::filter(!is.na(Response)) %>%
+        unique()
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(eld15, aes(x = key, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "EORTC QLQ ELD15 Domains at Baseline by Primary Treatment",
+            subtitle = "Excludes Missing Responses") +
+    facet_grid(~primary_treatment) +
+    theme_bw()
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+eld15_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
+eld15_adjuvant <- dplyr::filter(eld15, primary_treatment == "Adjuvant Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
+                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
+                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
+                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
+                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
+                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
+                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
+                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
+                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
+                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
+                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
+                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
+                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
+                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
+                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Adjuvant Endocrine",
+                              prnt.plot = FALSE)
+eld15_primary <- dplyr::filter(eld15, primary_treatment == "Primary Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
+                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
+                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
+                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
+                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
+                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
+                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
+                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
+                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
+                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
+                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
+                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
+                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
+                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
+                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Primary Endocrine",
+                              prnt.plot = FALSE)
+eld15_chemotherapy <- dplyr::filter(eld15, primary_treatment == "Chemotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
+                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
+                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
+                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
+                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
+                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
+                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
+                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
+                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
+                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
+                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
+                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
+                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
+                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
+                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Chemotherapy",
+                              prnt.plot = FALSE)
+eld15_radiotherapy <- dplyr::filter(eld15, primary_treatment == "Radiotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
+                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
+                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
+                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
+                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
+                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
+                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
+                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
+                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
+                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
+                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
+                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
+                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
+                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
+                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Radiotherapy",
+                              prnt.plot = FALSE)
+eld15_surgery <- dplyr::filter(eld15, primary_treatment == "Surgery") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
+                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
+                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
+                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
+                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
+                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
+                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
+                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
+                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
+                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
+                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
+                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
+                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
+                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
+                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Surgery",
+                              prnt.plot = FALSE)
+eld15_adjuvant$plot
+eld15_primary$plot
+eld15_chemotherapy$plot
+eld15_radiotherapy$plot
+eld15_surgery$plot
 
 ```
