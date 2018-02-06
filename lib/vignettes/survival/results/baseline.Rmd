@@ -2,6 +2,7 @@
 
 Baseline characteristics are summarised and tabulated below for each of the Primary Treatment Groups.
 
+#### Age
 ```{r baseline_summary_demographics_age, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 ## Generate plots of Age at Baseline
 age_gap %>%
@@ -24,6 +25,7 @@ age_gap %>%
 
 ```
 
+#### EQ5D
 ```{r baseline_summary_demographics_eq5d, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 ## Generate plots of EQ5D at Baseline...
 ##
@@ -42,7 +44,6 @@ age_gap %>%
     facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
     theme_bw() +
     theme(legend.position = "none")
-
 ## Subset, reshape and tidy questionnaire responses...
 eq5d <- age_gap %>%
         ## Filter Baseline group, with primary_treatment defined and without missing or zero age
@@ -142,6 +143,7 @@ eq5d_surgery$plot
 
 ```
 
+#### EORTC QLQ C30
 ```{r baseline_summary_demographics_c30, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 ## Generate plots of EORTC QLQ C30 at Baseline...
 ##
@@ -385,14 +387,15 @@ c30_surgery <- dplyr::filter(c30, primary_treatment == "Surgery") %>%
                  dplyr::select(-individual_id) %>%
                  sjp.stackfrq(title = "Surgery",
                               prnt.plot = FALSE)
-br23_adjuvant$plot
-br23_primary$plot
-br23_chemotherapy$plot
-br23_radiotherapy$plot
-br23_surgery$plot
+c30_adjuvant$plot
+c30_primary$plot
+c30_chemotherapy$plot
+c30_radiotherapy$plot
+c30_surgery$plot
 
 ```
 
+#### EORTC QLQ BR23
 ```{r baseline_summary_demographics_br23, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 ## Generate plots of BR23 at Baseline...
 ##
@@ -545,6 +548,7 @@ br23_surgery$plot
 
 ```
 
+#### EORTC QLQ ELD15
 ```{r baseline_summary_demographics_eld15, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 ## Generate plots of ELD15 at Baseline...
 ##
