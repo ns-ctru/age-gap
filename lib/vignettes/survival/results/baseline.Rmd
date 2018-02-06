@@ -1,1 +1,557 @@
 ### Baseline Characteristics
+
+Baseline characteristics are summarised and tabulated below for each of the Primary Treatment Groups.
+
+```{r baseline_summary_demographics_age, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at Baseline
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(age_exact != 0 & !is.na(age_exact)) %>%
+    ## Histograms by treatment group
+    ggplot(aes(age_exact, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("Age (Years)") +
+    ylab("N") +
+    ggtitle(label = "Age distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(age_exact != 0 & !is.na(age_exact)) %>%
+    ungroup() %>%
+    dplyr::select(primary_treatment, age_exact) %>%
+    group_by(primary_treatment) %$%
+    stargazer()
+    dust(age_exact, tidy_df = TRUE) %>%
+    sprinkle(cols  = c("mean", "sd", "median"),
+             round = 2)
+
+```
+
+```{r baseline_summary_demographics_eq5d, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of EQ5D at Baseline...
+##
+## Histograms by treatment group
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(!is.na(eq5d_score)) %>%
+    ggplot(aes(eq5d_score, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EQ5D Score") +
+    ylab("N") +
+    ggtitle(label = "EQ5D Score by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+
+## Subset, reshape and tidy questionnaire responses...
+eq5d <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        dplyr::filter(!is.na(eq5d_score)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      mobility,
+                      self_care,
+                      usual_activity,
+                      pain_discomfort,
+                      anxiety_depression) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(key   = case_when(key == "anxiety_depression" ~ "Anxiety / Depression",
+                                 key == "mobility"           ~ "Mobility",
+                                 key == "pain_discomfort"    ~ "Pain / Discomfort",
+                                 key == "self_care"          ~ "Self Care",
+                                 key == "usual_activity"     ~ "Usual Activity")) %>%
+        unique()
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(eq5d, aes(x = primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle("EQ5D Domains at Baseline by Primary Treatment") +
+    facet_grid(~key) +
+    theme_bw()
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+eq5d_levels <- c('None', 'Slight', 'Moderate', 'Severe', 'Extreme')
+eq5d_adjuvant <- dplyr::filter(eq5d, primary_treatment == "Adjuvant Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
+                         `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
+                         `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
+                         `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
+                         `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Adjuvant Endocrine",
+                              prnt.plot = FALSE)
+eq5d_chemotherapy <- dplyr::filter(eq5d, primary_treatment == "Chemotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
+                         `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
+                         `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
+                         `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
+                         `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Chemotherapy",
+                              prnt.plot = FALSE)
+eq5d_primary <- dplyr::filter(eq5d, primary_treatment == "Primary Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
+                         `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
+                         `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
+                         `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
+                         `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Primary Endocrine",
+                              prnt.plot = FALSE)
+eq5d_radiotherapy <- dplyr::filter(eq5d, primary_treatment == "Radiotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
+                         `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
+                         `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
+                         `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
+                         `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Radiotherapy",
+                              prnt.plot = FALSE)
+eq5d_surgery <- dplyr::filter(eq5d, primary_treatment == "Surgery") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
+                         `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
+                         `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
+                         `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
+                         `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Surgery",
+                              prnt.plot = FALSE)
+eq5d_adjuvant
+eq5d_primary
+eq5d_chemotherapy
+eq5d_radiotherapy
+eq5d_surgery
+
+```
+
+```{r baseline_summary_demographics_c30, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of EORTC QLQ C30 at Baseline...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  ql_scale,
+                  pf_scale,
+                  rf_scale,
+                  ef_scale,
+                  cf_scale,
+                  sf_scale,
+                  fa_scale,
+                  nv_scale,
+                  pa_scale,
+                  dy_scale,
+                  sl_scale,
+                  ap_scale,
+                  co_scale,
+                  di_scale,
+                  fi_scale) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EORTC QLQ C30") +
+    ylab("N") +
+    ggtitle(label = "EORTC QLQ C30 Scaled Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+c30 <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
+                      c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
+                      c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                      c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                      c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                      c30_q26, c30_q27, c30_q28) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much"))) %>%
+        ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
+        dplyr::filter(!is.na(Response)) %>%
+        unique()
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(c30, aes(x = key, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "EORTC QLQ C30 Domains at Baseline by Primary Treatment",
+            subtitle = "Excludes Missing Responses") +
+    facet_grid(~primary_treatment) +
+    theme_bw()
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+c30_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
+c30_adjuvant <- dplyr::filter(c30, primary_treatment == "Adjuvant Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
+                        c30_q2  = factor(c30_q2,  levels = c30_levels),
+                        c30_q3  = factor(c30_q3,  levels = c30_levels),
+                        c30_q4  = factor(c30_q4,  levels = c30_levels),
+                        c30_q5  = factor(c30_q5,  levels = c30_levels),
+                        c30_q6  = factor(c30_q6,  levels = c30_levels),
+                        c30_q7  = factor(c30_q7,  levels = c30_levels),
+                        c30_q8  = factor(c30_q8,  levels = c30_levels),
+                        c30_q9  = factor(c30_q9,  levels = c30_levels),
+                        c30_q10 = factor(c30_q10, levels = c30_levels),
+                        c30_q11 = factor(c30_q11, levels = c30_levels),
+                        c30_q12 = factor(c30_q12, levels = c30_levels),
+                        c30_q13 = factor(c30_q13, levels = c30_levels),
+                        c30_q14 = factor(c30_q14, levels = c30_levels),
+                        c30_q15 = factor(c30_q15, levels = c30_levels),
+                        c30_q16 = factor(c30_q16, levels = c30_levels),
+                        c30_q17 = factor(c30_q17, levels = c30_levels),
+                        c30_q18 = factor(c30_q18, levels = c30_levels),
+                        c30_q19 = factor(c30_q19, levels = c30_levels),
+                        c30_q20 = factor(c30_q20, levels = c30_levels),
+                        c30_q21 = factor(c30_q21, levels = c30_levels),
+                        c30_q22 = factor(c30_q22, levels = c30_levels),
+                        c30_q23 = factor(c30_q23, levels = c30_levels),
+                        c30_q24 = factor(c30_q24, levels = c30_levels),
+                        c30_q25 = factor(c30_q25, levels = c30_levels),
+                        c30_q26 = factor(c30_q26, levels = c30_levels),
+                        c30_q27 = factor(c30_q27, levels = c30_levels),
+                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Adjuvant Endocrine",
+                              prnt.plot = FALSE)
+c30_primary <- dplyr::filter(c30, primary_treatment == "Primary Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
+                        c30_q2  = factor(c30_q2,  levels = c30_levels),
+                        c30_q3  = factor(c30_q3,  levels = c30_levels),
+                        c30_q4  = factor(c30_q4,  levels = c30_levels),
+                        c30_q5  = factor(c30_q5,  levels = c30_levels),
+                        c30_q6  = factor(c30_q6,  levels = c30_levels),
+                        c30_q7  = factor(c30_q7,  levels = c30_levels),
+                        c30_q8  = factor(c30_q8,  levels = c30_levels),
+                        c30_q9  = factor(c30_q9,  levels = c30_levels),
+                        c30_q10 = factor(c30_q10, levels = c30_levels),
+                        c30_q11 = factor(c30_q11, levels = c30_levels),
+                        c30_q12 = factor(c30_q12, levels = c30_levels),
+                        c30_q13 = factor(c30_q13, levels = c30_levels),
+                        c30_q14 = factor(c30_q14, levels = c30_levels),
+                        c30_q15 = factor(c30_q15, levels = c30_levels),
+                        c30_q16 = factor(c30_q16, levels = c30_levels),
+                        c30_q17 = factor(c30_q17, levels = c30_levels),
+                        c30_q18 = factor(c30_q18, levels = c30_levels),
+                        c30_q19 = factor(c30_q19, levels = c30_levels),
+                        c30_q20 = factor(c30_q20, levels = c30_levels),
+                        c30_q21 = factor(c30_q21, levels = c30_levels),
+                        c30_q22 = factor(c30_q22, levels = c30_levels),
+                        c30_q23 = factor(c30_q23, levels = c30_levels),
+                        c30_q24 = factor(c30_q24, levels = c30_levels),
+                        c30_q25 = factor(c30_q25, levels = c30_levels),
+                        c30_q26 = factor(c30_q26, levels = c30_levels),
+                        c30_q27 = factor(c30_q27, levels = c30_levels),
+                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Primary Endocrine",
+                              prnt.plot = FALSE)
+c30_chemotherapy <- dplyr::filter(c30, primary_treatment == "Chemotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
+                        c30_q2  = factor(c30_q2,  levels = c30_levels),
+                        c30_q3  = factor(c30_q3,  levels = c30_levels),
+                        c30_q4  = factor(c30_q4,  levels = c30_levels),
+                        c30_q5  = factor(c30_q5,  levels = c30_levels),
+                        c30_q6  = factor(c30_q6,  levels = c30_levels),
+                        c30_q7  = factor(c30_q7,  levels = c30_levels),
+                        c30_q8  = factor(c30_q8,  levels = c30_levels),
+                        c30_q9  = factor(c30_q9,  levels = c30_levels),
+                        c30_q10 = factor(c30_q10, levels = c30_levels),
+                        c30_q11 = factor(c30_q11, levels = c30_levels),
+                        c30_q12 = factor(c30_q12, levels = c30_levels),
+                        c30_q13 = factor(c30_q13, levels = c30_levels),
+                        c30_q14 = factor(c30_q14, levels = c30_levels),
+                        c30_q15 = factor(c30_q15, levels = c30_levels),
+                        c30_q16 = factor(c30_q16, levels = c30_levels),
+                        c30_q17 = factor(c30_q17, levels = c30_levels),
+                        c30_q18 = factor(c30_q18, levels = c30_levels),
+                        c30_q19 = factor(c30_q19, levels = c30_levels),
+                        c30_q20 = factor(c30_q20, levels = c30_levels),
+                        c30_q21 = factor(c30_q21, levels = c30_levels),
+                        c30_q22 = factor(c30_q22, levels = c30_levels),
+                        c30_q23 = factor(c30_q23, levels = c30_levels),
+                        c30_q24 = factor(c30_q24, levels = c30_levels),
+                        c30_q25 = factor(c30_q25, levels = c30_levels),
+                        c30_q26 = factor(c30_q26, levels = c30_levels),
+                        c30_q27 = factor(c30_q27, levels = c30_levels),
+                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Chemotherapy",
+                              prnt.plot = FALSE)
+c30_radiotherapy <- dplyr::filter(c30, primary_treatment == "Radiotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
+                        c30_q2  = factor(c30_q2,  levels = c30_levels),
+                        c30_q3  = factor(c30_q3,  levels = c30_levels),
+                        c30_q4  = factor(c30_q4,  levels = c30_levels),
+                        c30_q5  = factor(c30_q5,  levels = c30_levels),
+                        c30_q6  = factor(c30_q6,  levels = c30_levels),
+                        c30_q7  = factor(c30_q7,  levels = c30_levels),
+                        c30_q8  = factor(c30_q8,  levels = c30_levels),
+                        c30_q9  = factor(c30_q9,  levels = c30_levels),
+                        c30_q10 = factor(c30_q10, levels = c30_levels),
+                        c30_q11 = factor(c30_q11, levels = c30_levels),
+                        c30_q12 = factor(c30_q12, levels = c30_levels),
+                        c30_q13 = factor(c30_q13, levels = c30_levels),
+                        c30_q14 = factor(c30_q14, levels = c30_levels),
+                        c30_q15 = factor(c30_q15, levels = c30_levels),
+                        c30_q16 = factor(c30_q16, levels = c30_levels),
+                        c30_q17 = factor(c30_q17, levels = c30_levels),
+                        c30_q18 = factor(c30_q18, levels = c30_levels),
+                        c30_q19 = factor(c30_q19, levels = c30_levels),
+                        c30_q20 = factor(c30_q20, levels = c30_levels),
+                        c30_q21 = factor(c30_q21, levels = c30_levels),
+                        c30_q22 = factor(c30_q22, levels = c30_levels),
+                        c30_q23 = factor(c30_q23, levels = c30_levels),
+                        c30_q24 = factor(c30_q24, levels = c30_levels),
+                        c30_q25 = factor(c30_q25, levels = c30_levels),
+                        c30_q26 = factor(c30_q26, levels = c30_levels),
+                        c30_q27 = factor(c30_q27, levels = c30_levels),
+                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Radiotherapy",
+                              prnt.plot = FALSE)
+c30_surgery <- dplyr::filter(c30, primary_treatment == "Surgery") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
+                        c30_q2  = factor(c30_q2,  levels = c30_levels),
+                        c30_q3  = factor(c30_q3,  levels = c30_levels),
+                        c30_q4  = factor(c30_q4,  levels = c30_levels),
+                        c30_q5  = factor(c30_q5,  levels = c30_levels),
+                        c30_q6  = factor(c30_q6,  levels = c30_levels),
+                        c30_q7  = factor(c30_q7,  levels = c30_levels),
+                        c30_q8  = factor(c30_q8,  levels = c30_levels),
+                        c30_q9  = factor(c30_q9,  levels = c30_levels),
+                        c30_q10 = factor(c30_q10, levels = c30_levels),
+                        c30_q11 = factor(c30_q11, levels = c30_levels),
+                        c30_q12 = factor(c30_q12, levels = c30_levels),
+                        c30_q13 = factor(c30_q13, levels = c30_levels),
+                        c30_q14 = factor(c30_q14, levels = c30_levels),
+                        c30_q15 = factor(c30_q15, levels = c30_levels),
+                        c30_q16 = factor(c30_q16, levels = c30_levels),
+                        c30_q17 = factor(c30_q17, levels = c30_levels),
+                        c30_q18 = factor(c30_q18, levels = c30_levels),
+                        c30_q19 = factor(c30_q19, levels = c30_levels),
+                        c30_q20 = factor(c30_q20, levels = c30_levels),
+                        c30_q21 = factor(c30_q21, levels = c30_levels),
+                        c30_q22 = factor(c30_q22, levels = c30_levels),
+                        c30_q23 = factor(c30_q23, levels = c30_levels),
+                        c30_q24 = factor(c30_q24, levels = c30_levels),
+                        c30_q25 = factor(c30_q25, levels = c30_levels),
+                        c30_q26 = factor(c30_q26, levels = c30_levels),
+                        c30_q27 = factor(c30_q27, levels = c30_levels),
+                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Surgery",
+                              prnt.plot = FALSE)
+br23_adjuvant
+br23_primary
+br23_chemotherapy
+br23_radiotherapy
+br23_surgery
+
+```
+
+```{r baseline_summary_demographics_br23, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of BR23 at Baseline...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  brbi_scale,
+                  brsef_scale,
+                  brfu_scale,
+                  brst_scale,
+                  brbs_scale,
+                  bras_scale,
+                  brhl_scale) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EORTC QLQ BR23") +
+    ylab("N") +
+    ggtitle(label = "EORTC QLQ BR23 Scaled Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+br23 <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
+                      br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
+                      br23_q41, br23_q42, br23_q43, br23_q44, br23_q45,
+                      br23_q46, br23_q47, br23_q48, br23_q49, br23_q50,
+                      br23_q51, br23_q52, br23_q53) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much"))) %>%
+        ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
+        dplyr::filter(!is.na(Response)) %>%
+        unique()
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(br23, aes(x = key, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "EORTC QLQ BR23 Domains at Baseline by Primary Treatment",
+            subtitle = "Excludes Missing Responses") +
+    facet_grid(~primary_treatment) +
+    theme_bw()
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+br23_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
+br23_adjuvant <- dplyr::filter(br23, primary_treatment == "Adjuvant Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(br23_q31  = factor(br23_q31,  levels = br23_levels),
+                        br23_q32  = factor(br23_q32,  levels = br23_levels),
+                        br23_q33  = factor(br23_q33,  levels = br23_levels),
+                        br23_q34  = factor(br23_q34,  levels = br23_levels),
+                        br23_q35  = factor(br23_q35,  levels = br23_levels),
+                        br23_q36  = factor(br23_q36,  levels = br23_levels),
+                        br23_q37  = factor(br23_q37,  levels = br23_levels),
+                        br23_q38  = factor(br23_q38,  levels = br23_levels),
+                        br23_q39  = factor(br23_q39,  levels = br23_levels),
+                        br23_q40  = factor(br23_q40,  levels = br23_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Adjuvant Endocrine",
+                              prnt.plot = FALSE)
+br23_primary <- dplyr::filter(br23, primary_treatment == "Primary Endocrine") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(br23_q31  = factor(br23_q31,  levels = br23_levels),
+                        br23_q32  = factor(br23_q32,  levels = br23_levels),
+                        br23_q33  = factor(br23_q33,  levels = br23_levels),
+                        br23_q34  = factor(br23_q34,  levels = br23_levels),
+                        br23_q35  = factor(br23_q35,  levels = br23_levels),
+                        br23_q36  = factor(br23_q36,  levels = br23_levels),
+                        br23_q37  = factor(br23_q37,  levels = br23_levels),
+                        br23_q38  = factor(br23_q38,  levels = br23_levels),
+                        br23_q39  = factor(br23_q39,  levels = br23_levels),
+                        br23_q40  = factor(br23_q40,  levels = br23_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Primary Endocrine",
+                              prnt.plot = FALSE)
+br23_chemotherapy <- dplyr::filter(br23, primary_treatment == "Chemotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(br23_q31  = factor(br23_q31,  levels = br23_levels),
+                        br23_q32  = factor(br23_q32,  levels = br23_levels),
+                        br23_q33  = factor(br23_q33,  levels = br23_levels),
+                        br23_q34  = factor(br23_q34,  levels = br23_levels),
+                        br23_q35  = factor(br23_q35,  levels = br23_levels),
+                        br23_q36  = factor(br23_q36,  levels = br23_levels),
+                        br23_q37  = factor(br23_q37,  levels = br23_levels),
+                        br23_q38  = factor(br23_q38,  levels = br23_levels),
+                        br23_q39  = factor(br23_q39,  levels = br23_levels),
+                        br23_q40  = factor(br23_q40,  levels = br23_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Chemotherapy",
+                              prnt.plot = FALSE)
+br23_radiotherapy <- dplyr::filter(br23, primary_treatment == "Radiotherapy") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(br23_q31  = factor(br23_q31,  levels = br23_levels),
+                        br23_q32  = factor(br23_q32,  levels = br23_levels),
+                        br23_q33  = factor(br23_q33,  levels = br23_levels),
+                        br23_q34  = factor(br23_q34,  levels = br23_levels),
+                        br23_q35  = factor(br23_q35,  levels = br23_levels),
+                        br23_q36  = factor(br23_q36,  levels = br23_levels),
+                        br23_q37  = factor(br23_q37,  levels = br23_levels),
+                        br23_q38  = factor(br23_q38,  levels = br23_levels),
+                        br23_q39  = factor(br23_q39,  levels = br23_levels),
+                        br23_q40  = factor(br23_q40,  levels = br23_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Radiotherapy",
+                              prnt.plot = FALSE)
+br23_surgery <- dplyr::filter(br23, primary_treatment == "Surgery") %>%
+                 dplyr::select(-primary_treatment, -event_name) %>%
+                 spread(key, Response) %>%
+                 mutate(br23_q31  = factor(br23_q31,  levels = br23_levels),
+                        br23_q32  = factor(br23_q32,  levels = br23_levels),
+                        br23_q33  = factor(br23_q33,  levels = br23_levels),
+                        br23_q34  = factor(br23_q34,  levels = br23_levels),
+                        br23_q35  = factor(br23_q35,  levels = br23_levels),
+                        br23_q36  = factor(br23_q36,  levels = br23_levels),
+                        br23_q37  = factor(br23_q37,  levels = br23_levels),
+                        br23_q38  = factor(br23_q38,  levels = br23_levels),
+                        br23_q39  = factor(br23_q39,  levels = br23_levels),
+                        br23_q40  = factor(br23_q40,  levels = br23_levels)) %>%
+                 dplyr::select(-individual_id) %>%
+                 sjp.stackfrq(title = "Surgery",
+                              prnt.plot = FALSE)
+br23_adjuvant$plot
+br23_primary$plot
+br23_chemotherapy$plot
+br23_radiotherapy$plot
+br23_surgery$plot
+
+```
