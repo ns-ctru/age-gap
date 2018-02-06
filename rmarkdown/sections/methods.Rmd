@@ -63,7 +63,7 @@ Summary tables of the number of missing observations, mean, standard deviation (
 
 #### Clinical Outcomes
 
-Qualit of Life outcomes are the primary outcome (although which is the primary is currently unclear from the Statistical Analysis Plan).  The table below details all Quality of Life measurements that are recorded and the time points at which they are recorded.
+Quality of Life outcomes are the primary outcome (although which is the primary is currently unclear from the Statistical Analysis Plan).  The table below details all Quality of Life measurements that are recorded and the time points at which they are recorded.
 
 | Quality of Life                                           | Reference             | Baseline | 6 Weeks | 6 Months | 12 Months | 18 Months | 24 Months |
 |-----------------------------------------------------------|-----------------------|:--------:|:-------:|:--------:|:---------:|:---------:|:---------:|
