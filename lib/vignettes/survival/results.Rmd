@@ -1,39 +1,21 @@
 ## Results
 
-### Baseline Characteristics
+
+```{r child='results/recruitment.Rmd', eval = TRUE}
+
+```
 
 
-### Primary Treatment Classification
+```{r child='results/primary_treatment.Rmd', eval = TRUE}
+
+```
 
 
-### Death Follow-up
+```{r child='results/baseline.Rmd', eval = TRUE}
 
-As full five-year follow-up is not currently available the `Study Completion and Discontinuation Form` is being used as a proxy for the time being.  This is, unless a participant withdraws early, meant to be completed at two year follow-up, although this is only true for a fraction of cases as shown in the figure below.
+```
 
-```{r results-study-completion, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
-## Plot the reasons for study completion/discontinuation
-age_gap %>%
-    ## Either replace disc_rsn with text indicating no completion data...
-    mutate(`Last Contact Type` = ifelse(!is.na(disc_rsn),
-                                        yes = as.character(disc_rsn),
-                                        no  = "No Completion, date last seen.")) %>%
-    ## ...or remove those individuals who don't have it.
-    ## dplyr::filter(!is.na(disc_rsn)) %>%
-##ggplot(, aes(as.numeric(survival), colour = disc_rsn)) +
-    ggplot(aes(as.numeric(survival),
-               colour = `Last Contact Type`,
-               fill   = `Last Contact Type`)) +
-    geom_histogram(bins = 80, position = "stack") +
-    ## annotate("432",
-    ##          x = 0, y = 432) +
-    xlab("Days") +
-    ylab("N") +
-    ggtitle("Survival by Event Date") +
-    ## facet_wrap(~event_name, ncol = 1) +
-    facet_grid(`Last Contact Type`~event_name, scales = "free") +
-    ## ToDo - Sort out legend title
-    ## scale_fill_colour(name = "Last Contact Type") +
-    ## theme(legend.text = "Last Contact") +
-    theme_bw()
+
+```{r child='results/survival.Rmd', eval = TRUE}
 
 ```
