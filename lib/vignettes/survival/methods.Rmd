@@ -22,7 +22,7 @@ The algorithm, the term used for a set of rules which in this case are implement
     ELSE IF(trastuzumab == 'Yes' THEN Trastuzumab')
 
 
-The terms to the left of the `==` are variables as described below...
+The terms to the left of the `==` are variables as described below, whilst the terms to the right are the values they can take.  The term following `THEN` is the value the derived variable `primary_treatment` takes.
 
 | Variable | Description | Case Report Form |
 |:---------|:------------|:-----------------|
@@ -37,6 +37,24 @@ The terms to the left of the `==` are variables as described below...
 Data on individuals who could not be classified was provided to Lynda Wyld 2017-11-21 (see email from [n.shephard@sheffield.ac.uk](mailto:n.shephard@sheffield.ac.uk) @ 16:40 **Subject** [AGEGAP] Data for review) for review and classification to Primarty Treatment
 
 **NB** If this is not available, as is the case at the time of writing, then such individuals will in essence be excluded from all analyses as they can not unequivocally be allocated to a primary treatment group, although the option to include them as a group of their own under the category of `Other` exists.
+
+### Clinical Outcomes
+
+Quality of Life outcomes are the primary outcome (although which is the primary is currently unclear from the Statistical Analysis Plan).  The table below details all Quality of Life measurements that are recorded and the time points at which they are recorded.
+
+| Quality of Life                                           | Reference             | Baseline | 6 Weeks | 6 Months | 12 Months | 18 Months | 24 Months |
+|-----------------------------------------------------------|-----------------------|:--------:|:-------:|:--------:|:---------:|:---------:|:---------:|
+| [EORTC-QLQ-C30](http://groups.eortc.be/qol/eortc-qlq-c30) | [@aaronson1993]       | Yes      | Yes     | Yes      | Yes       | Yes       | Yes       |
+| [EORTC-QLQ-BR23](http://groups.eortc.be/qol/eortc-qol-module-breast-cancer-update-qol-br23) | [@aaronson1993]       | Yes      | Yes     | Yes        | Yes       | Yes       | Yes       |
+| [EORTC-QLQ-ELD15](http://groups.eortc.be/qol/elderly-cancer-patients-qlq-eld14) | [@johnson2010]       | Yes      | Yes     | Yes        | Yes       | Yes       | Yes       |
+|[Barthel Activites of Daily Living (ADL)](https://www.mdcalc.com/barthel-index-activities-daily-living-adl) | [@wade1988 @collin1988 @mahoney1965] | Yes      | No      | No         | No        | No        | No        |
+| [EQ-5D-5L](https://euroqol.org/eq-5d-instruments/eq-5d-5l-about/) |  | Yes      | Yes     | Yes        | Yes       | Yes       | Yes       |
+| [Instrumental Activities of Daily Living]() |  | Yes      | No      | No         | No        | No        | No        |
+**NB** Whilst EORTC-QLQ-ELD15 has been used in this study it has been scored using EORTC-QLQ-ELD14 as no scoring method for version 15 is currently available.
+
+The derived scores/domains will be summarised in tabular format for Baseline and all follow-up periods and waterfall plots[@gillespie2012] produced for each follow-up time point.
+
+<!-- See examples at https://www.r-bloggers.com/waterfall-plots-what-and-how/ -->
 
 ### Death Follow-up
 
