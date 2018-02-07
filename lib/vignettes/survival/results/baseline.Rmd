@@ -590,7 +590,7 @@ eld15 <- age_gap %>%
                       event_name,
                       eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
                       eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
-                      eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68,) %>%
+                      eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68) %>%
         ## Reshape the data, replace variable names with neater descriptions and plot
         gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
         mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much"))) %>%
@@ -721,5 +721,400 @@ eld15_primary$plot
 eld15_chemotherapy$plot
 eld15_radiotherapy$plot
 eld15_surgery$plot
+
+```
+
+#### Barthel Activities of Daily Living
+```{r baseline_summary_demographics_adl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
+## Generate plots of ELD15 at Baseline...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  adl_score) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("ADL Score") +
+    ylab("N") +
+    ggtitle(label = "Barthel Activities of Daily Living Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+adl <- age_gap %>%
+       ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+       dplyr::filter(event_name == "Baseline") %>%
+       dplyr::filter(!is.na(primary_treatment)) %>%
+       ungroup() %>%
+       dplyr::select(individual_id,
+                     primary_treatment,
+                     event_name,
+                     feeding, transfer_bed_chair, personal_toilet,
+                     toiletting, bathing, walking_wheelchair, ascend_descend,
+                     dressing, bowels, bladder) %>%
+       unique()
+
+## Stacked bar-chart of domain responses using base ggplo2
+adl_plot <- list()
+adl_plot$feeding <- adl %>%
+    dplyr::filter(!is.na(feeding)) %>%
+    mutate(Response = feeding) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Feeding") +
+    theme_bw()
+adl_plot$transfer_bed_chair <- adl %>%
+    dplyr::filter(!is.na(transfer_bed_chair)) %>%
+    mutate(Response = transfer_bed_chair) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Transfer Bed/Chair") +
+    theme_bw()
+adl_plot$personal_toilet <- adl %>%
+    dplyr::filter(!is.na(personal_toilet)) %>%
+    mutate(Response = personal_toilet) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Personal Toilet") +
+    theme_bw()
+adl_plot$toiletting <- adl %>%
+    dplyr::filter(!is.na(toiletting)) %>%
+    mutate(Response = toiletting) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "toiletting") +
+    theme_bw()
+adl_plot$bathing <- adl %>%
+    dplyr::filter(!is.na(bathing)) %>%
+    mutate(Response = bathing) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Bathing") +
+    theme_bw()
+adl_plot$walking_wheelchair <- adl %>%
+    dplyr::filter(!is.na(walking_wheelchair)) %>%
+    mutate(Response = walking_wheelchair) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Walking / Wheelchair") +
+    theme_bw()
+adl_plot$ascend_descend <- adl %>%
+    dplyr::filter(!is.na(ascend_descend)) %>%
+    mutate(Response = ascend_descend) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Ascend / Descend") +
+    theme_bw()
+adl_plot$dressing <- adl %>%
+    dplyr::filter(!is.na(dressing)) %>%
+    mutate(Response = dressing) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Dressing") +
+    theme_bw()
+adl_plot$bowels <- adl %>%
+    dplyr::filter(!is.na(bowels)) %>%
+    mutate(Response = bowels) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Bowels") +
+    theme_bw()
+adl_plot$bladder <- adl %>%
+    dplyr::filter(!is.na(bladder)) %>%
+    mutate(Response = bladder) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Bladder") +
+    theme_bw()
+## Combine all plots using patchworkm, forcing into two columns
+adl_plot$feeding + adl_plot$transfer_bed_chair +
+    adl_plot$personal_toilet + adl_plot$toiletting +
+    adl_plot$bowels + adl_plot$bladder +
+    adl_plot$bathing + adl_plot$walking_wheelchair +
+    adl_plot$ascend_descend + adl_plot$dressing +
+    plot_layout(ncol = 2)
+
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+adl_sjp <- list()
+adl_sjp$feeding <- adl %>%
+    dplyr::select(individual_id, primary_treatment, feeding) %>%
+    spread(primary_treatment, feeding) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Feeding",
+                 prnt.plot = FALSE)
+adl_sjp$transfer_bed_chair <- adl %>%
+    dplyr::select(individual_id, primary_treatment, transfer_bed_chair) %>%
+    spread(primary_treatment, transfer_bed_chair) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Transfer Bed / Chair",
+                 prnt.plot = FALSE)
+adl_sjp$personal_toilet <- adl %>%
+    dplyr::select(individual_id, primary_treatment, personal_toilet) %>%
+    spread(primary_treatment, personal_toilet) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Personal Toilet",
+                 prnt.plot = FALSE)
+adl_sjp$toiletting <- adl %>%
+    dplyr::select(individual_id, primary_treatment, toiletting) %>%
+    spread(primary_treatment, toiletting) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Toiletting",
+                 prnt.plot = FALSE)
+adl_sjp$bowels <- adl %>%
+    dplyr::select(individual_id, primary_treatment, bowels) %>%
+    spread(primary_treatment, bowels) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Bowels",
+                 prnt.plot = FALSE)
+adl_sjp$bladder <- adl %>%
+    dplyr::select(individual_id, primary_treatment, bladder) %>%
+    spread(primary_treatment, bladder) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Bladder",
+                 prnt.plot = FALSE)
+adl_sjp$bathing <- adl %>%
+    dplyr::select(individual_id, primary_treatment, bathing) %>%
+    spread(primary_treatment, bathing) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Bathing",
+                 prnt.plot = FALSE)
+adl_sjp$walking_wheelchair <- adl %>%
+    dplyr::select(individual_id, primary_treatment, walking_wheelchair) %>%
+    spread(primary_treatment, walking_wheelchair) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Walking / Wheelchair",
+                 prnt.plot = FALSE)
+adl_sjp$ascend_descend <- adl %>%
+    dplyr::select(individual_id, primary_treatment, ascend_descend) %>%
+    spread(primary_treatment, ascend_descend) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Ascend / Descend",
+                 prnt.plot = FALSE)
+adl_sjp$dressing <- adl %>%
+    dplyr::select(individual_id, primary_treatment, dressing) %>%
+    spread(primary_treatment, dressing) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Dressing",
+                 prnt.plot = FALSE)
+adl_sjp$feeding
+adl_sjp$transfer_bed_chair
+adl_sjp$personal_toilet
+adl_sjp$toiletting
+adl_sjp$bowels
+adl_sjp$bladder
+adl_sjp$bathing
+adl_sjp$walking_wheelchair
+adl_sjp$ascend_descend
+adl_sjp$dressing
+
+```
+
+#### Instrumental Activities of Daily Living
+```{r baseline_summary_demographics_iadl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of ELD15 at Baseline...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  iadl_score) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("ADL Score") +
+    ylab("N") +
+    ggtitle(label = "Instrumental Activities of Daily Living Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+iadl <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      telephone, shopping, food_prep, housekeeping, laundry,
+                      transport, medication, finances)
+        unique()
+## Stacked bar-chart of domain responses using base ggplot2.opts
+## Because the responses are not consistent across questions these are plotted indivudally
+## and then combined into one plot
+iadl_plots <- list()
+iadl_plots$feeding <- adl %>%
+    dplyr::filter(!is.na(feeding)) %>%
+    ggplot(aes(x = feeding)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Instrumental Activities of Daily Living Domains at Baseline by Primary Treatment",
+            subtitle = "Excludes Missing Responses") +
+    facet_grid(~primary_treatment) +
+    theme_bw()
+## ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## ## patchwork (see https://github.com/thomasp85/patchwork)
+## adl_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
+## adl_adjuvant <- dplyr::filter(adl, primary_treatment == "Adjuvant Endocrine") %>%
+##                  dplyr::select(-primary_treatment, -event_name) %>%
+##                  spread(key, Response) %>%
+##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
+##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
+##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
+##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
+##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
+##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
+##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
+##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
+##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
+##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
+##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
+##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
+##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
+##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
+##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
+##                  dplyr::select(-individual_id) %>%
+##                  sjp.stackfrq(title = "Adjuvant Endocrine",
+##                               prnt.plot = FALSE)
+## adl_primary <- dplyr::filter(adl, primary_treatment == "Primary Endocrine") %>%
+##                  dplyr::select(-primary_treatment, -event_name) %>%
+##                  spread(key, Response) %>%
+##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
+##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
+##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
+##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
+##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
+##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
+##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
+##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
+##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
+##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
+##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
+##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
+##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
+##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
+##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
+##                  dplyr::select(-individual_id) %>%
+##                  sjp.stackfrq(title = "Primary Endocrine",
+##                               prnt.plot = FALSE)
+## adl_chemotherapy <- dplyr::filter(adl, primary_treatment == "Chemotherapy") %>%
+##                  dplyr::select(-primary_treatment, -event_name) %>%
+##                  spread(key, Response) %>%
+##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
+##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
+##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
+##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
+##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
+##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
+##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
+##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
+##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
+##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
+##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
+##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
+##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
+##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
+##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
+##                  dplyr::select(-individual_id) %>%
+##                  sjp.stackfrq(title = "Chemotherapy",
+##                               prnt.plot = FALSE)
+## adl_radiotherapy <- dplyr::filter(adl, primary_treatment == "Radiotherapy") %>%
+##                  dplyr::select(-primary_treatment, -event_name) %>%
+##                  spread(key, Response) %>%
+##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
+##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
+##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
+##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
+##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
+##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
+##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
+##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
+##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
+##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
+##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
+##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
+##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
+##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
+##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
+##                  dplyr::select(-individual_id) %>%
+##                  sjp.stackfrq(title = "Radiotherapy",
+##                               prnt.plot = FALSE)
+## adl_surgery <- dplyr::filter(adl, primary_treatment == "Surgery") %>%
+##                  dplyr::select(-primary_treatment, -event_name) %>%
+##                  spread(key, Response) %>%
+##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
+##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
+##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
+##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
+##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
+##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
+##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
+##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
+##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
+##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
+##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
+##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
+##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
+##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
+##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
+##                  dplyr::select(-individual_id) %>%
+##                  sjp.stackfrq(title = "Surgery",
+##                               prnt.plot = FALSE)
+## adl_adjuvant$plot
+## adl_primary$plot
+## adl_chemotherapy$plot
+## adl_radiotherapy$plot
+## adl_surgery$plot
 
 ```
