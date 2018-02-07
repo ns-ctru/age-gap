@@ -68,13 +68,13 @@ eq5d <- age_gap %>%
                                  key == "usual_activity"     ~ "Usual Activity")) %>%
         unique()
 ## Stacked bar-chart of domain responses using base ggplo2
-ggplot(eq5d, aes(x = primary_treatment, fill = Response)) +
+ggplot(eq5d, aes(x = key, fill = Response)) +
     geom_bar(position = "fill") +
     coord_flip() +
     xlab("") +
     ylab("Proportion") +
     ggtitle("EQ5D Domains at Baseline by Primary Treatment") +
-    facet_grid(~key) +
+    facet_wrap(~primary_treatment, ncol = 1) +
     theme_bw()
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
@@ -199,199 +199,227 @@ c30 <- age_gap %>%
                       c30_q26, c30_q27, c30_q28) %>%
         ## Reshape the data, replace variable names with neater descriptions and plot
         gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
-        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much"))) %>%
+        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much")),
+               key      = factor(key, levels = c("c30_q1", "c30_q2", "c30_q3", "c30_q4", "c30_q5",
+                                                 "c30_q6", "c30_q7", "c30_q8", "c30_q9", "c30_q10",
+                                                 "c30_q11", "c30_q12", "c30_q13", "c30_q14", "c30_q15",
+                                                 "c30_q16", "c30_q17", "c30_q18", "c30_q19", "c30_q20",
+                                                 "c30_q21", "c30_q22", "c30_q23", "c30_q24", "c30_q25",
+                                                 "c30_q26", "c30_q27", "c30_q28"))) %>%
         ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
         dplyr::filter(!is.na(Response)) %>%
         unique()
 ## Stacked bar-chart of domain responses using base ggplo2
-ggplot(c30, aes(x = key, fill = Response)) +
+ggplot(c30, aes(x = primary_treatment, fill = Response)) +
     geom_bar(position = "fill") +
     coord_flip() +
     xlab("") +
     ylab("Proportion") +
     ggtitle(label = "EORTC QLQ C30 Domains at Baseline by Primary Treatment",
             subtitle = "Excludes Missing Responses") +
-    facet_grid(~primary_treatment) +
+    facet_wrap(~key, ncol = 2) +
     theme_bw()
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
-c30_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
-c30_adjuvant <- dplyr::filter(c30, primary_treatment == "Adjuvant Endocrine") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
-                        c30_q2  = factor(c30_q2,  levels = c30_levels),
-                        c30_q3  = factor(c30_q3,  levels = c30_levels),
-                        c30_q4  = factor(c30_q4,  levels = c30_levels),
-                        c30_q5  = factor(c30_q5,  levels = c30_levels),
-                        c30_q6  = factor(c30_q6,  levels = c30_levels),
-                        c30_q7  = factor(c30_q7,  levels = c30_levels),
-                        c30_q8  = factor(c30_q8,  levels = c30_levels),
-                        c30_q9  = factor(c30_q9,  levels = c30_levels),
-                        c30_q10 = factor(c30_q10, levels = c30_levels),
-                        c30_q11 = factor(c30_q11, levels = c30_levels),
-                        c30_q12 = factor(c30_q12, levels = c30_levels),
-                        c30_q13 = factor(c30_q13, levels = c30_levels),
-                        c30_q14 = factor(c30_q14, levels = c30_levels),
-                        c30_q15 = factor(c30_q15, levels = c30_levels),
-                        c30_q16 = factor(c30_q16, levels = c30_levels),
-                        c30_q17 = factor(c30_q17, levels = c30_levels),
-                        c30_q18 = factor(c30_q18, levels = c30_levels),
-                        c30_q19 = factor(c30_q19, levels = c30_levels),
-                        c30_q20 = factor(c30_q20, levels = c30_levels),
-                        c30_q21 = factor(c30_q21, levels = c30_levels),
-                        c30_q22 = factor(c30_q22, levels = c30_levels),
-                        c30_q23 = factor(c30_q23, levels = c30_levels),
-                        c30_q24 = factor(c30_q24, levels = c30_levels),
-                        c30_q25 = factor(c30_q25, levels = c30_levels),
-                        c30_q26 = factor(c30_q26, levels = c30_levels),
-                        c30_q27 = factor(c30_q27, levels = c30_levels),
-                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Adjuvant Endocrine",
-                              prnt.plot = FALSE)
-c30_primary <- dplyr::filter(c30, primary_treatment == "Primary Endocrine") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
-                        c30_q2  = factor(c30_q2,  levels = c30_levels),
-                        c30_q3  = factor(c30_q3,  levels = c30_levels),
-                        c30_q4  = factor(c30_q4,  levels = c30_levels),
-                        c30_q5  = factor(c30_q5,  levels = c30_levels),
-                        c30_q6  = factor(c30_q6,  levels = c30_levels),
-                        c30_q7  = factor(c30_q7,  levels = c30_levels),
-                        c30_q8  = factor(c30_q8,  levels = c30_levels),
-                        c30_q9  = factor(c30_q9,  levels = c30_levels),
-                        c30_q10 = factor(c30_q10, levels = c30_levels),
-                        c30_q11 = factor(c30_q11, levels = c30_levels),
-                        c30_q12 = factor(c30_q12, levels = c30_levels),
-                        c30_q13 = factor(c30_q13, levels = c30_levels),
-                        c30_q14 = factor(c30_q14, levels = c30_levels),
-                        c30_q15 = factor(c30_q15, levels = c30_levels),
-                        c30_q16 = factor(c30_q16, levels = c30_levels),
-                        c30_q17 = factor(c30_q17, levels = c30_levels),
-                        c30_q18 = factor(c30_q18, levels = c30_levels),
-                        c30_q19 = factor(c30_q19, levels = c30_levels),
-                        c30_q20 = factor(c30_q20, levels = c30_levels),
-                        c30_q21 = factor(c30_q21, levels = c30_levels),
-                        c30_q22 = factor(c30_q22, levels = c30_levels),
-                        c30_q23 = factor(c30_q23, levels = c30_levels),
-                        c30_q24 = factor(c30_q24, levels = c30_levels),
-                        c30_q25 = factor(c30_q25, levels = c30_levels),
-                        c30_q26 = factor(c30_q26, levels = c30_levels),
-                        c30_q27 = factor(c30_q27, levels = c30_levels),
-                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Primary Endocrine",
-                              prnt.plot = FALSE)
-c30_chemotherapy <- dplyr::filter(c30, primary_treatment == "Chemotherapy") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
-                        c30_q2  = factor(c30_q2,  levels = c30_levels),
-                        c30_q3  = factor(c30_q3,  levels = c30_levels),
-                        c30_q4  = factor(c30_q4,  levels = c30_levels),
-                        c30_q5  = factor(c30_q5,  levels = c30_levels),
-                        c30_q6  = factor(c30_q6,  levels = c30_levels),
-                        c30_q7  = factor(c30_q7,  levels = c30_levels),
-                        c30_q8  = factor(c30_q8,  levels = c30_levels),
-                        c30_q9  = factor(c30_q9,  levels = c30_levels),
-                        c30_q10 = factor(c30_q10, levels = c30_levels),
-                        c30_q11 = factor(c30_q11, levels = c30_levels),
-                        c30_q12 = factor(c30_q12, levels = c30_levels),
-                        c30_q13 = factor(c30_q13, levels = c30_levels),
-                        c30_q14 = factor(c30_q14, levels = c30_levels),
-                        c30_q15 = factor(c30_q15, levels = c30_levels),
-                        c30_q16 = factor(c30_q16, levels = c30_levels),
-                        c30_q17 = factor(c30_q17, levels = c30_levels),
-                        c30_q18 = factor(c30_q18, levels = c30_levels),
-                        c30_q19 = factor(c30_q19, levels = c30_levels),
-                        c30_q20 = factor(c30_q20, levels = c30_levels),
-                        c30_q21 = factor(c30_q21, levels = c30_levels),
-                        c30_q22 = factor(c30_q22, levels = c30_levels),
-                        c30_q23 = factor(c30_q23, levels = c30_levels),
-                        c30_q24 = factor(c30_q24, levels = c30_levels),
-                        c30_q25 = factor(c30_q25, levels = c30_levels),
-                        c30_q26 = factor(c30_q26, levels = c30_levels),
-                        c30_q27 = factor(c30_q27, levels = c30_levels),
-                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Chemotherapy",
-                              prnt.plot = FALSE)
-c30_radiotherapy <- dplyr::filter(c30, primary_treatment == "Radiotherapy") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
-                        c30_q2  = factor(c30_q2,  levels = c30_levels),
-                        c30_q3  = factor(c30_q3,  levels = c30_levels),
-                        c30_q4  = factor(c30_q4,  levels = c30_levels),
-                        c30_q5  = factor(c30_q5,  levels = c30_levels),
-                        c30_q6  = factor(c30_q6,  levels = c30_levels),
-                        c30_q7  = factor(c30_q7,  levels = c30_levels),
-                        c30_q8  = factor(c30_q8,  levels = c30_levels),
-                        c30_q9  = factor(c30_q9,  levels = c30_levels),
-                        c30_q10 = factor(c30_q10, levels = c30_levels),
-                        c30_q11 = factor(c30_q11, levels = c30_levels),
-                        c30_q12 = factor(c30_q12, levels = c30_levels),
-                        c30_q13 = factor(c30_q13, levels = c30_levels),
-                        c30_q14 = factor(c30_q14, levels = c30_levels),
-                        c30_q15 = factor(c30_q15, levels = c30_levels),
-                        c30_q16 = factor(c30_q16, levels = c30_levels),
-                        c30_q17 = factor(c30_q17, levels = c30_levels),
-                        c30_q18 = factor(c30_q18, levels = c30_levels),
-                        c30_q19 = factor(c30_q19, levels = c30_levels),
-                        c30_q20 = factor(c30_q20, levels = c30_levels),
-                        c30_q21 = factor(c30_q21, levels = c30_levels),
-                        c30_q22 = factor(c30_q22, levels = c30_levels),
-                        c30_q23 = factor(c30_q23, levels = c30_levels),
-                        c30_q24 = factor(c30_q24, levels = c30_levels),
-                        c30_q25 = factor(c30_q25, levels = c30_levels),
-                        c30_q26 = factor(c30_q26, levels = c30_levels),
-                        c30_q27 = factor(c30_q27, levels = c30_levels),
-                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Radiotherapy",
-                              prnt.plot = FALSE)
-c30_surgery <- dplyr::filter(c30, primary_treatment == "Surgery") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(c30_q1  = factor(c30_q1,  levels = c30_levels),
-                        c30_q2  = factor(c30_q2,  levels = c30_levels),
-                        c30_q3  = factor(c30_q3,  levels = c30_levels),
-                        c30_q4  = factor(c30_q4,  levels = c30_levels),
-                        c30_q5  = factor(c30_q5,  levels = c30_levels),
-                        c30_q6  = factor(c30_q6,  levels = c30_levels),
-                        c30_q7  = factor(c30_q7,  levels = c30_levels),
-                        c30_q8  = factor(c30_q8,  levels = c30_levels),
-                        c30_q9  = factor(c30_q9,  levels = c30_levels),
-                        c30_q10 = factor(c30_q10, levels = c30_levels),
-                        c30_q11 = factor(c30_q11, levels = c30_levels),
-                        c30_q12 = factor(c30_q12, levels = c30_levels),
-                        c30_q13 = factor(c30_q13, levels = c30_levels),
-                        c30_q14 = factor(c30_q14, levels = c30_levels),
-                        c30_q15 = factor(c30_q15, levels = c30_levels),
-                        c30_q16 = factor(c30_q16, levels = c30_levels),
-                        c30_q17 = factor(c30_q17, levels = c30_levels),
-                        c30_q18 = factor(c30_q18, levels = c30_levels),
-                        c30_q19 = factor(c30_q19, levels = c30_levels),
-                        c30_q20 = factor(c30_q20, levels = c30_levels),
-                        c30_q21 = factor(c30_q21, levels = c30_levels),
-                        c30_q22 = factor(c30_q22, levels = c30_levels),
-                        c30_q23 = factor(c30_q23, levels = c30_levels),
-                        c30_q24 = factor(c30_q24, levels = c30_levels),
-                        c30_q25 = factor(c30_q25, levels = c30_levels),
-                        c30_q26 = factor(c30_q26, levels = c30_levels),
-                        c30_q27 = factor(c30_q27, levels = c30_levels),
-                        c30_q28 = factor(c30_q28, levels = c30_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Surgery",
-                              prnt.plot = FALSE)
-c30_adjuvant$plot
-c30_primary$plot
-c30_chemotherapy$plot
-c30_radiotherapy$plot
-c30_surgery$plot
+c30_sjp <- list()
+c30_sjp$q1 <- dplyr::filter(c30, key == "c30_q1") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q1",
+                 prnt.plot = FALSE)
+c30_sjp$q2 <- dplyr::filter(c30, key == "c30_q2") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q2",
+                 prnt.plot = FALSE)
+c30_sjp$q3 <- dplyr::filter(c30, key == "c30_q3") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q3",
+                 prnt.plot = FALSE)
+c30_sjp$q4 <- dplyr::filter(c30, key == "c30_q4") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q4",
+                 prnt.plot = FALSE)
+c30_sjp$q5 <- dplyr::filter(c30, key == "c30_q5") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q5",
+                 prnt.plot = FALSE)
+c30_sjp$q6 <- dplyr::filter(c30, key == "c30_q6") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q6",
+                 prnt.plot = FALSE)
+c30_sjp$q7 <- dplyr::filter(c30, key == "c30_q7") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q7",
+                 prnt.plot = FALSE)
+c30_sjp$q8 <- dplyr::filter(c30, key == "c30_q8") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q8",
+                 prnt.plot = FALSE)
+c30_sjp$q9 <- dplyr::filter(c30, key == "c30_q9") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q9",
+                 prnt.plot = FALSE)
+c30_sjp$q10 <- dplyr::filter(c30, key == "c30_q10") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q10",
+                 prnt.plot = FALSE)
+c30_sjp$q11 <- dplyr::filter(c30, key == "c30_q11") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q11",
+                 prnt.plot = FALSE)
+c30_sjp$q12 <- dplyr::filter(c30, key == "c30_q12") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q12",
+                 prnt.plot = FALSE)
+c30_sjp$q13 <- dplyr::filter(c30, key == "c30_q13") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q13",
+                 prnt.plot = FALSE)
+c30_sjp$q14 <- dplyr::filter(c30, key == "c30_q14") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q14",
+                 prnt.plot = FALSE)
+c30_sjp$q15 <- dplyr::filter(c30, key == "c30_q15") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q15",
+                 prnt.plot = FALSE)
+c30_sjp$q16 <- dplyr::filter(c30, key == "c30_q16") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q16",
+                 prnt.plot = FALSE)
+c30_sjp$q17 <- dplyr::filter(c30, key == "c30_q17") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q17",
+                 prnt.plot = FALSE)
+c30_sjp$q18 <- dplyr::filter(c30, key == "c30_q18") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q18",
+                 prnt.plot = FALSE)
+c30_sjp$q19 <- dplyr::filter(c30, key == "c30_q19") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q19",
+                 prnt.plot = FALSE)
+c30_sjp$q20 <- dplyr::filter(c30, key == "c30_q20") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q20",
+                 prnt.plot = FALSE)
+c30_sjp$q21 <- dplyr::filter(c30, key == "c30_q21") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q21",
+                 prnt.plot = FALSE)
+c30_sjp$q22 <- dplyr::filter(c30, key == "c30_q22") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q22",
+                 prnt.plot = FALSE)
+c30_sjp$q23 <- dplyr::filter(c30, key == "c30_q23") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q23",
+                 prnt.plot = FALSE)
+c30_sjp$q24 <- dplyr::filter(c30, key == "c30_q24") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q24",
+                 prnt.plot = FALSE)
+c30_sjp$q25 <- dplyr::filter(c30, key == "c30_q25") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q25",
+                 prnt.plot = FALSE)
+c30_sjp$q26 <- dplyr::filter(c30, key == "c30_q26") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q26",
+                 prnt.plot = FALSE)
+c30_sjp$q27 <- dplyr::filter(c30, key == "c30_q27") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q27",
+                 prnt.plot = FALSE)
+c30_sjp$q28 <- dplyr::filter(c30, key == "c30_q28") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "c30_q28",
+                 prnt.plot = FALSE)
+c30_sjp$q1$plot
+c30_sjp$q2$plot
+c30_sjp$q3$plot
+c30_sjp$q4$plot
+c30_sjp$q5$plot
+c30_sjp$q6$plot
+c30_sjp$q7$plot
+c30_sjp$q8$plot
+c30_sjp$q9$plot
+c30_sjp$q10$plot
+c30_sjp$q11$plot
+c30_sjp$q12$plot
+c30_sjp$q13$plot
+c30_sjp$q14$plot
+c30_sjp$q15$plot
+c30_sjp$q16$plot
+c30_sjp$q17$plot
+c30_sjp$q18$plot
+c30_sjp$q19$plot
+c30_sjp$q20$plot
+c30_sjp$q21$plot
+c30_sjp$q22$plot
+c30_sjp$q23$plot
+c30_sjp$q24$plot
+c30_sjp$q25$plot
+c30_sjp$q26$plot
+c30_sjp$q27$plot
+c30_sjp$q28$plot
+
 
 ```
 
@@ -442,19 +470,24 @@ br23 <- age_gap %>%
                       br23_q51, br23_q52, br23_q53) %>%
         ## Reshape the data, replace variable names with neater descriptions and plot
         gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
-        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much"))) %>%
+        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much")),
+               key      = factor(key, levels = c("br23_q31", "br23_q32", "br23_q33", "br23_q34", "br23_q35",
+                                                 "br23_q36", "br23_q37", "br23_q38", "br23_q39", "br23_q40",
+                                                 "br23_q41", "br23_q42", "br23_q43", "br23_q44", "br23_q45",
+                                                 "br23_q46", "br23_q47", "br23_q48", "br23_q49", "br23_q50",
+                                                 "br23_q51", "br23_q52", "br23_q53"))) %>%
         ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
         dplyr::filter(!is.na(Response)) %>%
         unique()
 ## Stacked bar-chart of domain responses using base ggplo2
-ggplot(br23, aes(x = key, fill = Response)) +
+ggplot(br23, aes(x = primary_treatment, fill = Response)) +
     geom_bar(position = "fill") +
     coord_flip() +
     xlab("") +
     ylab("Proportion") +
     ggtitle(label = "EORTC QLQ BR23 Domains at Baseline by Primary Treatment",
             subtitle = "Excludes Missing Responses") +
-    facet_grid(~primary_treatment) +
+    facet_wrap(~key, ncol = 2) +
     theme_bw()
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
@@ -593,19 +626,22 @@ eld15 <- age_gap %>%
                       eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68) %>%
         ## Reshape the data, replace variable names with neater descriptions and plot
         gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
-        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much"))) %>%
+        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much")),
+               key      = factor(key, levels = c("eld15_q54", "eld15_q55", "eld15_q56", "eld15_q57", "eld15_q58",
+                                                 "eld15_q59", "eld15_q60", "eld15_q61", "eld15_q62", "eld15_q63",
+                                                 "eld15_q64", "eld15_q65", "eld15_q66", "eld15_q67", "eld15_q68"))) %>%
         ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
         dplyr::filter(!is.na(Response)) %>%
         unique()
 ## Stacked bar-chart of domain responses using base ggplo2
-ggplot(eld15, aes(x = key, fill = Response)) +
+ggplot(eld15, aes(x = primary_treatment, fill = Response)) +
     geom_bar(position = "fill") +
     coord_flip() +
     xlab("") +
     ylab("Proportion") +
     ggtitle(label = "EORTC QLQ ELD15 Domains at Baseline by Primary Treatment",
             subtitle = "Excludes Missing Responses") +
-    facet_grid(~primary_treatment) +
+    facet_wrap(~key, ncol = 2) +
     theme_bw()
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
@@ -725,6 +761,9 @@ eld15_surgery$plot
 ```
 
 #### Barthel Activities of Daily Living
+
+**NB** Because the responses are not consistent between questions it is *not* possible to use the `facet_wrap()` function of [ggplot2](http://ggplot2.tidyverse.org/reference/) to plot these all at once.  Instead individual plots are generated and combined using [patchwork](https://github.com/thomasp85/patchwork).
+
 ```{r baseline_summary_demographics_adl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
 ## Generate plots of ELD15 at Baseline...
 ##
@@ -762,7 +801,6 @@ adl <- age_gap %>%
                      toiletting, bathing, walking_wheelchair, ascend_descend,
                      dressing, bowels, bladder) %>%
        unique()
-
 ## Stacked bar-chart of domain responses using base ggplo2
 adl_plot <- list()
 adl_plot$feeding <- adl %>%
@@ -937,20 +975,23 @@ adl_sjp$dressing <- adl %>%
     dplyr::select(-individual_id) %>%
     sjp.stackfrq(title     = "Dressing",
                  prnt.plot = FALSE)
-adl_sjp$feeding
-adl_sjp$transfer_bed_chair
-adl_sjp$personal_toilet
-adl_sjp$toiletting
-adl_sjp$bowels
-adl_sjp$bladder
-adl_sjp$bathing
-adl_sjp$walking_wheelchair
-adl_sjp$ascend_descend
-adl_sjp$dressing
+adl_sjp$feeding$plot
+adl_sjp$transfer_bed_chair$plot
+adl_sjp$personal_toilet$plot
+adl_sjp$toiletting$plot
+adl_sjp$bowels$plot
+adl_sjp$bladder$plot
+adl_sjp$bathing$plot
+adl_sjp$walking_wheelchair$plot
+adl_sjp$ascend_descend$plot
+adl_sjp$dressing$plot
 
 ```
 
 #### Instrumental Activities of Daily Living
+
+**NB** Because the responses are not consistent between questions it is *not* possible to use the `facet_wrap()` function of [ggplot2](http://ggplot2.tidyverse.org/reference/) to plot these all at once.  Instead individual plots are generated and combined using [patchwork](https://github.com/thomasp85/patchwork).
+
 ```{r baseline_summary_demographics_iadl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 ## Generate plots of ELD15 at Baseline...
 ##
@@ -981,140 +1022,161 @@ iadl <- age_gap %>%
         dplyr::filter(event_name == "Baseline") %>%
         dplyr::filter(!is.na(primary_treatment)) %>%
         ungroup() %>%
-        dplyr::select(individual_id,
-                      primary_treatment,
-                      event_name,
+        dplyr::select(individual_id, primary_treatment, event_name,
                       telephone, shopping, food_prep, housekeeping, laundry,
-                      transport, medication, finances)
+                      transport, medication, finances) %>%
         unique()
 ## Stacked bar-chart of domain responses using base ggplot2.opts
 ## Because the responses are not consistent across questions these are plotted indivudally
 ## and then combined into one plot
 iadl_plots <- list()
-iadl_plots$feeding <- adl %>%
-    dplyr::filter(!is.na(feeding)) %>%
-    ggplot(aes(x = feeding)) +
+iadl_plots$telephone <- iadl %>%
+    dplyr::filter(!is.na(telephone)) %>%
+    mutate(Response = telephone) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
     geom_bar(position = "fill") +
     coord_flip() +
     xlab("") +
     ylab("Proportion") +
-    ggtitle(label = "Instrumental Activities of Daily Living Domains at Baseline by Primary Treatment",
-            subtitle = "Excludes Missing Responses") +
-    facet_grid(~primary_treatment) +
+    ggtitle(label = "Telephone") +
     theme_bw()
-## ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
-## ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
-## ## patchwork (see https://github.com/thomasp85/patchwork)
-## adl_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
-## adl_adjuvant <- dplyr::filter(adl, primary_treatment == "Adjuvant Endocrine") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
-##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
-##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
-##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
-##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
-##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
-##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
-##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
-##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
-##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
-##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
-##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
-##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
-##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
-##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Adjuvant Endocrine",
-##                               prnt.plot = FALSE)
-## adl_primary <- dplyr::filter(adl, primary_treatment == "Primary Endocrine") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
-##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
-##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
-##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
-##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
-##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
-##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
-##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
-##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
-##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
-##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
-##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
-##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
-##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
-##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Primary Endocrine",
-##                               prnt.plot = FALSE)
-## adl_chemotherapy <- dplyr::filter(adl, primary_treatment == "Chemotherapy") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
-##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
-##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
-##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
-##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
-##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
-##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
-##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
-##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
-##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
-##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
-##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
-##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
-##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
-##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Chemotherapy",
-##                               prnt.plot = FALSE)
-## adl_radiotherapy <- dplyr::filter(adl, primary_treatment == "Radiotherapy") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
-##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
-##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
-##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
-##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
-##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
-##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
-##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
-##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
-##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
-##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
-##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
-##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
-##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
-##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Radiotherapy",
-##                               prnt.plot = FALSE)
-## adl_surgery <- dplyr::filter(adl, primary_treatment == "Surgery") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(adl_q54  = factor(adl_q54,  levels = adl_levels),
-##                         adl_q55  = factor(adl_q55,  levels = adl_levels),
-##                         adl_q56  = factor(adl_q56,  levels = adl_levels),
-##                         adl_q57  = factor(adl_q57,  levels = adl_levels),
-##                         adl_q58  = factor(adl_q58,  levels = adl_levels),
-##                         adl_q59  = factor(adl_q59,  levels = adl_levels),
-##                         adl_q60  = factor(adl_q60,  levels = adl_levels),
-##                         adl_q61  = factor(adl_q61,  levels = adl_levels),
-##                         adl_q62  = factor(adl_q62,  levels = adl_levels),
-##                         adl_q63  = factor(adl_q63,  levels = adl_levels),
-##                         adl_q64  = factor(adl_q64,  levels = adl_levels),
-##                         adl_q65  = factor(adl_q65,  levels = adl_levels),
-##                         adl_q66  = factor(adl_q66,  levels = adl_levels),
-##                         adl_q67  = factor(adl_q67,  levels = adl_levels),
-##                         adl_q68  = factor(adl_q68,  levels = adl_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Surgery",
-##                               prnt.plot = FALSE)
-## adl_adjuvant$plot
-## adl_primary$plot
-## adl_chemotherapy$plot
-## adl_radiotherapy$plot
-## adl_surgery$plot
+iadl_plots$shopping <- iadl %>%
+    dplyr::filter(!is.na(shopping)) %>%
+    mutate(Response = shopping) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Shopping") +
+    theme_bw()
+iadl_plots$food_prep <- iadl %>%
+    dplyr::filter(!is.na(food_prep)) %>%
+    mutate(Response = food_prep) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Food Preparation") +
+    theme_bw()
+iadl_plots$housekeeping <- iadl %>%
+    dplyr::filter(!is.na(housekeeping)) %>%
+    mutate(Response = housekeeping) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Housekeeping") +
+    theme_bw()
+iadl_plots$laundry <- iadl %>%
+    dplyr::filter(!is.na(laundry)) %>%
+    mutate(Response = laundry) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Laundry") +
+    theme_bw()
+iadl_plots$transport <- iadl %>%
+    dplyr::filter(!is.na(transport)) %>%
+    mutate(Response = transport) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Transport") +
+    theme_bw()
+iadl_plots$medication <- iadl %>%
+    dplyr::filter(!is.na(medication)) %>%
+    mutate(Response = medication) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Medication") +
+    theme_bw()
+iadl_plots$finances <- iadl %>%
+    dplyr::filter(!is.na(finances)) %>%
+    mutate(Response = finances) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Finances") +
+    theme_bw()
+## Combine using patchwork
+iadl_plot$telephone + iadl_plot$shopping +
+iadl_plot$food_prep + iadl_plot$housekeeping +
+iadl_plot$laundry + iadl_plot$transport +
+iadl_plot$medication + iadl_plot$finances +
+plot_layout(ncol = 2)
+
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+iadl_sjp <- list()
+iadl_sjp$telephone <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, telephone) %>%
+    spread(primary_treatment, telephone) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Telephone",
+                 prnt.plot = FALSE)
+iadl_sjp$shopping <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, shopping) %>%
+    spread(primary_treatment, shopping) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Shopping",
+                 prnt.plot = FALSE)
+iadl_sjp$food_prep <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, food_prep) %>%
+    spread(primary_treatment, food_prep) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Food Preparation",
+                 prnt.plot = FALSE)
+iadl_sjp$housekeeping <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, housekeeping) %>%
+    spread(primary_treatment, housekeeping) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Housekeeping",
+                 prnt.plot = FALSE)
+iadl_sjp$laundry <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, laundry) %>%
+    spread(primary_treatment, laundry) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Laundry",
+                 prnt.plot = FALSE)
+iadl_sjp$transport <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, transport) %>%
+    spread(primary_treatment, transport) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Transport",
+                 prnt.plot = FALSE)
+iadl_sjp$medication <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, medication) %>%
+    spread(primary_treatment, medication) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Medication",
+                 prnt.plot = FALSE)
+iadl_sjp$finances <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, finances) %>%
+    spread(primary_treatment, finances) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Finances",
+                 prnt.plot = FALSE)
+iadl_sjp$telephone$plot
+iadl_sjp$shopping$plot
+iadl_sjp$food_prep$plot
+iadl_sjp$housekeeping$plot
+iadl_sjp$laundry$plot
+iadl_sjp$transport$plot
+iadl_sjp$medication$plot
+iadl_sjp$finances$plot
+
 
 ```
