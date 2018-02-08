@@ -1,0 +1,11 @@
+## Appendix
+
+For convenience tabulations and plots of many of the outcomes at all time points by primary treatment group are provided along with Waterfall Plots[@gillespie2012] of changes from Baseline by Primary Treatment.
+
+These are generated automatically from the file `~/lib/vignettes/survival/results/baseline.Rmd` using a [Bash shell script]() to substitute the text `Baseline` for each of the additional follow-up time points (i.e. `6 weeks`, `6 months`, `12 months`, `18 months` and `24 months`).  This shell script is called natively under GNU/Linux and will "Just Work^TM " however should you modify the layout of graphs or plots in the file `~/lib/vignettes/survival/results/baseline.Rmd` and `build_vignettes()` under a M$-Windows operating system this will *not* re-generate the output for the additional timepoints because the Bash shell is not native under M$-Windows.  To get around this you can install [Cygwin]() on your computer, navigate to the directory containing the Bash script (i.e. `cd /[path]/[to]/[where]/[project]/[is/]/lib/vignettes/survival`) and run the Bash script manually by typing `./populate.sh`.
+
+```{r child='appendix/tables.Rmd', eval = TRUE}
+```
+
+```{r child='appendix/waterfall.Rmd', eval = TRUE}
+```
