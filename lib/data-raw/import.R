@@ -1183,7 +1183,7 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             by = c('individual_id', 'site', 'event_name')) %>%
 ## Instrumental Activites Daily Living
                   full_join(.,
-                            dplyr::select(master$instrumental_activities_daily_living,
+                           dplyr::select(master$instrumental_activities_daily_living,
                                           individual_id, site, event_name, ## event_date, database_id,
                                           telephone, shopping, food_prep, housekeeping,
                                           laundry, transport, medication, finances, iadl_score),
@@ -1209,7 +1209,12 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
                             dplyr::select(master$ecog_performance_status_score,
                                           individual_id, site, event_name, ## event_date, database_id,
                                           ecog_grade),
-                            by = c('individual_id', 'site', 'event_name')) ## %>%
+                            by = c('individual_id', 'site', 'event_name')) %>%
+## Ethnicity
+           full_join(.,
+                     dplyr::select(master$screening_form,
+                                   individual_id, site, event_name, event_date, ## database_id,
+                                   ethnicity)) %>%
 
 ## Site Randomisation
                   ## full_join(.,
@@ -2508,7 +2513,8 @@ age_gap <- age_gap %>%
 ## Finally make copies of age_gap to master$ and then remove those who were not enrolled
 master$master <- age_gap
 age_gap <- age_gap %>%
-           dplyr::filter(!is.na(enrolment_no))
+           ## dplyr::filter(!is.na(enrolment_no))
+           dplyr::filter(!is.na(randomisation))
 
 ###################################################################################
 ## Add in derived variables to the fields lookup                                 ##
