@@ -1,0 +1,174 @@
+### Recruitment
+```{r analysis_recruitment, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+## Results
+recruitment <- list()
+## Screening
+screen_all <- master$screening_form %>%
+              group_by(event_date) %>%
+              summarise(n = n()) %>%
+              mutate(sum = cumsum(n),
+                     site = "All") %>%
+              as.data.frame()
+screen_site <- master$screening_form %>%
+              group_by(site, event_date) %>%
+              summarise(n = n()) %>%
+              mutate(sum = cumsum(n)) %>%
+              ungroup() %>%
+              as.data.frame()
+recruitment$screened <- bind_rows(screen_all,
+                              screen_site) %>%
+                        mutate(status = "Screened") %>%
+                        as.data.frame()
+rm(screen_all, screen_site)
+## Recruitment (requires missing "" > NA)
+t <- master$screening_form %>%
+     mutate(enrolment_no = ifelse(enrolment_no == '',
+                                  yes = NA,
+                                  no  = enrolment_no))
+recruit_all <- t %>%
+               dplyr::filter(!is.na(enrolment_no)) %>%
+               group_by(event_date) %>%
+               summarise(n = n()) %>%
+               mutate(sum = cumsum(n),
+                      site = "All") %>%
+               as.data.frame()
+recruit_site <- t %>%
+                dplyr::filter(!is.na(enrolment_no)) %>%
+                group_by(site, event_date) %>%
+                summarise(n = n()) %>%
+                mutate(sum = cumsum(n)) %>%
+                as.data.frame()
+recruitment$recruited <- bind_rows(recruit_all,
+                               recruit_site) %>%
+                         mutate(status = "Recruited") %>%
+                         as.data.frame()
+
+## Short function to save time/repetition
+summarise_by <- function(df,
+                         site   = 'Site',
+                         date   = 'Date',
+                         n      = 'N',
+                         total  = 'Total',
+                         status = FALSE){
+    if(status == FALSE)      group <- quos(site, year_month)
+    else if(status == TRUE)  group <- quos(site, year_month, status)
+    results <- df %>%
+        mutate(year_month = paste(year(event_date),
+                                  month(event_date),
+                                  '01',
+                                  sep = '-') %>% as.Date()) %>%
+        ## group_by(site, year_month) %>%
+        group_by(!!!group) %>%
+        summarise(n = sum(n, na.rm = TRUE)) %>%
+        ungroup() %>%
+        mutate(sum = cumsum(n))
+    names(results) <- gsub('site',       site,  names(results))
+    names(results) <- gsub('year_month', date,  names(results))
+    names(results) <- gsub('n',          n,     names(results))
+    names(results) <- gsub('sum',        total, names(results))
+    return(results)
+}
+
+## Tables of screening and recruitment
+recruitment$table_screened_all_month <- dplyr::filter(recruitment$screened, site == "All") %>%
+    summarise_by(df     = .,
+                 site   = 'Site',
+                 date   = 'Date',
+                 n      = 'Screened',
+                 total  = 'Total Screened',
+                 status = FALSE)
+recruitment$table_screened_site_month <- dplyr::filter(recruitment$screened, site != "All") %>%
+    summarise_by(site   = 'Site',
+                 date   = 'Date',
+                 n      = 'Screened',
+                 total  = 'Total Screened',
+                 status = FALSE)
+recruitment$table_screened_month <- bind_rows(recruitment$table_screened_all_month,
+                                              recruitment$table_screened_site_month)
+recruitment$table_recruited_all_month <- dplyr::filter(recruitment$recruited, site == "All") %>%
+    summarise_by(site   = 'Site',
+                 date   = 'Date',
+                 n      = 'Recruited',
+                 total  = 'Total Recruited',
+                 status = FALSE)
+recruitment$table_recruited_site_month <- dplyr::filter(recruitment$recruited, site != "All") %>%
+    summarise_by(site   = 'Site',
+                 date   = 'Date',
+                 n      = 'Recruited',
+                 total  = 'Total Recruited',
+                 status = FALSE)
+recruitment$table_recruited_month <- bind_rows(recruitment$table_recruited_all_month,
+                                               recruitment$table_recruited_site_month)
+## Combine screening and recruitment and format for printing
+recruitment$table_screened_recruited_month <- full_join(recruitment$table_screened_month,
+                                                    recruitment$table_recruited_month,
+                                                    by = c('Site', 'Date')) %>%
+    mutate(`Percent Recruited` = (Recruited * 100) / Screened,
+           `Cumulative Percent Recruited` = (`Total Recruited` * 100) / `Total Screened`)
+
+## Plots
+recruitment$plot_screened_all <- dplyr::filter(recruitment$screened, site == 'All') %>%
+    ggplot(aes(x = event_date, y = sum)) +
+    geom_line() +
+    xlab('Date') + ylab('N') + ggtitle('Recruitment across all Sites') +
+    guides(color = guide_legend(ncol = 2)) +
+    theme_bw()
+recruitment$plot_screened_site <- dplyr::filter(recruitment$screened, site != 'All') %>%
+    ggplot(aes(x = event_date, y = sum, colour = site)) +
+    geom_line() +
+    xlab('Date') + ylab('N') + ggtitle('Recruitment by Site') +
+    theme_bw()
+recruitment$plot_recruited_all <- dplyr::filter(recruitment$recruited, site == 'All') %>%
+    ggplot(aes(x = event_date, y = sum)) +
+    geom_line() +
+    xlab('Date') + ylab('N') + ggtitle('Recruitment across all Sites') +
+    guides(color = guide_legend(ncol = 2)) +
+    theme_bw()
+recruitment$plot_recruited_site <- dplyr::filter(recruitment$recruited, site != 'All') %>%
+    ggplot(aes(x = event_date, y = sum, colour = site)) +
+    geom_line() +
+    xlab('Date') + ylab('N') + ggtitle('Recruitment by Site') +
+    theme_bw()
+## Plot both by combining screening and recruitment
+recruitment$screened_recruited <- bind_rows(recruitment$screened,
+                                            recruitment$recruited)
+recruitment$screened_recruited <- recruitment$screened_recruited %>%
+    dplyr::select(-n) %>%
+    spread(key = status, value = sum)
+recruitment$plot_screened_recruited_all <- dplyr::filter(recruitment$screened_recruited,
+                                                     site == 'All') %>%
+    ggplot() +
+    geom_line(aes(x = event_date,
+                  y = Screened),
+              linetype = 'dashed') +
+    geom_line(aes(x = event_date,
+                  y = Recruited),
+              linetype = 'solid') +
+    xlab('Date') + ylab('N') +
+    ggtitle('Screening and Recruitment across all Sites') +
+    theme_bw()
+recruitment$plot_screened_recruited_site <- dplyr::filter(recruitment$screened_recruited,
+                                                      site != 'All') %>%
+    ggplot() +
+    geom_line(aes(x = event_date,
+                  y = Screened, color = site),
+              linetype = 'dashed') +
+    geom_line(aes(x = event_date,
+                  y = Recruited, color = site),
+              linetype = 'solid') +
+    xlab('Date') + ylab('N') +
+    ggtitle('Screening and Recruitment across all Sites') +
+    theme_bw() +
+    facet_wrap(~site,
+               ncol = "Site",
+               scales = "free_y",
+               strip.position = "left") +
+    guides(colour = FALSE) +
+    theme(axis.text.x = element_text(angle = 90))
+recruitment$plot_screened_recruited_all
+recruitment$plot_screened_recruited_site
+recruitment$table_screened_recruited_month %>%
+    kable(caption = "Screening and Recruitment by month by Site and Overall.")
+
+
+```
