@@ -25,7 +25,7 @@ age_gap %>%
 
 ```
 #### Ethnicity
-```{r baseline_summary_demographics_age, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+```{r baseline_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
 ```
 
 #### EQ5D
@@ -145,11 +145,11 @@ eq5d_sjp$usual_activity <- dplyr::filter(eq5d, key == "Usual Activity") %>%
     dplyr::select(-individual_id) %>%
     sjp.stackfrq(title = "Usual Activity",
                  prnt.plot = FALSE)
-eq5d_sjp$anxiety_depression
-eq5d_sjp$mobility
-eq5d_sjp$pain_discomfort
-eq5d_sjp$self_care
-eq5d_sjp$usual_activity
+eq5d_sjp$anxiety_depression$plot
+eq5d_sjp$mobility$plot
+eq5d_sjp$pain_discomfort$plot
+eq5d_sjp$self_care$plot
+eq5d_sjp$usual_activity$plot
 
 ```
 
