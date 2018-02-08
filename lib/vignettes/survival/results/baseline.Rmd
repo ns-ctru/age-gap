@@ -24,6 +24,9 @@ age_gap %>%
 ## Table of summary statistics
 
 ```
+#### Ethnicity
+```{r baseline_summary_demographics_age, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+```
 
 #### EQ5D
 ```{r baseline_summary_demographics_eq5d, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
@@ -45,6 +48,7 @@ age_gap %>%
     theme_bw() +
     theme(legend.position = "none")
 ## Subset, reshape and tidy questionnaire responses...
+eq5d_levels <- c('None', 'Slight', 'Moderate', 'Severe', 'Extreme')
 eq5d <- age_gap %>%
         ## Filter Baseline group, with primary_treatment defined and without missing or zero age
         dplyr::filter(event_name == "Baseline") %>%
@@ -65,7 +69,9 @@ eq5d <- age_gap %>%
                                  key == "mobility"           ~ "Mobility",
                                  key == "pain_discomfort"    ~ "Pain / Discomfort",
                                  key == "self_care"          ~ "Self Care",
-                                 key == "usual_activity"     ~ "Usual Activity")) %>%
+                                 key == "usual_activity"     ~ "Usual Activity"),
+               Response = factor(Response, levels = eq5d_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
         unique()
 ## Stacked bar-chart of domain responses using base ggplo2
 ggplot(eq5d, aes(x = key, fill = Response)) +
@@ -76,6 +82,10 @@ ggplot(eq5d, aes(x = key, fill = Response)) +
     ggtitle("EQ5D Domains at Baseline by Primary Treatment") +
     facet_wrap(~primary_treatment, ncol = 1) +
     theme_bw()
+
+```
+
+```{r baseline_summary_demographics_eq5d_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -83,30 +93,55 @@ eq5d_sjp <- list()
 eq5d_sjp$anxiety_depression <- dplyr::filter(eq5d, key == "Anxiety / Depression") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
     dplyr::select(-individual_id) %>%
     sjp.stackfrq(title = "Anxiety / Depression",
                  prnt.plot = FALSE)
 eq5d_sjp$mobility <- dplyr::filter(eq5d, key == "Mobility") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
     dplyr::select(-individual_id) %>%
     sjp.stackfrq(title = "Mobility",
                  prnt.plot = FALSE)
 eq5d_sjp$pain_discomfort <- dplyr::filter(eq5d, key == "Pain / Discomfort") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
     dplyr::select(-individual_id) %>%
     sjp.stackfrq(title = "Pain / Discomfort",
                  prnt.plot = FALSE)
 eq5d_sjp$self_care <- dplyr::filter(eq5d, key == "Self Care") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
     dplyr::select(-individual_id) %>%
     sjp.stackfrq(title = "Self Care",
                  prnt.plot = FALSE)
 eq5d_sjp$usual_activity <- dplyr::filter(eq5d, key == "Usual Activity") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
     dplyr::select(-individual_id) %>%
     sjp.stackfrq(title = "Usual Activity",
                  prnt.plot = FALSE)
@@ -115,68 +150,6 @@ eq5d_sjp$mobility
 eq5d_sjp$pain_discomfort
 eq5d_sjp$self_care
 eq5d_sjp$usual_activity
-
-## eq5d_levels <- c('None', 'Slight', 'Moderate', 'Severe', 'Extreme')
-## eq5d_adjuvant <- dplyr::filter(eq5d, primary_treatment == "Adjuvant Endocrine") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
-##                          `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
-##                          `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
-##                          `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
-##                          `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Adjuvant Endocrine",
-##                               prnt.plot = FALSE)
-## eq5d_chemotherapy <- dplyr::filter(eq5d, primary_treatment == "Chemotherapy") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
-##                          `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
-##                          `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
-##                          `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
-##                          `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Chemotherapy",
-##                               prnt.plot = FALSE)
-## eq5d_primary <- dplyr::filter(eq5d, primary_treatment == "Primary Endocrine") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
-##                          `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
-##                          `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
-##                          `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
-##                          `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Primary Endocrine",
-##                               prnt.plot = FALSE)
-## eq5d_radiotherapy <- dplyr::filter(eq5d, primary_treatment == "Radiotherapy") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
-##                          `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
-##                          `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
-##                          `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
-##                          `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Radiotherapy",
-##                               prnt.plot = FALSE)
-## eq5d_surgery <- dplyr::filter(eq5d, primary_treatment == "Surgery") %>%
-##                  dplyr::select(-primary_treatment, -event_name) %>%
-##                  spread(key, Response) %>%
-##                  mutate(`Anxiety / Depression` = factor(`Anxiety / Depression`, levels = eq5d_levels),
-##                          `Mobility`            = factor(`Mobility`, levels = eq5d_levels),
-##                          `Pain / Discomfort`   = factor(`Pain / Discomfort`, levels = eq5d_levels),
-##                          `Self Care`           = factor(`Self Care`, levels = eq5d_levels),
-##                          `Usual Activity`      = factor(`Usual Activity`, levels = eq5d_levels)) %>%
-##                  dplyr::select(-individual_id) %>%
-##                  sjp.stackfrq(title = "Surgery",
-##                               prnt.plot = FALSE)
-## eq5d_adjuvant$plot
-## eq5d_primary$plot
-## eq5d_chemotherapy$plot
-## eq5d_radiotherapy$plot
-## eq5d_surgery$plot
 
 ```
 
@@ -220,6 +193,7 @@ age_gap %>%
     theme_bw() +
     theme(legend.position = "none")
 ## Subset, reshape and tidy questionnaire responses...
+c30_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
 c30 <- age_gap %>%
         ## Filter Baseline group, with primary_treatment defined and without missing or zero age
         dplyr::filter(event_name == "Baseline") %>%
@@ -236,16 +210,20 @@ c30 <- age_gap %>%
                       c30_q26, c30_q27, c30_q28) %>%
         ## Reshape the data, replace variable names with neater descriptions and plot
         gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
-        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much")),
-               key      = factor(key, levels = c("c30_q1", "c30_q2", "c30_q3", "c30_q4", "c30_q5",
+        mutate(key      = factor(key, levels = c("c30_q1", "c30_q2", "c30_q3", "c30_q4", "c30_q5",
                                                  "c30_q6", "c30_q7", "c30_q8", "c30_q9", "c30_q10",
                                                  "c30_q11", "c30_q12", "c30_q13", "c30_q14", "c30_q15",
                                                  "c30_q16", "c30_q17", "c30_q18", "c30_q19", "c30_q20",
                                                  "c30_q21", "c30_q22", "c30_q23", "c30_q24", "c30_q25",
-                                                 "c30_q26", "c30_q27", "c30_q28"))) %>%
+                                                 "c30_q26", "c30_q27", "c30_q28", "c30_q29", "c30_q30")),
+               Response = factor(Response, levels = c30_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
         ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
         dplyr::filter(!is.na(Response)) %>%
-        unique()
+        unique() %>%
+        left_join(.,
+                  master$lookups_fields,
+                  by = c("key" = "identifier"))
 ## Stacked bar-chart of domain responses using base ggplo2
 ggplot(c30, aes(x = primary_treatment, fill = Response)) +
     geom_bar(position = "fill") +
@@ -254,8 +232,12 @@ ggplot(c30, aes(x = primary_treatment, fill = Response)) +
     ylab("Proportion") +
     ggtitle(label = "EORTC QLQ C30 Domains at Baseline by Primary Treatment",
             subtitle = "Excludes Missing Responses") +
-    facet_wrap(~key, ncol = 2) +
+    facet_wrap(~label, ncol = 2) +
     theme_bw()
+
+```
+
+```{r baseline_summary_demographics_c30_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -264,170 +246,182 @@ c30_sjp$q1 <- dplyr::filter(c30, key == "c30_q1") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q1",
+    sjp.stackfrq(title = "1. Do you have any trouble doing strenuous activities?",
                  prnt.plot = FALSE)
 c30_sjp$q2 <- dplyr::filter(c30, key == "c30_q2") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q2",
+    sjp.stackfrq(title = "2. Do you have any trouble taking a long walk?",
                  prnt.plot = FALSE)
 c30_sjp$q3 <- dplyr::filter(c30, key == "c30_q3") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q3",
+    sjp.stackfrq(title = "3. Do you have any trouble taking a short walk outside of the house?",
                  prnt.plot = FALSE)
 c30_sjp$q4 <- dplyr::filter(c30, key == "c30_q4") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q4",
+    sjp.stackfrq(title = "4. Do you need to stay in be or a chari during the day",
                  prnt.plot = FALSE)
 c30_sjp$q5 <- dplyr::filter(c30, key == "c30_q5") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q5",
+    sjp.stackfrq(title = "5. Do you need help with eating, dressing, washing yourself or using the toilet?",
                  prnt.plot = FALSE)
 c30_sjp$q6 <- dplyr::filter(c30, key == "c30_q6") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q6",
+    sjp.stackfrq(title = "6. Were you limited in doing either your work or other daily activites?",
                  prnt.plot = FALSE)
 c30_sjp$q7 <- dplyr::filter(c30, key == "c30_q7") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q7",
+    sjp.stackfrq(title = "7. Were you limited in pursuing your hobbies or other leisure activities?",
                  prnt.plot = FALSE)
 c30_sjp$q8 <- dplyr::filter(c30, key == "c30_q8") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q8",
+    sjp.stackfrq(title = "8. Were you short of breath?",
                  prnt.plot = FALSE)
 c30_sjp$q9 <- dplyr::filter(c30, key == "c30_q9") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q9",
+    sjp.stackfrq(title = "9. Have you had pain?",
                  prnt.plot = FALSE)
 c30_sjp$q10 <- dplyr::filter(c30, key == "c30_q10") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q10",
+    sjp.stackfrq(title = "10. Did you need to rest?",
                  prnt.plot = FALSE)
 c30_sjp$q11 <- dplyr::filter(c30, key == "c30_q11") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q11",
+    sjp.stackfrq(title = "11. Have you had trouble sleeping?",
                  prnt.plot = FALSE)
 c30_sjp$q12 <- dplyr::filter(c30, key == "c30_q12") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q12",
+    sjp.stackfrq(title = "12. Have you felt weak?",
                  prnt.plot = FALSE)
 c30_sjp$q13 <- dplyr::filter(c30, key == "c30_q13") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q13",
+    sjp.stackfrq(title = "13. Have you lacked appetite?",
                  prnt.plot = FALSE)
 c30_sjp$q14 <- dplyr::filter(c30, key == "c30_q14") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q14",
+    sjp.stackfrq(title = "14. Have you felt nauseated?",
                  prnt.plot = FALSE)
 c30_sjp$q15 <- dplyr::filter(c30, key == "c30_q15") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q15",
+    sjp.stackfrq(title = "15. Have you vomited?",
                  prnt.plot = FALSE)
 c30_sjp$q16 <- dplyr::filter(c30, key == "c30_q16") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q16",
+    sjp.stackfrq(title = "16. Have you been constipated?",
                  prnt.plot = FALSE)
 c30_sjp$q17 <- dplyr::filter(c30, key == "c30_q17") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q17",
+    sjp.stackfrq(title = "17. Have you had diarrhea?",
                  prnt.plot = FALSE)
 c30_sjp$q18 <- dplyr::filter(c30, key == "c30_q18") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q18",
+    sjp.stackfrq(title = "18. Were you tired?",
                  prnt.plot = FALSE)
 c30_sjp$q19 <- dplyr::filter(c30, key == "c30_q19") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q19",
+    sjp.stackfrq(title = "19. Did pain interfere with your daily activities?",
                  prnt.plot = FALSE)
 c30_sjp$q20 <- dplyr::filter(c30, key == "c30_q20") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q20",
+    sjp.stackfrq(title = "20. Have you had difficulty in concentrating on things?",
                  prnt.plot = FALSE)
 c30_sjp$q21 <- dplyr::filter(c30, key == "c30_q21") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q21",
+    sjp.stackfrq(title = "21. Did you feel tense?",
                  prnt.plot = FALSE)
 c30_sjp$q22 <- dplyr::filter(c30, key == "c30_q22") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q22",
+    sjp.stackfrq(title = "22. Did you worry?",
                  prnt.plot = FALSE)
 c30_sjp$q23 <- dplyr::filter(c30, key == "c30_q23") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q23",
+    sjp.stackfrq(title = "23. Did you feel irritable?",
                  prnt.plot = FALSE)
 c30_sjp$q24 <- dplyr::filter(c30, key == "c30_q24") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q24",
+    sjp.stackfrq(title = "24. Did you feel depressed?",
                  prnt.plot = FALSE)
 c30_sjp$q25 <- dplyr::filter(c30, key == "c30_q25") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q25",
+    sjp.stackfrq(title = "25. Have you had difficulty remembering things?",
                  prnt.plot = FALSE)
 c30_sjp$q26 <- dplyr::filter(c30, key == "c30_q26") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q26",
+    sjp.stackfrq(title = "26. Has your physical condition or treatment interfered with family life?",
                  prnt.plot = FALSE)
 c30_sjp$q27 <- dplyr::filter(c30, key == "c30_q27") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q27",
+    sjp.stackfrq(title = "27. Has your physical condition or treatment interfered with scoial activities?",
                  prnt.plot = FALSE)
 c30_sjp$q28 <- dplyr::filter(c30, key == "c30_q28") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "c30_q28",
+    sjp.stackfrq(title = "28. Has your physical condition or treatment interfered with financial difficulties?",
                  prnt.plot = FALSE)
+## c30_sjp$q29 <- dplyr::filter(c30, key == "c30_q29") %>%
+##     dplyr::select(individual_id, primary_treatment, Response) %>%
+##     spread(primary_treatment, Response) %>%
+##     dplyr::select(-individual_id) %>%
+##     sjp.stackfrq(title = "Has your physical condition or treatment interfered with financial difficulties?",
+##                  prnt.plot = FALSE)
+## c30_sjp$q30 <- dplyr::filter(c30, key == "c30_q30") %>%
+##     dplyr::select(individual_id, primary_treatment, Response) %>%
+##     spread(primary_treatment, Response) %>%
+##     dplyr::select(-individual_id) %>%
+##     sjp.stackfrq(title = "Has your physical condition or treatment interfered with financial difficulties?",
+##                  prnt.plot = FALSE)
 c30_sjp$q1$plot
 c30_sjp$q2$plot
 c30_sjp$q3$plot
@@ -456,6 +450,8 @@ c30_sjp$q25$plot
 c30_sjp$q26$plot
 c30_sjp$q27$plot
 c30_sjp$q28$plot
+## c30_sjp$q29$plot
+## c30_sjp$q30$plot
 
 
 ```
@@ -492,6 +488,7 @@ age_gap %>%
     theme_bw() +
     theme(legend.position = "none")
 ## Subset, reshape and tidy questionnaire responses...
+br23_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
 br23 <- age_gap %>%
         ## Filter Baseline group, with primary_treatment defined and without missing or zero age
         dplyr::filter(event_name == "Baseline") %>%
@@ -507,15 +504,19 @@ br23 <- age_gap %>%
                       br23_q51, br23_q52, br23_q53) %>%
         ## Reshape the data, replace variable names with neater descriptions and plot
         gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
-        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much")),
-               key      = factor(key, levels = c("br23_q31", "br23_q32", "br23_q33", "br23_q34", "br23_q35",
+        mutate(key      = factor(key, levels = c("br23_q31", "br23_q32", "br23_q33", "br23_q34", "br23_q35",
                                                  "br23_q36", "br23_q37", "br23_q38", "br23_q39", "br23_q40",
                                                  "br23_q41", "br23_q42", "br23_q43", "br23_q44", "br23_q45",
                                                  "br23_q46", "br23_q47", "br23_q48", "br23_q49", "br23_q50",
-                                                 "br23_q51", "br23_q52", "br23_q53"))) %>%
+                                                 "br23_q51", "br23_q52", "br23_q53")),
+               Response = factor(Response, levels = br23_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
         ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
         dplyr::filter(!is.na(Response)) %>%
-        unique()
+        unique() %>%
+        left_join(.,
+                  master$lookups_fields,
+                  by = c("key" = "identifier"))
 ## Stacked bar-chart of domain responses using base ggplo2
 ggplot(br23, aes(x = primary_treatment, fill = Response)) +
     geom_bar(position = "fill") +
@@ -524,8 +525,12 @@ ggplot(br23, aes(x = primary_treatment, fill = Response)) +
     ylab("Proportion") +
     ggtitle(label = "EORTC QLQ BR23 Domains at Baseline by Primary Treatment",
             subtitle = "Excludes Missing Responses") +
-    facet_wrap(~key, ncol = 2) +
+    facet_wrap(~label, ncol = 2) +
     theme_bw()
+
+```
+
+```{r baseline_summary_demographics_br23_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -534,139 +539,139 @@ br23_sjp$q31 <- dplyr::filter(br23, key == "br23_q31") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Did you have a dry mouth?",
+    sjp.stackfrq(title = "31. Did you have a dry mouth?",
                  prnt.plot = FALSE)
 br23_sjp$q32 <- dplyr::filter(br23, key == "br23_q32") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Did food and drink taste different than usual?",
+    sjp.stackfrq(title = "32. Did food and drink taste different than usual?",
                  prnt.plot = FALSE)
 br23_sjp$q33 <- dplyr::filter(br23, key == "br23_q33") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Were your eyes painful, irritated or watery",
+    sjp.stackfrq(title = "33. Were your eyes painful, irritated or watery",
                  prnt.plot = FALSE)
 br23_sjp$q34 <- dplyr::filter(br23, key == "br23_q34") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Have you lost any hair?",
+    sjp.stackfrq(title = "34. Have you lost any hair?",
                  prnt.plot = FALSE)
 br23_sjp$q35 <- dplyr::filter(br23, key == "br23_q35") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Were you upset by the loss of your hair?",
+    sjp.stackfrq(title = "35. Were you upset by the loss of your hair?",
                  prnt.plot = FALSE)
 br23_sjp$q36 <- dplyr::filter(br23, key == "br23_q36") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Did you feel ill or unwell?",
+    sjp.stackfrq(title = "36. Did you feel ill or unwell?",
                  prnt.plot = FALSE)
 br23_sjp$q37 <- dplyr::filter(br23, key == "br23_q37") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Did you hot flushess?",
+    sjp.stackfrq(title = "37. Did you hot flushess?",
                  prnt.plot = FALSE)
 br23_sjp$q38 <- dplyr::filter(br23, key == "br23_q38") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Did you have headaches?",
+    sjp.stackfrq(title = "38. Did you have headaches?",
                  prnt.plot = FALSE)
 br23_sjp$q39 <- dplyr::filter(br23, key == "br23_q39") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Have you felt physically less attractive as a result of your disease or treatment?",
+    sjp.stackfrq(title = "39. Have you felt physically less attractive as a result of your disease or treatment?",
                  prnt.plot = FALSE)
 br23_sjp$q40 <- dplyr::filter(br23, key == "br23_q40") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Have you been feeling less feminine as a result of your disease or treatment",
+    sjp.stackfrq(title = "40. Have you been feeling less feminine as a result of your disease or treatment",
                  prnt.plot = FALSE)
 br23_sjp$q41 <- dplyr::filter(br23, key == "br23_q41") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "DId you find it difficult to look at yourself naked?",
+    sjp.stackfrq(title = "41. Did you find it difficult to look at yourself naked?",
                  prnt.plot = FALSE)
 br23_sjp$q42 <- dplyr::filter(br23, key == "br23_q42") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Have you been dissatisfied with your body?",
+    sjp.stackfrq(title = "42. Have you been dissatisfied with your body?",
                  prnt.plot = FALSE)
 br23_sjp$q43 <- dplyr::filter(br23, key == "br23_q43") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Were you worred about your health in the future?",
+    sjp.stackfrq(title = "43. Were you worred about your health in the future?",
                  prnt.plot = FALSE)
 br23_sjp$q44 <- dplyr::filter(br23, key == "br23_q44") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "To what extent were you interested in sex?",
+    sjp.stackfrq(title = "44. To what extent were you interested in sex?",
                  prnt.plot = FALSE)
 br23_sjp$q45 <- dplyr::filter(br23, key == "br23_q45") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "To what extent were you sexually active?",
+    sjp.stackfrq(title = "45. To what extent were you sexually active?",
                  prnt.plot = FALSE)
 br23_sjp$q46 <- dplyr::filter(br23, key == "br23_q46") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "To what extent was sex enjoyable for you?",
+    sjp.stackfrq(title = "46. To what extent was sex enjoyable for you?",
                  prnt.plot = FALSE)
 br23_sjp$q47 <- dplyr::filter(br23, key == "br23_q47") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Did you have any pain in your arm or shoulder?",
+    sjp.stackfrq(title = "47. Did you have any pain in your arm or shoulder?",
                  prnt.plot = FALSE)
 br23_sjp$q48 <- dplyr::filter(br23, key == "br23_q48") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Did you have a swollen arm or hand?",
+    sjp.stackfrq(title = "48. Did you have a swollen arm or hand?",
                  prnt.plot = FALSE)
 br23_sjp$q49 <- dplyr::filter(br23, key == "br23_q49") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Was it difficult to raise your arm or to move it sideways?",
+    sjp.stackfrq(title = "49. Was it difficult to raise your arm or to move it sideways?",
                  prnt.plot = FALSE)
 br23_sjp$q50 <- dplyr::filter(br23, key == "br23_q50") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Have you had any pain in the area of your affected breast?",
+    sjp.stackfrq(title = "50. Have you had any pain in the area of your affected breast?",
                  prnt.plot = FALSE)
 br23_sjp$q51 <- dplyr::filter(br23, key == "br23_q51") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Was the area of your affected breast swollen?",
+    sjp.stackfrq(title = "51. Was the area of your affected breast swollen?",
                  prnt.plot = FALSE)
 br23_sjp$q52 <- dplyr::filter(br23, key == "br23_q52") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Was the area of your affected breast oversensitive?",
+    sjp.stackfrq(title = "52. Was the area of your affected breast oversensitive?",
                  prnt.plot = FALSE)
 br23_sjp$q53 <- dplyr::filter(br23, key == "br23_q53") %>%
     dplyr::select(individual_id, primary_treatment, Response) %>%
     spread(primary_treatment, Response) %>%
     dplyr::select(-individual_id) %>%
-    sjp.stackfrq(title = "Have you had skin problems on or in the area of your affected breast?",
+    sjp.stackfrq(title = "53. Have you had skin problems on or in the area of your affected breast?",
                  prnt.plot = FALSE)
 br23_sjp$q31$plot
 br23_sjp$q32$plot
@@ -727,6 +732,7 @@ age_gap %>%
     theme_bw() +
     theme(legend.position = "none")
 ## Subset, reshape and tidy questionnaire responses...
+eld15_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
 eld15 <- age_gap %>%
         ## Filter Baseline group, with primary_treatment defined and without missing or zero age
         dplyr::filter(event_name == "Baseline") %>%
@@ -740,13 +746,17 @@ eld15 <- age_gap %>%
                       eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68) %>%
         ## Reshape the data, replace variable names with neater descriptions and plot
         gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
-        mutate(Response = factor(Response, levels = c("Not at All", "A Little", "Quite a Bit", "Very Much")),
-               key      = factor(key, levels = c("eld15_q54", "eld15_q55", "eld15_q56", "eld15_q57", "eld15_q58",
+        mutate(key      = factor(key, levels = c("eld15_q54", "eld15_q55", "eld15_q56", "eld15_q57", "eld15_q58",
                                                  "eld15_q59", "eld15_q60", "eld15_q61", "eld15_q62", "eld15_q63",
-                                                 "eld15_q64", "eld15_q65", "eld15_q66", "eld15_q67", "eld15_q68"))) %>%
+                                                 "eld15_q64", "eld15_q65", "eld15_q66", "eld15_q67", "eld15_q68")),
+               Response = factor(Response, levels = eld15_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
         ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
         dplyr::filter(!is.na(Response)) %>%
-        unique()
+        unique() %>%
+        left_join(.,
+                  master$lookups_fields,
+                  by = c("key" = "identifier"))
 ## Stacked bar-chart of domain responses using base ggplo2
 ggplot(eld15, aes(x = primary_treatment, fill = Response)) +
     geom_bar(position = "fill") +
@@ -755,122 +765,124 @@ ggplot(eld15, aes(x = primary_treatment, fill = Response)) +
     ylab("Proportion") +
     ggtitle(label = "EORTC QLQ ELD15 Domains at Baseline by Primary Treatment",
             subtitle = "Excludes Missing Responses") +
-    facet_wrap(~key, ncol = 2) +
+    facet_wrap(~label, ncol = 2) +
     theme_bw()
+
+```
+
+```{r baseline_summary_demographics_eld15_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
-eld15_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
-eld15_adjuvant <- dplyr::filter(eld15, primary_treatment == "Adjuvant Endocrine") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
-                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
-                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
-                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
-                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
-                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
-                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
-                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
-                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
-                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
-                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
-                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
-                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
-                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
-                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Adjuvant Endocrine",
-                              prnt.plot = FALSE)
-eld15_primary <- dplyr::filter(eld15, primary_treatment == "Primary Endocrine") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
-                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
-                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
-                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
-                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
-                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
-                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
-                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
-                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
-                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
-                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
-                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
-                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
-                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
-                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Primary Endocrine",
-                              prnt.plot = FALSE)
-eld15_chemotherapy <- dplyr::filter(eld15, primary_treatment == "Chemotherapy") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
-                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
-                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
-                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
-                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
-                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
-                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
-                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
-                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
-                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
-                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
-                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
-                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
-                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
-                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Chemotherapy",
-                              prnt.plot = FALSE)
-eld15_radiotherapy <- dplyr::filter(eld15, primary_treatment == "Radiotherapy") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
-                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
-                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
-                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
-                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
-                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
-                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
-                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
-                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
-                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
-                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
-                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
-                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
-                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
-                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Radiotherapy",
-                              prnt.plot = FALSE)
-eld15_surgery <- dplyr::filter(eld15, primary_treatment == "Surgery") %>%
-                 dplyr::select(-primary_treatment, -event_name) %>%
-                 spread(key, Response) %>%
-                 mutate(eld15_q54  = factor(eld15_q54,  levels = eld15_levels),
-                        eld15_q55  = factor(eld15_q55,  levels = eld15_levels),
-                        eld15_q56  = factor(eld15_q56,  levels = eld15_levels),
-                        eld15_q57  = factor(eld15_q57,  levels = eld15_levels),
-                        eld15_q58  = factor(eld15_q58,  levels = eld15_levels),
-                        eld15_q59  = factor(eld15_q59,  levels = eld15_levels),
-                        eld15_q60  = factor(eld15_q60,  levels = eld15_levels),
-                        eld15_q61  = factor(eld15_q61,  levels = eld15_levels),
-                        eld15_q62  = factor(eld15_q62,  levels = eld15_levels),
-                        eld15_q63  = factor(eld15_q63,  levels = eld15_levels),
-                        eld15_q64  = factor(eld15_q64,  levels = eld15_levels),
-                        eld15_q65  = factor(eld15_q65,  levels = eld15_levels),
-                        eld15_q66  = factor(eld15_q66,  levels = eld15_levels),
-                        eld15_q67  = factor(eld15_q67,  levels = eld15_levels),
-                        eld15_q68  = factor(eld15_q68,  levels = eld15_levels)) %>%
-                 dplyr::select(-individual_id) %>%
-                 sjp.stackfrq(title = "Surgery",
-                              prnt.plot = FALSE)
-eld15_adjuvant$plot
-eld15_primary$plot
-eld15_chemotherapy$plot
-eld15_radiotherapy$plot
-eld15_surgery$plot
+eld15_sjp <- list()
+eld15_sjp$q54 <- dplyr::filter(eld15, key == "eld15_q54") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "54. Have you had difficulty with steps or stairs?",
+                 prnt.plot = FALSE)
+eld15_sjp$q55 <- dplyr::filter(eld15, key == "eld15_q55") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "55. Have you had trouble with your joints?",
+                 prnt.plot = FALSE)
+eld15_sjp$q56 <- dplyr::filter(eld15, key == "eld15_q56") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "56. Do you feel unsteady on your feet?",
+                 prnt.plot = FALSE)
+eld15_sjp$q57 <- dplyr::filter(eld15, key == "eld15_q57") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "57. Did you need help with household chores?",
+                 prnt.plot = FALSE)
+eld15_sjp$q58 <- dplyr::filter(eld15, key == "eld15_q58") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "58. Has your relationship with your family become closer?",
+                 prnt.plot = FALSE)
+eld15_sjp$q59 <- dplyr::filter(eld15, key == "eld15_q59") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "59. Have you felt able to talk to your family about your illness?",
+                 prnt.plot = FALSE)
+eld15_sjp$q60 <- dplyr::filter(eld15, key == "eld15_q60") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "60. Have you worred about your family coping with your illness and treatment?",
+                 prnt.plot = FALSE)
+eld15_sjp$q61 <- dplyr::filter(eld15, key == "eld15_q61") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "61. Have you worried about the future of people who are important to you?",
+                 prnt.plot = FALSE)
+eld15_sjp$q62 <- dplyr::filter(eld15, key == "eld15_q62") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "62. Were you worried about your future health?",
+                 prnt.plot = FALSE)
+eld15_sjp$q63 <- dplyr::filter(eld15, key == "eld15_q63") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "63. Did you feel uncertain about the future?",
+                 prnt.plot = FALSE)
+eld15_sjp$q64 <- dplyr::filter(eld15, key == "eld15_q64") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "64. Have you worried about what might happen towards the end of your life?",
+                 prnt.plot = FALSE)
+eld15_sjp$q65 <- dplyr::filter(eld15, key == "eld15_q65") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "65. Have you had a positive outlook on life in the last week?",
+                 prnt.plot = FALSE)
+eld15_sjp$q66 <- dplyr::filter(eld15, key == "eld15_q66") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "66. Have you felt motivated to continue with your normal hobbies or activities?",
+                 prnt.plot = FALSE)
+eld15_sjp$q67 <- dplyr::filter(eld15, key == "eld15_q67") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "67. How much has your illness been a burden to you?",
+                 prnt.plot = FALSE)
+eld15_sjp$q68 <- dplyr::filter(eld15, key == "eld15_q68") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "68. How much has your treatment been a burden to you?",
+                 prnt.plot = FALSE)
+eld15_sjp$q54$plot
+eld15_sjp$q55$plot
+eld15_sjp$q56$plot
+eld15_sjp$q57$plot
+eld15_sjp$q58$plot
+eld15_sjp$q59$plot
+eld15_sjp$q60$plot
+eld15_sjp$q61$plot
+eld15_sjp$q62$plot
+eld15_sjp$q63$plot
+eld15_sjp$q64$plot
+eld15_sjp$q65$plot
+eld15_sjp$q66$plot
+eld15_sjp$q67$plot
+eld15_sjp$q68$plot
+eld15_sjp$q69$plot
+eld15_sjp$q60$plot
+
 
 ```
 
@@ -878,7 +890,7 @@ eld15_surgery$plot
 
 **NB** Because the responses are not consistent between questions it is *not* possible to use the `facet_wrap()` function of [ggplot2](http://ggplot2.tidyverse.org/reference/) to plot these all at once.  Instead individual plots are generated and combined using [patchwork](https://github.com/thomasp85/patchwork).
 
-```{r baseline_summary_demographics_adl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
+```{r baseline_summary_demographics_adl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 10, eval = TRUE}
 ## Generate plots of ELD15 at Baseline...
 ##
 ## Histograms of scaled scores by treatment group
@@ -955,7 +967,7 @@ adl_plot$toiletting <- adl %>%
     coord_flip() +
     xlab("") +
     ylab("Proportion") +
-    ggtitle(label = "toiletting") +
+    ggtitle(label = "Toiletting") +
     theme_bw()
 adl_plot$bathing <- adl %>%
     dplyr::filter(!is.na(bathing)) %>%
@@ -1023,8 +1035,11 @@ adl_plot$feeding + adl_plot$transfer_bed_chair +
     adl_plot$bowels + adl_plot$bladder +
     adl_plot$bathing + adl_plot$walking_wheelchair +
     adl_plot$ascend_descend + adl_plot$dressing +
-    plot_layout(ncol = 2)
+    plot_layout(ncol = 1)
 
+```
+
+```{r baseline_summary_demographics_adl_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = FALSETRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -1106,7 +1121,7 @@ adl_sjp$dressing$plot
 
 **NB** Because the responses are not consistent between questions it is *not* possible to use the `facet_wrap()` function of [ggplot2](http://ggplot2.tidyverse.org/reference/) to plot these all at once.  Instead individual plots are generated and combined using [patchwork](https://github.com/thomasp85/patchwork).
 
-```{r baseline_summary_demographics_iadl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+```{r baseline_summary_demographics_iadl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 10,eval = TRUE}
 ## Generate plots of ELD15 at Baseline...
 ##
 ## Histograms of scaled scores by treatment group
@@ -1143,8 +1158,8 @@ iadl <- age_gap %>%
 ## Stacked bar-chart of domain responses using base ggplot2.opts
 ## Because the responses are not consistent across questions these are plotted indivudally
 ## and then combined into one plot
-iadl_plots <- list()
-iadl_plots$telephone <- iadl %>%
+iadl_plot <- list()
+iadl_plot$telephone <- iadl %>%
     dplyr::filter(!is.na(telephone)) %>%
     mutate(Response = telephone) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1154,7 +1169,7 @@ iadl_plots$telephone <- iadl %>%
     ylab("Proportion") +
     ggtitle(label = "Telephone") +
     theme_bw()
-iadl_plots$shopping <- iadl %>%
+iadl_plot$shopping <- iadl %>%
     dplyr::filter(!is.na(shopping)) %>%
     mutate(Response = shopping) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1164,7 +1179,7 @@ iadl_plots$shopping <- iadl %>%
     ylab("Proportion") +
     ggtitle(label = "Shopping") +
     theme_bw()
-iadl_plots$food_prep <- iadl %>%
+iadl_plot$food_prep <- iadl %>%
     dplyr::filter(!is.na(food_prep)) %>%
     mutate(Response = food_prep) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1174,7 +1189,7 @@ iadl_plots$food_prep <- iadl %>%
     ylab("Proportion") +
     ggtitle(label = "Food Preparation") +
     theme_bw()
-iadl_plots$housekeeping <- iadl %>%
+iadl_plot$housekeeping <- iadl %>%
     dplyr::filter(!is.na(housekeeping)) %>%
     mutate(Response = housekeeping) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1184,7 +1199,7 @@ iadl_plots$housekeeping <- iadl %>%
     ylab("Proportion") +
     ggtitle(label = "Housekeeping") +
     theme_bw()
-iadl_plots$laundry <- iadl %>%
+iadl_plot$laundry <- iadl %>%
     dplyr::filter(!is.na(laundry)) %>%
     mutate(Response = laundry) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1194,7 +1209,7 @@ iadl_plots$laundry <- iadl %>%
     ylab("Proportion") +
     ggtitle(label = "Laundry") +
     theme_bw()
-iadl_plots$transport <- iadl %>%
+iadl_plot$transport <- iadl %>%
     dplyr::filter(!is.na(transport)) %>%
     mutate(Response = transport) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1204,7 +1219,7 @@ iadl_plots$transport <- iadl %>%
     ylab("Proportion") +
     ggtitle(label = "Transport") +
     theme_bw()
-iadl_plots$medication <- iadl %>%
+iadl_plot$medication <- iadl %>%
     dplyr::filter(!is.na(medication)) %>%
     mutate(Response = medication) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1214,7 +1229,7 @@ iadl_plots$medication <- iadl %>%
     ylab("Proportion") +
     ggtitle(label = "Medication") +
     theme_bw()
-iadl_plots$finances <- iadl %>%
+iadl_plot$finances <- iadl %>%
     dplyr::filter(!is.na(finances)) %>%
     mutate(Response = finances) %>%
     ggplot(aes(primary_treatment, fill = Response)) +
@@ -1229,8 +1244,11 @@ iadl_plot$telephone + iadl_plot$shopping +
 iadl_plot$food_prep + iadl_plot$housekeeping +
 iadl_plot$laundry + iadl_plot$transport +
 iadl_plot$medication + iadl_plot$finances +
-plot_layout(ncol = 2)
+plot_layout(ncol = 1)
 
+```
+
+```{r baseline_summary_demographics_iadl_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
