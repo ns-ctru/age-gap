@@ -47,5 +47,7 @@ ggplot2.opts$binwidth <- 30
 ```{r child='survival/results.Rmd', eval = TRUE}
 ```
 
+## References
+
 ```{r child='survival/appendix.Rmd', eval = TRUE}
 ```
