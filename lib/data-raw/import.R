@@ -1213,8 +1213,8 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
 ## Ethnicity
            full_join(.,
                      dplyr::select(master$screening_form,
-                                   individual_id, site, event_name, event_date, ## database_id,
-                                   ethnicity)) %>%
+                                   individual_id, site, event_name, ## event_date, database_id,
+                                   ethnicity))## %>%
 
 ## Site Randomisation
                   ## full_join(.,
