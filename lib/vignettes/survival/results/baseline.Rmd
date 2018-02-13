@@ -24,9 +24,18 @@ age_gap %>%
 ## Table of summary statistics
 
 ```
+
 #### Ethnicity
 ```{r baseline_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
 ```
+
+#### Estrogen Receptor Status
+
+The distribution of `allred` is plotted below along with the numbers dichotomised when applyin the rule that `allred < 3 == ER -ve` and `allred >= 3 & allred <= 8 == ER +ve`
+```{r baseline_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
+
+```
+
 
 #### EQ5D
 ```{r baseline_summary_demographics_eq5d, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
@@ -85,7 +94,7 @@ ggplot(eq5d, aes(x = key, fill = Response)) +
 
 ```
 
-```{r baseline_summary_demographics_eq5d_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
+```{r baseline_summary_demographics_eq5d_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -237,7 +246,7 @@ ggplot(c30, aes(x = primary_treatment, fill = Response)) +
 
 ```
 
-```{r baseline_summary_demographics_c30_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
+```{r baseline_summary_demographics_c30_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -530,7 +539,7 @@ ggplot(br23, aes(x = primary_treatment, fill = Response)) +
 
 ```
 
-```{r baseline_summary_demographics_br23_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
+```{r baseline_summary_demographics_br23_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -770,7 +779,7 @@ ggplot(eld15, aes(x = primary_treatment, fill = Response)) +
 
 ```
 
-```{r baseline_summary_demographics_eld15_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
+```{r baseline_summary_demographics_eld15_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -911,7 +920,7 @@ age_gap %>%
     ylab("N") +
     ggtitle(label = "Barthel Activities of Daily Living Scores by Primary Treatment Group",
             subtitle = "Y-axis varies between plots") +
-    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    facet_wrap(~primary_treatment, scales = "free_y") +
     theme_bw() +
     theme(legend.position = "none")
 ## Subset, reshape and tidy questionnaire responses...
@@ -1039,7 +1048,7 @@ adl_plot$feeding + adl_plot$transfer_bed_chair +
 
 ```
 
-```{r baseline_summary_demographics_adl_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = FALSETRUE}
+```{r baseline_summary_demographics_adl_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
@@ -1142,7 +1151,7 @@ age_gap %>%
     ylab("N") +
     ggtitle(label = "Instrumental Activities of Daily Living Scores by Primary Treatment Group",
             subtitle = "Y-axis varies between plots") +
-    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    facet_wrap(~primary_treatment, scales = "free_y") +
     theme_bw() +
     theme(legend.position = "none")
 ## Subset, reshape and tidy questionnaire responses...
@@ -1248,7 +1257,7 @@ plot_layout(ncol = 1)
 
 ```
 
-```{r baseline_summary_demographics_iadl_sjp, echo = FALSE, cache = FALSE, fig.width = 3, fig.height = 3,eval = TRUE}
+```{r baseline_summary_demographics_iadl_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
 ## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
 ## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
 ## patchwork (see https://github.com/thomasp85/patchwork)
