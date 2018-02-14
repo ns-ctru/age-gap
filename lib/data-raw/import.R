@@ -2510,7 +2510,8 @@ age_gap <- age_gap %>%
                 death_cause_3,
                 death,
                 last_seen,
-                age_last_seen)
+                age_last_seen,
+                ethnicity)
 
 ## Finally make copies of age_gap to master$ and then remove those who were not enrolled
 master$master <- age_gap
