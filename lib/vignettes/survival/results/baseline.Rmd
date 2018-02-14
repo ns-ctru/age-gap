@@ -27,12 +27,52 @@ age_gap %>%
 
 #### Ethnicity
 ```{r baseline_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    mutate(Ethnicity           = ethnicity,
+           `Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment groups
+    ggplot(aes(Ethnicity, fill = `Primary Treatment`)) +
+    geom_bar() +
+    xlab("Ethnicity") +
+    ylab("N") +
+    ggtitle(label = "Allred distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+
 ```
 
 #### Estrogen Receptor Status
 
-The distribution of `allred` is plotted below along with the numbers dichotomised when applyin the rule that `allred < 3 == ER -ve` and `allred >= 3 & allred <= 8 == ER +ve`
-```{r baseline_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
+The distribution of `allred` is plotted below along with the numbers dichotomised when applying the rule that `allred < 3 == ER Negative` and `allred >= 3 & allred <= 8 == ER Positive` to derive the variable `er_tumour` which takes stated values.
+
+```{r baseline_summary_demographics_estrogen_receptor, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    mutate(Allred              = allred_baseline,
+           `Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment groups
+    ggplot(aes(Allred, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 9) +
+    xlab("Allred") +
+    ylab("N") +
+    ggtitle(label = "Allred distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %$%
+    table(primary_treatment, er_tumour)
 
 ```
 
