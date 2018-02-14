@@ -26,7 +26,7 @@ age_gap %>%
 ```
 
 #### Ethnicity
-```{r baseline_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = FALSE}
+```{r baseline_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
 age_gap %>%
     ## Filter Baseline group, with primary_treatment defined and without missing or zero age
     dplyr::filter(event_name == "Baseline") %>%
@@ -38,11 +38,20 @@ age_gap %>%
     geom_bar() +
     xlab("Ethnicity") +
     ylab("N") +
-    ggtitle(label = "Allred distribution by Primary Treatment Group",
+    ggtitle(label = "Ethnicity by Primary Treatment Group",
             subtitle = "Y-axis varies between plots") +
     facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
     theme_bw() +
-    theme(legend.position = "none")
+    theme(legend.position = "none",
+          axis.text.x = element_text(angle = 90))
+## Table
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %$%
+    table(ethnicity, primary_treatment) %>%
+    kable(caption = "Ethnicity by primary treatment group.")
+
 
 ```
 
