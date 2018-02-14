@@ -592,6 +592,7 @@ master$consent_form <- read_prospect(file = 'Consent Form.csv',
                          convert.dates       = TRUE,
                          convert.underscores = TRUE,
                          dictionary          = master$lookups)
+names(master$consent_form) <- gsub("screening_no", "screening", names(master$consent_form))
 ## File : Decision Making Preferences.csv
 master$decision_making_preferences <- read_prospect(file = 'Decision Making Preferences.csv',
                          header              = TRUE,
@@ -1214,7 +1215,8 @@ master$baseline <- full_join(dplyr::select(master$consent_form,
            full_join(.,
                      dplyr::select(master$screening_form,
                                    individual_id, site, event_name, ## event_date, database_id,
-                                   ethnicity))## %>%
+                                   ethnicity) %>%
+                     mutate(event_name = "Baseline"))## %>%
 
 ## Site Randomisation
                   ## full_join(.,
