@@ -22,6 +22,156 @@ age_gap %>%
     theme_bw() +
     theme(legend.position = "none")
 ## Table of summary statistics
+test <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(age_exact),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "Age at Baseline by primary treatment group.")
+
+
+```
+
+#### Height
+```{r baseline_summary_demographics_height, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at Baseline
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(height_cm != 0 & !is.na(height_cm)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment group
+    ggplot(aes(height_cm, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("Height (cm)") +
+    ylab("N") +
+    ggtitle(label = "Height distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+test <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(height),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "Height at Baseline by primary treatment group.")
+
+```
+
+#### Weight
+```{r baseline_summary_demographics_weight, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at Baseline
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(weight_kg != 0 & !is.na(weight_kg)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment group
+    ggplot(aes(weight_kg, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("Weight (kg)") +
+    ylab("N") +
+    ggtitle(label = "Weight distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+test <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(weight),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "Weight at Baseline by primary treatment group.")
+
+```
+
+#### BMI
+```{r baseline_summary_demographics_bmi, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at Baseline
+age_gap %>%
+    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(bmi != 0 & !is.na(bmi)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment group
+    ggplot(aes(bmi, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("BMI") +
+    ylab("N") +
+    ggtitle(label = "BMI distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+test <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(bmi),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "BMI at Baseline by primary treatment group.")
 
 ```
 
@@ -49,8 +199,8 @@ age_gap %>%
     ## Filter Baseline group, with primary_treatment defined and without missing or zero age
     dplyr::filter(event_name == "Baseline") %>%
     dplyr::filter(!is.na(primary_treatment)) %$%
-    table(ethnicity, primary_treatment) %>%
-    kable(caption = "Ethnicity by primary treatment group.")
+    table(ethnicity, primary_treatment, useNA = "ifany") %>%
+    kable(caption = "Ethnicity by Primary Treatment Group.")
 
 
 ```
@@ -77,12 +227,75 @@ age_gap %>%
     theme_bw() +
     theme(legend.position = "none")
 ## Table
+test <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## allred_baseline,
+                                          er_tumour),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.000)") %>%
+    dplyr::select(-label, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "Estrogen Receptor status by primary treatment group.")
+
+```
+
+#### Histological Grade
+
+The distribution of provisional histological grade at baseline tumor assessment is plotted below.  Whilst this is recorded on both body axes only the most severe is summarised below.
+
+```{r baseline_summary_demographics_histo_grade, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 age_gap %>%
     ## Filter Baseline group, with primary_treatment defined and without missing or zero age
     dplyr::filter(event_name == "Baseline") %>%
-    dplyr::filter(!is.na(primary_treatment)) %$%
-    table(primary_treatment, er_tumour) %>%
-    kable(caption = "Estrogen Receptor status by primary treatment group.")
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    mutate(`Histological Grade` = histo_grade_baseline,
+           `Primary Treatment`  = primary_treatment) %>%
+    ## Histograms by treatment groups
+    ggplot(aes(`Histological Grade`, fill = `Primary Treatment`)) +
+    geom_bar() +
+    xlab("Histological Grade") +
+    ylab("N") +
+    ggtitle(label = "Provisional Histological Grade at Baseline by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table
+test <- age_gap %>%
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    ungroup() %>%
+    ctru::table_summary(df        = .,
+                        lookup    = master$lookups_fields,
+                        id        = individual_id,
+                        select    = c(histo_grade_baseline),
+                        time      = event_name,
+                        group     = primary_treatment,
+                        nomissing = FALSE,
+                        digits    = 2,
+                        reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    dplyr::select(-label, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "Provisional Histological Grade at Baseline by Primary Treatment Group.")
 
 ```
 
@@ -141,6 +354,45 @@ ggplot(eq5d, aes(x = key, fill = Response)) +
     ggtitle("EQ5D Domains at Baseline by Primary Treatment") +
     facet_wrap(~primary_treatment, ncol = 1) +
     theme_bw()
+## ToDo - Histogram of scores
+## Table output
+test <- age_gap %>%
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## eq5d_number,
+                                          eq5d_score,
+                                          mobility,
+                                          self_care,
+                                          usual_activity,
+                                          pain_discomfort,
+                                          anxiety_depression),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  None, Slight, Moderate, Severe, Extreme, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EQ5D responses at Baseline by Primary Treatment Group.")
+## Tabulate the continuous variables
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EQ5D Visual Analogue Scale and Score at Baseline by Primary Treatment Group.")
+
 
 ```
 
@@ -261,6 +513,11 @@ c30 <- age_gap %>%
         dplyr::select(individual_id,
                       primary_treatment,
                       event_name,
+                      ql_scale, pf_scale, rf_scale,
+                      ef_scale, cf_scale, sf_scale,
+                      fa_scale, nv_scale, pa_scale,
+                      dy_scale, sl_scale, ap_scale,
+                      co_scale, di_scale, fi_scale,
                       c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
                       c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
                       c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
@@ -293,6 +550,48 @@ ggplot(c30, aes(x = primary_treatment, fill = Response)) +
             subtitle = "Excludes Missing Responses") +
     facet_wrap(~label, ncol = 2) +
     theme_bw()
+## ToDo - Histogram of scores
+## Table
+test <- age_gap %>%
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## ql_scale, pf_scale, rf_scale,
+                                          ## ef_scale, cf_scale, sf_scale,
+                                          ## fa_scale, nv_scale, pa_scale,
+                                          ## dy_scale, sl_scale, ap_scale,
+                                          ## co_scale, di_scale, fi_scale,
+                                          c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
+                                          c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
+                                          c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                                          c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                                          c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                                          c30_q26, c30_q27, c30_q28),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ C30 Domains at Baseline by Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ C30 Scaled Scores at Baseline at Baseline by Primary Treatment Group.")
 
 ```
 
@@ -556,6 +855,9 @@ br23 <- age_gap %>%
         dplyr::select(individual_id,
                       primary_treatment,
                       event_name,
+                      brbi_scale, brsee_scale, brfu_scale,
+                      brst_scale, brbs_scale, bras_scale,
+                      brhl_scale,
                       br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
                       br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
                       br23_q41, br23_q42, br23_q43, br23_q44, br23_q45,
@@ -586,6 +888,45 @@ ggplot(br23, aes(x = primary_treatment, fill = Response)) +
             subtitle = "Excludes Missing Responses") +
     facet_wrap(~label, ncol = 2) +
     theme_bw()
+## ToDo - Histogram of scores
+## Table
+test <- age_gap %>%
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## brbi_scale, brsee_scale, brfu_scale,
+                                          ## brst_scale, brbs_scale, bras_scale,
+                                          ## brhl_scale,
+                                          br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
+                                          br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
+                                          br23_q41, br23_q42, br23_q43, br23_q44, br23_q45,
+                                          br23_q46, br23_q47, br23_q48, br23_q49, br23_q50,
+                                          br23_q51, br23_q52, br23_q53),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ BR23 Domains at Baseline by Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ BR23 scaled scores at Baseline by Primary Treatment Group.")
 
 ```
 
@@ -800,6 +1141,9 @@ eld15 <- age_gap %>%
         dplyr::select(individual_id,
                       primary_treatment,
                       event_name,
+                      mo_scale, wao_scale, wo_scale,
+                      mp_scale, boi_scale, fs_scale,
+                      js_scale,
                       eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
                       eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
                       eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68) %>%
@@ -826,6 +1170,43 @@ ggplot(eld15, aes(x = primary_treatment, fill = Response)) +
             subtitle = "Excludes Missing Responses") +
     facet_wrap(~label, ncol = 2) +
     theme_bw()
+## ToDo - Histogram of scores
+## Table
+test <- age_gap %>%
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## mo_scale, wao_scale, wo_scale,
+                                          ## mp_scale, boi_scale, fs_scale,
+                                          ## js_scale,
+                                          eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
+                                          eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
+                                          eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ BR23 Domains at Baseline by Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ BR23 scaled scores at Baseline by Primary Treatment Group.")
 
 ```
 
@@ -1095,6 +1476,8 @@ adl_plot$feeding + adl_plot$transfer_bed_chair +
     adl_plot$bathing + adl_plot$walking_wheelchair +
     adl_plot$ascend_descend + adl_plot$dressing +
     plot_layout(ncol = 1)
+## ToDo - Histogram of scores
+## ToDo - Table of domains
 
 ```
 
@@ -1304,6 +1687,8 @@ iadl_plot$food_prep + iadl_plot$housekeeping +
 iadl_plot$laundry + iadl_plot$transport +
 iadl_plot$medication + iadl_plot$finances +
 plot_layout(ncol = 1)
+## ToDo - Histogram of scores
+## ToDo - Table of domains
 
 ```
 
