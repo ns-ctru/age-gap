@@ -2499,6 +2499,9 @@ age_gap <- age_gap %>%
                 histo_spcfy_baseline,
                 ## Derived variables
                 age_exact,
+                height_cm,
+                weight_kg,
+                bmi,
                 age_cat,
                 primary_treatment,
                 er_tumour,
