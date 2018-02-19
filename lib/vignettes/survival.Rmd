@@ -36,6 +36,10 @@ ggplot2.opts$binwidth <- 30
 ## The following 'non-recruited' need excluding from all analyses
 ## exclusions <- c()
 
+## Generate the appendixes
+cmd <- c('cd survival && ./populate.sh && cd ..')
+system(cmd)
+
 ```
 
 ```{r child='survival/intro.Rmd', eval = TRUE}
