@@ -2476,6 +2476,7 @@ age_gap <- age_gap %>%
            fill(## Key identifier
                 ## enrolment_no,
                 randomisation,
+                ethnicity,
                 ## Baseline tumour assessments
                 allred_baseline,
                 h_score_baseline,
@@ -2497,6 +2498,8 @@ age_gap <- age_gap %>%
                 biopsy_type_baseline,
                 confirm_present_baseline,
                 histo_spcfy_baseline,
+                adl_score,
+                iadl_score,
                 ## Derived variables
                 age_exact,
                 height_cm,
