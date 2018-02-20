@@ -250,7 +250,7 @@ test <- age_gap %>%
         ctru::table_summary(df        = .,
                             lookup    = master$lookups_fields,
                             id        = individual_id,
-                            select    = c(allred_baseline,
+                            select    = c(## allred_baseline,
                                           er_tumour),
                             time      = event_name,
                             group     = primary_treatment,
@@ -316,10 +316,13 @@ spread(test$factor,
 
 
 #### EQ5D
+
+**NB** The EQ5D Visual Analoguse Scale does not appear to have been recorded as part of this study so is not summarised.
+
 ```{r baseline_summary_demographics_eq5d, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
 ## Generate plots of EQ5D at Baseline...
 ##
-## Histograms by treatment group
+## Histograms by treatment group of EQ5D Score
 age_gap %>%
     ## Filter Baseline group, with primary_treatment defined and without missing or zero age
     dplyr::filter(event_name == "Baseline") %>%
