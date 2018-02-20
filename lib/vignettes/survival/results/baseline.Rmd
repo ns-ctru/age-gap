@@ -74,7 +74,7 @@ test <- age_gap %>%
         ctru::table_summary(df        = .,
                             lookup    = master$lookups_fields,
                             id        = individual_id,
-                            select    = c(height),
+                            select    = c(height_cm),
                             time      = event_name,
                             group     = primary_treatment,
                             nomissing = FALSE,
@@ -117,7 +117,7 @@ test <- age_gap %>%
         ctru::table_summary(df        = .,
                             lookup    = master$lookups_fields,
                             id        = individual_id,
-                            select    = c(weight),
+                            select    = c(weight_kg),
                             time      = event_name,
                             group     = primary_treatment,
                             nomissing = FALSE,
@@ -195,12 +195,27 @@ age_gap %>%
     theme(legend.position = "none",
           axis.text.x = element_text(angle = 90))
 ## Table
-age_gap %>%
-    ## Filter Baseline group, with primary_treatment defined and without missing or zero age
-    dplyr::filter(event_name == "Baseline") %>%
-    dplyr::filter(!is.na(primary_treatment)) %$%
-    table(ethnicity, primary_treatment, useNA = "ifany") %>%
-    kable(caption = "Ethnicity by Primary Treatment Group.")
+test <- age_gap %>%
+        ## Filter Baseline group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(ethnicity),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+spread(test$factor,
+       primary_treatment,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    dplyr::select(-label, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "Ethnicity by Primary Treatment Group.")
 
 
 ```
@@ -235,7 +250,7 @@ test <- age_gap %>%
         ctru::table_summary(df        = .,
                             lookup    = master$lookups_fields,
                             id        = individual_id,
-                            select    = c(## allred_baseline,
+                            select    = c(allred_baseline,
                                           er_tumour),
                             time      = event_name,
                             group     = primary_treatment,
@@ -246,7 +261,7 @@ test <- age_gap %>%
 spread(test$factor,
        value,
        n_prop,
-       fill = "0 (0.000)") %>%
+       fill = "0 (0.00)") %>%
     dplyr::select(-label, -event_name) %>%
     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
           caption = "Estrogen Receptor status by primary treatment group.")
@@ -1200,13 +1215,13 @@ spread(test$factor,
                   `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
     arrange(Dimension, primary_treatment) %>%
     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
-          caption = "EORTC QLQ BR23 Domains at Baseline by Primary Treatment Group.")
+          caption = "EORTC QLQ ELD15 Domains at Baseline by Primary Treatment Group.")
 ## Tabulate the continuous variables
 ## test$continuous %>%
 ##     mutate(Metric = label) %>%
 ##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
 ##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
-##           caption = "EORTC QLQ BR23 scaled scores at Baseline by Primary Treatment Group.")
+##           caption = "EORTC QLQ ELD15 scaled scores at Baseline by Primary Treatment Group.")
 
 ```
 
