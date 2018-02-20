@@ -1,22 +1,27 @@
 ## Appendix
 
-For convenience tabulations and plots of many of the outcomes at all time points by primary treatment group are provided along with Waterfall Plots[@gillespie2012] of changes from Baseline by Primary Treatment.
+For convenience tabulations and plots of many of the outcomes at all time points by primary treatment group are provided along with Waterfall Plots[@gillespie2012] of changes from Baseline by Primary Treatment.  For convenience tables are also generated for all time points combined.
 
-These are generated automatically from the file `~/lib/vignettes/survival/results/baseline.Rmd` using a [Bash shell script](https://en.wikibooks.org/wiki/Bash_Shell_Scripting) to substitute the text `Baseline` for each of the additional follow-up time points (i.e. `6 weeks`, `6 months`, `12 months`, `18 months` and `24 months`).  This shell script is called natively under GNU/Linux and will "Just Work^TM " however should you modify the layout of graphs or plots in the file `~/lib/vignettes/survival/results/baseline.Rmd` and `build_vignettes()` under a Windows operating system this will *not* re-generate the output for the additional timepoints because the Bash shell is not native under M$-Windows.  To get around this you can install [Cygwin]() on your computer, navigate to the directory containing the Bash script (i.e. `cd /[path]/[to]/[where]/[project]/[is/]/lib/vignettes/survival`)a nd run the Bash script manually by typing `./populate.sh`.
+The main work for these was done in writing and developing the baseline summaries in the file `~/lib/vignettes/survival/results/baseline.Rmd` a [Bash shell script](https://en.wikibooks.org/wiki/Bash_Shell_Scripting) (`~/lib/vignettes/survival/populate.sh`) was then written to substitute the text `Baseline` for each of the additional follow-up time points (i.e. `6 weeks`, `6 months`, `12 months`, `18 months` and `24 months`).  This shell script is called natively under GNU/Linux and will "Just Work^TM " however should you modify the layout of graphs or plots in the file `~/lib/vignettes/survival/results/baseline.Rmd` and `build_vignettes()` under a Windows operating system this will *not* re-generate the output for the additional timepoints because the Bash shell is not native under M$-Windows.  To get around this you can install [Cygwin](https://www.cygwin.com/) on your computer, navigate to the directory containing the Bash script (i.e. `cd /[path]/[to]/[where]/[project]/[is/]/lib/vignettes/survival`) and run the Bash script manually by typing `./populate.sh`.
 
-```{r child='appendix/6weeks.Rmd', eval = FALSE}
+A side-effect of this approach is that many of the baseline characteristics `age`, `height`, `weight`, `bmi`, `allred`, `er_tumour` and so forth and some of the Quality of Life Outcomes which are only measured at baseline (Barthel Activities of Daily Living and Instrumental Activities of Daily Living) are immutable and therefore duplicated (since they are recorded at baseline only and do not change with the follow-up period).  It is possible to avoid this by manually editing the code chunks of the files produced by `~/lib/vignette/survival/populate.sh` to switch off the evaulation of those sections by modifying the chunk options and setting `eval = FALSE` but to do this programatically was felt by the author to be an inefficient use of time so they remain as artefacts and can safely be ignored.
+
+```{r child='appendix/6weeks.Rmd', eval = TRUE}
 ```
 
-```{r child='appendix/6months.Rmd', eval = FALSE}
+```{r child='appendix/6months.Rmd', eval = TRUE}
 ```
 
-```{r child='appendix/12months.Rmd', eval = FALSE}
+```{r child='appendix/12months.Rmd', eval = TRUE}
 ```
 
-```{r child='appendix/18months.Rmd', eval = FALSE}
+```{r child='appendix/18months.Rmd', eval = TRUE}
 ```
 
-```{r child='appendix/24months.Rmd', eval = FALSE}
+```{r child='appendix/24months.Rmd', eval = TRUE}
+```
+
+```{r child='appendix/tables.Rmd', eval = FALSE}
 ```
 
 ```{r child='appendix/waterfall.Rmd', eval = FALSE}
