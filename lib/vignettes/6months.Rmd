@@ -1,0 +1,62 @@
+---
+title: 6 Month Summaries in the Bridging The Age Gap Study
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: bibliography.bib
+---
+
+```{r setup, echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', cache = FALSE, eval = TRUE}
+library(agegap)
+library(ggkm)
+library(patchwork)
+library(sjPlot)
+## Load the data unsure why the version in the installed agegap package
+## isn't correct/up-to-date
+load("../data/age-gap.RData")
+##opts_chunk$set(dev = 'pdf')
+opts_chunk$set(cache.path = 'cache/',
+               width    = 200,
+               fig.height = 8,
+               fig.width  = 8,
+               warning = FALSE,
+               message = FALSE)
+options(digits = 3,
+        imputations = 5)
+## Ensure anchors are assessed first
+## opts_knit$set(eval.after = 'echo')
+## Hooks
+## knit_hooks$set(anchor = hook_anchor)
+## Set a seed
+set.seed(69027181)
+## Set sensible defaults
+ggplot2.opts <- list()
+ggplot2.opts$binwidth <- 30
+## Exclusions
+##
+## The following 'non-recruited' need excluding from all analyses
+## exclusions <- c()
+
+## Generate the appendixes
+cmd <- c('cd survival && ./populate.sh && cd ..')
+system(cmd)
+
+```
+
+```{r child='common/intro.Rmd', eval = TRUE}
+```
+
+```{r child='common/methods.Rmd', eval = TRUE}
+```
+
+```{r child='6months/results.Rmd', eval = TRUE}
+```
+
+
+```{r child='common/appendix.Rmd', eval = FALSE}
+```
+
+## References
