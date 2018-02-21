@@ -56,7 +56,7 @@ system(cmd)
 ```
 
 
-```{r child='../common/appendix.Rmd', eval = FALSE}
+```{r child='common/appendix.Rmd', eval = FALSE}
 ```
 
 ## References
