@@ -1,9 +1,535 @@
+## 2018-02-20 - geom_km() wrangling
+##
+## This works (from the example at https://github.com/sachsmc/ggkm)
+lung %>%
+    as.tibble() %>%
+    ggplot(aes(time = time,
+               status = status,
+               colour = factor(sex))) +
+    geom_km() +
+    geom_kmticks() +
+    theme_bw()
+dim(lung)
+str(lung)
+dplyr::select(lung, time, status, sex)
+
+## This doesn't look right at all
+to_plot <- age_gap %>%
+           dplyr::select(individual_id, event_name, primary_treatment, survival, death) %>%
+           dplyr::filter(event_name == "Baseline") %>%
+           dplyr::filter(!is.na(primary_treatment)) %>%
+           dplyr::filter(primary_treatment == "Chemotherapy") %>%
+           dplyr::filter(survival != 0) %>%
+           mutate(time                = as.double(survival),
+                  status              = death,
+                  `Primary Treatment` = primary_treatment)
+ggplot(to_plot,
+       aes(time   = time,
+           status = status)) + geom_km()
+           colour = `Primary Treatment`)) +
+    geom_km() +
+    facet_wrap(~primary_treatment, ncol = 1) +
+    theme_bw()
+
+## Lets try putting the two together
+test <- to_plot %>%
+        mutate(time = survival,
+               status = death,
+               sex    = ifelse(runif(n = 1) > 0.5,
+                               yes = as.integer(2),
+                               no  = as.integer(1))) %>%
+        ungroup() %>%
+        dplyr::select(time,
+                      status,
+                      sex) %>%
+        as.data.frame()
+test <- rbind(test,
+              dplyr::select(lung, time, status, sex))
+test %>%
+    ggplot(aes(time = time,
+               status = status)) +
+    geom_km() +
+    geom_kmticks() +
+    theme_bw()
+
+## 2018-02-19 - Tabulating things using ctru::table_summary()
+test <- age_gap %>%
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(histo_grade_baseline),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 3,
+                            reshape   = NULL)
+## Now reshape (as I've not sussed out how to split quo_group within ctru::table_summary())
+test$factor %>%
+    ## dcast(event_name + event_name + label ~ value) %>%
+    spread(test$factor,
+           primary_treatment,
+           n_prop)
+
+## 2018-02-14 - Why isn't ethnicity which is a factor in master$screening_form and master$baseline
+##              not a factor in age_gap
+##
+## Worked it out, when combining ethnicity into the master$baseline the event_name in
+## the master$screening_form is "Screening" so nothing matched!!!
+t <- full_join(master$therapy_qol,
+                     master$baseline,
+                     by = c('individual_id', 'site', 'event_name')) %>%
+           full_join(.,
+                     master$rct,
+                     by = c('individual_id', 'site', 'event_name')) %>%
+## Study completion discontinuation form (deaths/censoring)
+           left_join(.,
+                     dplyr::select(master$study_completion_discontinuation_form,
+                                   individual_id, site, ## event_name, event_date, database_id,
+                                   study_completion_dt,
+                                   disc_death_dt,
+                                   disc_rsn,
+                                   death_cause_1,
+                                   death_cause_2,
+                                   death_cause_3),
+                     by = c('individual_id', 'site')) %>%
+## Merge in the event_date (use left_join() so that all data is retained, but exclude instances
+## where there is an individual_id/site/event_name without any data)
+           left_join(.,
+                     master$event_date,
+                     by = c('individual_id', 'site', 'event_name')) %>%
+## Convert event_name to a factor so that it will plot in the correct order in all
+## subsequent uses
+           mutate(event_name = factor(event_name,
+                                      levels = c('Baseline',
+                                                 ## 'RCT baseline',
+                                                 ## 'RCT treatment',
+                                                 '6 weeks',
+                                                 ## 'RCT 6 weeks',
+                                                 '6 months',
+                                                 ## 'RCT 6 months',
+                                                 '12 months',
+                                                 '18 months',
+                                                 '24 months',
+                                                 'Surgery'))) %>%
+## The site allocation so that RCT component can be conducted
+           left_join(.,
+                     dplyr::select(master$sites,
+                                   site, group, rct_date, pe_site, qol_sub_study),
+                     by = c('site')) %>%
+## And finally the treatments received by a given follow-up
+           full_join(.,
+                     master$therapy_ever,
+                     by = c('individual_id', 'event_name', 'event_date'))
+
+is.factor(t$ethnicity)
+table(t$ethnicity)
+
+
+## 2018-02-07 - Graphing the Activities of Daily Living components
+##
+## Berthel
+age_gap %$% levels(feeding)
+age_gap %$% levels(transfer_bed_chair)
+age_gap %$% levels(personal_toilet)
+age_gap %$% levels(toiletting)
+age_gap %$% levels(bathing)
+age_gap %$% levels(walking_wheelchair)
+age_gap %$% levels(ascend_descend)
+age_gap %$% levels(dressing)
+age_gap %$% levels(bowels)
+age_gap %$% levels(bladder)
+## Instrumental
+age_gap %$% levels(telephone)
+age_gap %$% levels(shopping)
+age_gap %$% levels(food_prep)
+age_gap %$% levels(housekeeping)
+age_gap %$% levels(laundry)
+age_gap %$% levels(transport)
+age_gap %$% levels(medication)
+age_gap %$% levels(finances)
+
+
+## 2018-01-29 - Now we now study completion isn't always the same as two year follow-up
+##              need to include the date of study completion as the "last_seen" date
+##
+## Lets compare the two (df using last event_date is now in age_gap_old for the current session
+## change lines 2437/2438 under section "Survival" of ~/lib/data-raw/import.R if needed again)
+## png(filename = "~/work/scharr/age-gap/tmp/survival_old.png", width = 1024, height = 768)
+ggplot(age_gap_old, aes(survival)) +
+    geom_histogram(bins = 80) +
+    ## annotate("432",
+    ##          x = 0, y = 432) +
+    xlab("Days") +
+    ylab("N") +
+    ggtitle("Survival by Event Date") +
+    facet_wrap(~event_name, ncol = 1) +
+    theme_bw()
+## dev.off()
+## png(filename = "~/work/scharr/age-gap/tmp/survival_new.png", width = 1024, height = 768)
+age_gap %>%
+    mutate(disc_rsn = ifelse(!is.na(disc_rsn),
+                             yes = disc_rsn,
+                             no  = "No Completion, date last seen.")) %>%
+    dplyr::filter(!is.na(disc_rsn)) %>%
+ggplot(, aes(as.numeric(survival), fill = disc_rsn)) +
+    geom_histogram(bins = 80) +
+    ## annotate("432",
+    ##          x = 0, y = 432) +
+    xlab("Days") +
+    ylab("N") +
+    ggtitle("Survival by Event Date") +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.text = "Last Contact")
+    theme_bw()
+## dev.off()
+
+## Determining how to get the death date by event_name which needs to be the event_date
+## for none Baseline/ other periods
+check <- age_gap %>%
+    dplyr::select(individual_id,
+                  ## site,
+                  event_name,
+                  event_date,
+                  study_completion_dt,
+                  disc_rsn) %>%
+    mutate(death = ifelse(is.na(disc_rsn) | disc_rsn != 'Participant died',
+                          yes = 0,
+                          no  = 1)) %>%
+    arrange(individual_id, event_date) %>%
+    group_by(individual_id) %>%
+    mutate(recruited = min(event_date, na.rm = TRUE),
+           last_seen = case_when(death == 1 & !is.na(study_completion_dt) ~ study_completion_dt,
+                                 death == 0 & is.na(study_completion_dt)  ~ event_date,
+                                 death == 0 & !is.na(study_completion_dt) ~ study_completion_dt,
+                                 death == 0 & is.na(study_completion_dt)  ~ max(event_date, na.rm = TRUE)))
+head(check, n = 40) %>% as.data.frame()
+
+## Check by individual_id
+## Missing 18/24 month follow-up but study completion available and dated one month after last scheduled contact...
+dplyr::filter(check, individual_id == 47728)
+## This person is lost to follow-up, should therefore have have NAs...
+dplyr::filter(check, individual_id == 47729)
+## Looks good (study_completion != event_date for 24 months)...
+dplyr::filter(check, individual_id == 47731)
+## Looks good (study_completion == event_date for 24 months)...
+dplyr::filter(check, individual_id == 47817)
+## Looks good (died four months after 6 month visit)...
+dplyr::filter(check, individual_id == 47899)
+## Looks good didn't die and study completion is a few weeks after 24 month follow-up
+dplyr::filter(check, individual_id == 47910)
+
+## Check some others who have died
+dplyr::filter(check, death == 1) %$%
+    table(individual_id) %>%
+    head(n = 10)
+## Looks good, Died roughly four months after 6 month follow up
+dplyr::filter(check, individual_id == 47962)
+## Problematic, Participant died two years after recruitment but missing all data
+dplyr::filter(check, individual_id == 48013)
+## Looks good, participant died three months after 6 month follow-up no missing data
+dplyr::filter(check, individual_id == 48064)
+## Looks good, participant died one month after 6 month follow-up, no missing data
+dplyr::filter(check, individual_id == 48101)
+## Looks good, participant died ~five months after 6 month follow-up, no missing data
+dplyr::filter(check, individual_id == 48102)
+## Problematic, participant died a year and a half after 6 week follow-up, but missing data
+dplyr::filter(check, individual_id == 48322)
+## Looks good, participant died four months after 6 week follow up, no missing data
+dplyr::filter(check, individual_id == 48375)
+## Problematic, participant died seven months after 12 month follow up, missing 18 month data
+dplyr::filter(check, individual_id == 48440)
+
+## Now check those who didn't die
+dplyr::filter(check, death == 0) %$%
+    table(individual_id) %>%
+    head(n = 10)
+## Problematic study_completiong_date is nine days prior to 24 month follow-up
+dplyr::filter(check, individual_id == 47932)
+## Problematic, no 24 month follow-up, no study completion
+dplyr::filter(check, individual_id == 47953)
+## Looks good
+dplyr::filter(check, individual_id == 47954)
+## Looks good
+dplyr::filter(check, individual_id == 47967)
+## Problematic, no study completion
+dplyr::filter(check, individual_id == 48011)
+## Looks good
+dplyr::filter(check, individual_id == 48012)
+
+## 2018-01-29 - Checking the data from study discontinuation is merged correctly and
+##              gives a death date that is the same across time points
+check <- full_join(master$therapy_qol,
+                     master$baseline,
+                     by = c('individual_id', 'site', 'event_name')) %>%
+           full_join(.,
+                     master$rct,
+                     by = c('individual_id', 'site', 'event_name')) %>%
+## Study completion discontinuation form (deaths/censoring)
+           left_join(.,
+                     dplyr::select(master$study_completion_discontinuation_form,
+                                   individual_id, site, ## event_name, event_date, database_id,
+                                   disc_death_dt,
+                                   disc_rsn,
+                                   death_cause_1,
+                                   death_cause_2,
+                                   death_cause_3),
+                     by = c('individual_id', 'site')) %>%
+           dplyr::select(individual_id,
+                         site,
+                         event_name,
+                         disc_death_dt,
+                         disc_rsn) %>%
+           dplyr::filter(disc_rsn == "Participant died")
+## How many people have death recorded?
+dim(check)
+## How many individuals is this?
+check %>%
+    dplyr::select(individual_id) %>%
+    unique() %>%
+    dim()
+## The correct number (i.e. the above two match)!!!
+##
+## Lets check the age_gap dataframe and see if the survival/age_last_seen are
+## consistent over the multiple events (they should be since the 'recruited'
+## variable is the minimum event_date)
+check <- age_gap %>%
+         dplyr::select(individual_id,
+                       event_name,
+                       event_date,
+                       recruited,
+                       disc_death_dt,
+                       last_seen,
+                       survival)
+## Total participants and observations
+dim(check)
+## Total participants
+check %$%
+    table(individual_id, event_name) %>%
+    nrow()
+## How many unique survivals are there
+check %>%
+    dplyr::select(individual_id, survival, last_seen, disc_death_dt) %>%
+    unique() %>%
+    dim()
+
+
+## 2018-01-29 - Checking Study Completion forms == 24 Month follow-up for most
+##              individuals (won't be all as some will withdraw/die before then)
+t1 <- age_gap %>%
+      dplyr::select(individual_id, event_date, event_name) %>%
+      dplyr::filter(event_name == "24 months") %>%
+      mutate(event_date_master = event_date) %>%
+      dplyr::select(-event_date, -event_name)
+t2 <- master$study_completion_discontinuation_form %>%
+      dplyr::select(individual_id, event_date) %>%
+      mutate(event_date_completion = event_date) %>%
+      dplyr::select(-event_date)
+check <- full_join(t1, t2) %>%
+    mutate(completion_diff_24month = event_date_completion - event_date_master)
+annotation <- dplyr::filter(check, completion_diff_24month == 0) %>% nrow()
+png(filename = "~/work/scharr/age-gap/tmp/difference_completion_and_24_month.png", width = 1024, height = 768)
+ggplot(check, aes(completion_diff_24month)) +
+    geom_histogram(bins = 80) +
+    ## annotate("432",
+    ##          x = 0, y = 432) +
+    xlab("Days") +
+    ylab("N") +
+    ggtitle("Difference between Study Completion form date and 24 month follow-up.") +
+    theme_bw()
+dev.off()
+## ...conclusion is that they don't!!!
+
+
+## 2018-01-25 - Kaplan-Meier plots
+##
+## Lets look at the example lung data
+head(lung, n = 40)
+lung %$% table(time, status)
+
+## ...and compare to subsetted age_gap
+dplyr::select(age_gap, event_name, individual_id, site, survival, death, primary_treatment) %>%
+    dplyr::filter(event_name == "Baseline") %>%
+    dplyr::filter(primary_treatment == "Surgery") %>%
+    mutate(death = death + 1) %>%
+    ## ToDo - filter based on descired comparison
+    ## dplyr::filter() %>%
+    unique() %$%
+    table(survival, death)
+
+## 2018-01-10 - Further work on deriving primary treatment, currently these are defined
+##              specific to the time point of follow-up, in reality we want one overall
+##              that is consistent across time points.
+##
+## Take a subset of data to play around with
+checking <- age_gap %>%
+            dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
+                         endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant) %>%
+            head(n = 300)
+checking_few <- age_gap %>%
+            dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
+                         endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant) %>%
+            dplyr::filter(individual_id %in% c(47954, 48012, 48215))
+
+## Lets take 6 week data
+primary_treatment <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
+                     dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
+                                   endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant) %>%
+mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Primary Endocrine',
+                                     surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
+                                     surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
+                                     endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
+                                     endocrine_therapy == 'No' & surgery == 'No' & radiotherapy == 'Yes' ~ 'Chemotherapy',
+                                     radiotherapy == 'Yes' ~ 'Radiotherapy',
+                                     ## radiotherapy == 'No'  ~ '',
+                                     trastuzumab  == 'Yes' ~ 'Trastuzumab'))
+table(primary_treatment$primary_treatment)
+
+## Of those who haven't yet got a primary treatment, how many had primary endocrine...
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %$%
+    table(primary_adjuvant, useNA = 'ifany')
+## How many had Surgery
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %$%
+    table(surgery, useNA = 'ifany')
+## Ahha, most of them, lets correct that and look again
+primary_treatment <- dplyr::filter(age_gap, event_name == '6 weeks') %>%
+                     dplyr::select(individual_id, site, event_name, primary_treatment, treatment_profile,
+                                   endocrine_therapy, radiotherapy, surgery, chemotherapy, trastuzumab, primary_adjuvant) %>%
+mutate(primary_treatment = case_when(endocrine_therapy == 'Yes' & primary_adjuvant == 'Primary' ~ 'Primary Endocrine',
+                                     surgery == 'Yes' & primary_adjuvant == 'Adjuvant' ~ 'Surgery',
+                                     surgery == 'Yes' & primary_adjuvant == 'Neoadjuvant' ~ 'Surgery',
+                                     surgery == 'Yes' & is.na(primary_adjuvant) ~ 'Surgery',
+                                     endocrine_therapy == 'No' & surgery == 'No' & chemotherapy == 'Yes' ~ 'Chemotherapy',
+                                     endocrine_therapy == 'No' & surgery == 'No' & radiotherapy == 'Yes' ~ 'Chemotherapy',
+                                     radiotherapy == 'Yes' ~ 'Radiotherapy',
+                                     ## radiotherapy == 'No'  ~ '',
+                                     trastuzumab  == 'Yes' ~ 'Trastuzumab'))
+table(primary_treatment$primary_treatment)
+
+## Of those who haven't yet got a primary treatment, how many had primary endocrine...
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %$%
+    table(primary_adjuvant, useNA = 'ifany')
+## How many had Surgery
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %$%
+    table(surgery, useNA = 'ifany')
+## Ok, thats sorted out 1518 individuals, leaving 161 who didn't have endocrine or surgery
+## Lets look at their chemo and radiotherapy
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %$%
+    table(chemotherapy, useNA = 'ifany')
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %$%
+    table(radiotherapy, useNA = 'ifany')
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %$%
+    table(trastuzumab, useNA = 'ifany')
+## Nope, they didn't have chemo or radiotherapy either (101 for definite; 60 with missing for
+## both).  Lets look at the treatment profiles
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %>%
+    dplyr::select(treatment_profile, endocrine_therapy, surgery,chemotherapy, radiotherapy, primary_adjuvant, primary_treatment) %$%
+        table(treatment_profile)
+## Ok 61 had "None" 100 had Endocrine, but what sort?
+dplyr::filter(primary_treatment, is.na(primary_treatment)) %>%
+    dplyr::select(treatment_profile, endocrine_therapy, surgery,chemotherapy, radiotherapy, primary_adjuvant, primary_treatment) %>%
+    dplyr::filter(treatment_profile == 'Endocrine') %$%
+    table(primary_adjuvant)
+## Of those 34 had  Adjuvant and 61 Neoadjuvant
+
+## 2018-01-05 - Duplicate investigation continued
+##
+## Lets look at individual_id == 47817 to see what file has missing site for this person
+quick_check <- function(df = master$baseline){
+    substitute(df) %>% deparse() %>% print()
+    df %>%
+        dplyr::filter(individual_id == 47817) %>%
+        dplyr::select(individual_id, site, event_name, event_date)
+}
+
+quick_check(df = master$baseline)
+quick_check(df = master$therapy_qol)
+quick_check(df = master$rct)
+quick_check(df = master$abridged_patient_assessment)
+quick_check(df = master$activities_daily_living)
+quick_check(df = master$adverse_events_ae)
+quick_check(df = master$adverse_events)
+quick_check(df = master$baseline_medications)
+quick_check(df = master$baseline_medications_med)
+quick_check(df = master$baseline_tumour_assessment)
+quick_check(df = master$breast_cancer_treatment_choices_chemo_no_chemo)
+quick_check(df = master$breast_cancer_treatment_choices_surgery_pills)
+quick_check(df = master$brief_cope)
+quick_check(df = master$change_in_participation)
+quick_check(df = master$chemotherapy_chemotherapy)
+quick_check(df = master$chemotherapy)
+quick_check(df = master$clinical_assessment_non_pet)
+quick_check(df = master$clinical_assessment_pet)
+quick_check(df = master$collaborate)
+quick_check(df = master$consent_form)
+quick_check(df = master$decision_making_preferences)
+quick_check(df = master$decision_regret_scale)
+quick_check(df = master$discussing_treatment_options)
+quick_check(df = master$ecog_performance_status_score)
+quick_check(df = master$eligibility_checklist)
+quick_check(df = master$endocrine_therapy)
+quick_check(df = master$eortc_qlq_br23)
+quick_check(df = master$eortc_qlq_c30)
+quick_check(df = master$eortc_qlq_eld15)
+quick_check(df = master$eq5d)
+quick_check(df = master$instrumental_activities_daily_living)
+quick_check(df = master$mini_mental_state_examination)
+quick_check(df = master$modified_charlson_comorbidity)
+quick_check(df = master$process_evaluation_log)
+quick_check(df = master$process_evaluation)
+quick_check(df = master$qol_lol_questionnaire)
+quick_check(df = master$radiotherapy)
+quick_check(df = master$screening_form)
+quick_check(df = master$spielberger_state_trait_anxiety)
+quick_check(df = master$study_completion_discontinuation_form)
+quick_check(df = master$surgery_and_post_operative_pathology)
+quick_check(df = master$the_brief_illness_perception_questionnaire)
+quick_check(df = master$therapy_assessment)
+quick_check(df = master$therapy_ever)
+quick_check(df = master$trastuzumab)
+quick_check(df = master$treatment_decision)
+quick_check(df = master$treatment_decision_support_consultations)
+quick_check(df = master$transfers)
+
+## Perhaps the duplication arises when merging the data frames baseline/therapy_qol/rct
+full_join(master$therapy_qol,
+          master$baseline,
+          by = c('individual_id', 'site', 'event_name', 'event_date')) %>%
+    dplyr::filter(individual_id == 47817) %>%
+    dplyr::select(individual_id, site, event_name, event_date)
+## Ahha, the QoL dataframe doesn't have event_date available, lets see why...
+quick_check(df = master$eortc_qlq_br23)
+quick_check(df = master$eortc_qlq_c30)
+quick_check(df = master$eortc_qlq_eld15)
+quick_check(df = master$eq5d)               ## Data with event_date
+quick_check(df = master$therapy_assessment) ## Data with event_date
+quick_check(df = master$endocrine_therapy)  ## Data with event_date
+quick_check(df = master$radiotherapy)
+quick_check(df = master$chemotherapy)
+quick_check(df = master$surgery)
+## ...its because none of the full_join() use event_date thus when combining therapy_qol and baseline
+## using event_date its NA from the former
+names(master$therapy_qol)
+typeof(master$therapy_qol$event_date)
+quick_check(df = master$therapy_qol)
+names(master$baseline)
+typeof(master$baseline$event_date)
+quick_check(df = master$baseline)
+full_join(master$therapy_qol,
+          master$baseline,
+          by = c('individual_id', 'site', 'event_name')) %>%
+    dplyr::filter(individual_id == 47817) %>%
+    dplyr::select(individual_id, site, event_name)
+
+
 ## 2018-01-04 - Duplicate investigation
 ## There appear some duplicates have crept into the dataset, at a bare minimum
 ## individual_id == 47817 is in there twice, lest work out why.
 ##
-dplyr::select(individual_id, site, event_name, event_date) %>%
-    dplyr::filter(individual_id == 47817)
+dplyr::select(age_gap, individual_id, site, event_name, event_date) %>%
+        dplyr::filter(individual_id == 47817)
 
 
 ## 2018-01-04 - Checking derivation of survival
