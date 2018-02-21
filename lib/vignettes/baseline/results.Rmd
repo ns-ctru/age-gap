@@ -1,0 +1,21 @@
+## Results
+
+
+```{r child='results/recruitment.Rmd', eval = TRUE}
+
+```
+
+
+```{r child='../common/primary_treatment.Rmd', eval = TRUE}
+
+```
+
+
+```{r child='results/baseline.Rmd', eval = FALSE}
+
+```
+
+
+```{r child='results/survival.Rmd', eval = TRUE}
+
+```
