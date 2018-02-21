@@ -1,0 +1,208 @@
+### More Tables
+
+For convenience a large number of tables are also generated for editing and usage elsewhere.
+
+#### Baseline Characteristics
+
+##### Continuous Variables
+
+Combined table for continuous baseline characteristics.
+
+
+```{r table_baseline_continuous, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+```
+
+##### Factor Variables
+
+Combined table for factor baseline characteristics.
+
+```{r table_baseline_factor, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+```
+
+#### EQ5D
+
+Table of EQ5D responses for all time points.
+
+```{r table_eq5d, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+test <- age_gap %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## eq5d_number,
+                                          eq5d_score,
+                                          mobility,
+                                          self_care,
+                                          usual_activity,
+                                          pain_discomfort,
+                                          anxiety_depression),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label,
+           Event     = event_name) %>%
+    ## You can reorder this table by choosing which of the two lines below you wish to order by
+    arrange(Dimension, primary_treatment, event_name) %>%
+    ## arrange(Dimension, event_name, primary_treatment) %>%
+    dplyr::select(Dimension, primary_treatment, Event,
+                  None, Slight, Moderate, Severe, Extreme, `<NA>`, -label) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EQ5D responses by Time-Point and Primary Treatment Group.")
+## Tabulate the continuous variables
+test$continuous %>%
+    mutate(Metric = label,
+           Event  = event_name) %>%
+    arrange(Event, primary_treatment) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EQ5D Visual Analogue Scale and Score by Time-Point and Primary Treatment Group.")
+
+```
+
+#### EORTC QLQ C30
+
+```{r table_eortc_qlq_c30, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+test <- age_gap %>%
+        dplyr::filter(event_name == "Baseline") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## ql_scale, pf_scale, rf_scale,
+                                          ## ef_scale, cf_scale, sf_scale,
+                                          ## fa_scale, nv_scale, pa_scale,
+                                          ## dy_scale, sl_scale, ap_scale,
+                                          ## co_scale, di_scale, fi_scale,
+                                          c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
+                                          c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
+                                          c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                                          c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                                          c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                                          c30_q26, c30_q27, c30_q28),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label,
+           Event     = event_name) %>%
+    ## You can reorder this table by choosing which of the two lines below you wish to order by
+    arrange(Dimension, primary_treatment, event_name) %>%
+    ## arrange(Dimension, event_name, primary_treatment) %>%
+    dplyr::select(Dimension, primary_treatment, Event,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ C30 Domains at Baseline by Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ C30 Scaled Scores by Time-Point and Primary Treatment Group.")
+
+```
+
+
+#### EORTC QLQ BR23
+
+```{r table_eortc_qlq_br23, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+test <- age_gap %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## brbi_scale, brsee_scale, brfu_scale,
+                                          ## brst_scale, brbs_scale, bras_scale,
+                                          ## brhl_scale,
+                                          br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
+                                          br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
+                                          br23_q41, br23_q42, br23_q43, br23_q44, br23_q45,
+                                          br23_q46, br23_q47, br23_q48, br23_q49, br23_q50,
+                                          br23_q51, br23_q52, br23_q53),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label,
+           Event     = event_name) %>%
+    ## You can reorder this table by choosing which of the two lines below you wish to order by
+    arrange(Dimension, primary_treatment, event_name) %>%
+    ## arrange(Dimension, event_name, primary_treatment) %>%
+    dplyr::select(Dimension, primary_treatment, Event,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ BR23 Domains by Time-Point and Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ BR23 scaled scores by Time-Point and Primary Treatment Group.")
+
+```
+
+
+#### EORTC QLQ ELD15
+
+```{r table_eortc_qlq_eld15, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Table
+test <- age_gap %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## mo_scale, wao_scale, wo_scale,
+                                          ## mp_scale, boi_scale, fs_scale,
+                                          ## js_scale,
+                                          eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
+                                          eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
+                                          eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label,
+           Event     = event_name) %>%
+    ## You can reorder this table by choosing which of the two lines below you wish to order by
+    arrange(Dimension, primary_treatment, event_name) %>%
+    ## arrange(Dimension, event_name, primary_treatment) %>%
+    dplyr::select(Dimension, primary_treatment, Event
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ BR23 Domains by Time-Point and  Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ BR23 scaled scores by Time-Point and  Primary Treatment Group.")
+
+```
