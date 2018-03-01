@@ -22,13 +22,20 @@ A series of reports have been produced under the [vignettes]() structure availab
 
 Links to the reports in HTML are below.
 
-* [Baseline](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/baseline.html)
-* [6 Weeks](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/6weeks.html)
-* [6 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/6months.html)
-* [12 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/12months.html)
-* [18 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/18months.html)
-* [24 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/24months.html)
+* [Baseline](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/baseline.html)
+* [6 Weeks](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6weeks.html)
+* [6 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6months.html)
+* [12 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/12months.html)
+* [18 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/18months.html)
+* [24 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/24months.html)
 
+##### How to update
+
+Because summarising at different follow-ups is an exercise in [iteration](https://en.wikipedia.org/wiki/Iteration) a programmatic approach has been taken whereby the code is written once for *baseline* outcomes and the code is then re-used for each subsequent follow-up time-point by using simple command line tools (['sed'](https://en.wikipedia.org/wiki/Sed)) called from a [Bash shell script](https://en.wikipedia.org/wiki/Bash_(Unix_shell)) (`lib/vignettes/populate.sh`) that derives the files for subsequent follow-up.  Thus in order to add new summaries simply modify the files under `lib/vignettes/baseline/results.Rmd` and `lib/vignettes/baseline/results/baseline.Rmd` and re-run the `lib/vignettes/populate.sh` script and they will be propogated to all subsequent follow-ups.  To do this you need access to a Bash shell.  If you are not using a GNU/Linux operating system but are instead using a M$-Windows variant then you can install the [Cygwin Shell](https://cygwin.com/) and running the `lib/vignettes/populate.sh` script under Cygwin will work.  Just navigate to `lib/vignettes/populate.sh` in the shell and type...
+
+    ./populate.sh
+
+...and the files under `6weeks`, `6months`, `12months`, `18months` and `24months` will be updated.
 
 #### Survival
 
