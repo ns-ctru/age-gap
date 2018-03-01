@@ -16,6 +16,20 @@ Much of the work done here has been to establish a *work-flow* acknowledging tha
 
 Primary Treatment Grouping (variable : `primary_treatment`) is derived using the rules defined in the function `agegap_encode()` this is an R file located at `lib/R/agegap_encode.R`.  It is called repeatedly because not everyone has any treatment recorded at six weeks follow-up so the six month data is then looked at, if that too is missing 12 month data and so on.  The code calling this function repeatedly can be found on lines 2265-2412 of the file `lib/data-raw/import.R` although these should not need modifying.  Additionally the relevant methods sections should be modified to reflect the new rules.  Currently this is only the `### Primary Treatment` section on lines 9-39 of `lib/vignettes/survival/methods.Rmd`.
 
+#### Summaries at Follow-Up
+
+A series of reports have been produced under the [vignettes]() structure available when writing/developing R packages.  This has the advantage that reports are rendered/compiled automatically when installing and updating the `age-gap` package (which you can browse under the [`lib/`](https://github.com/ns-ctru/age-gap/tree/master/lib) directory).  It was a deliberate design choice to include a report/summary for each time point as the tables and figures are extensive given the *huge* number of outcomes, questionnaires and questions involved.  With modern web-browsers allowing multiple tabs it is simple and straight-forward to have copies of each of these open and switch between tabs to compare results.  In addition a report comparing repsonses over time has been produced.
+
+Links to the reports in HTML are below.
+
+* [Baseline](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/baseline.html)
+* [6 Weeks](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/6weeks.html)
+* [6 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/6months.html)
+* [12 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/12months.html)
+* [18 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/18months.html)
+* [24 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/vignettes/24months.html)
+
+
 #### Survival
 
 At the time of writing the primary outcome, five year survival, was not available.  In order to establish a workflow the data from the *Study Completion and Discontinuation* Case Report Form was used, specifically the fields `study_completion_dt`, `disc_death_dt`, `disc_rsn`, `death_cause_1`, `death_cause_2` and `death_cause_3` (refer to the [database specification for descriptions](https://docs.google.com/spreadsheets/d/1mi2BsSIDHnslnxtbm1tCUdvt-uJ883iEHO0QOt0wig8/edit#gid=0)).  The code for merging this with the main data can be found under `lib/data-raw/import.R` on lines 1625-1634 where a `[left_join()](https://www.rdocumentation.org/packages/dplyr/versions/0.7.3/topics/join)` is done to the data frame that results from the preceeding `[full_join()](https://www.rdocumentation.org/packages/dplyr/versions/0.7.3/topics/join)`.  Its quite possible that the survival data will come from a new file derived externally to Prospect.  In this case you will have to write code to read in the file (likely in CSV format), tidy it up and then replace the afforementioned lines with code to bind the key variables with the previous files based on the variables `individual_id` and `site`.
@@ -38,6 +52,17 @@ You will then need to obtain the raw data from the studies project folder and ad
 	devtools::build(vignettes = FALSE)
 	devtools::install()
 	devtools::build_vignettes()
+	## To make a PDF copy of the report
+	setwd('/path/to/cloned/age-gap/lib')
+	rmarkdown::render("vignettes/survival.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/survival.pdf")
+	## To make a M$-Word copy of the report
+	setwd('/path/to/cloned/age-gap/lib')
+	rmarkdown::render("vignettes/survival.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/survival.docx")
+
 
 
 #### Dependencies
