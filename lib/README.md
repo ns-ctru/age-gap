@@ -1,0 +1,5 @@
+# Overview
+
+This is an [R](https://www.r-project.org) package that has been developed for the [Bridging the Age Gap]() study.  It aims to follow the guidelines and practices set out in the book [R Packages by Hadley Wickham](http://r-pkgs.had.co.nz/).  A lot of the code required for reading and summarising data has been abstracted since the tasks are common to all studies conducted within [Sheffield Clinical Trials Research Unit](https://www.sheffield.ac.uk/scharr/sections/dts/ctru) and so a major dependency of the `age-gap` package you are currently browsing is the [ctru](https://github.com/ns-ctru/ctru) package developed by the original author of the work you are reading ([Neil Shephard](mailto:n.shephard@sheffield.ac.uk) who left CTRU mid-April 2018 see [ns-ctru GitHub](https://github.com/ns-ctru) for other work).
+
+The main body of work within this project are therefore the [vignettes](vignettes/) which produce HTML (or if desired PDF and/or Word documents) which summarise the work and analyses required for the study.
