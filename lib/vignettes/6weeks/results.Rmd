@@ -1,0 +1,16 @@
+## Results
+
+
+```{r child='../common/recruitment.Rmd', eval = TRUE}
+
+```
+
+
+```{r child='../common/primary_treatment.Rmd', eval = TRUE}
+
+```
+
+
+```{r child='results/6weeks.Rmd', eval = TRUE}
+
+```

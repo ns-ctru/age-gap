@@ -1,0 +1,1776 @@
+### 18 months Characteristics
+
+18 months characteristics are summarised and tabulated below for each of the Primary Treatment Groups.
+
+#### Age
+```{r 18months_summary_demographics_age, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at 18 months
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(age_exact != 0 & !is.na(age_exact)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment group
+    ggplot(aes(age_exact, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("Age (Years)") +
+    ylab("N") +
+    ggtitle(label = "Age distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+test <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(age_exact),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "Age at 18 months by primary treatment group.")
+
+
+```
+
+#### Height
+```{r 18months_summary_demographics_height, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at 18 months
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(height_cm != 0 & !is.na(height_cm)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment group
+    ggplot(aes(height_cm, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("Height (cm)") +
+    ylab("N") +
+    ggtitle(label = "Height distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+test <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(height_cm),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "Height at 18 months by primary treatment group.")
+
+```
+
+#### Weight
+```{r 18months_summary_demographics_weight, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at 18 months
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(weight_kg != 0 & !is.na(weight_kg)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment group
+    ggplot(aes(weight_kg, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("Weight (kg)") +
+    ylab("N") +
+    ggtitle(label = "Weight distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+test <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(weight_kg),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "Weight at 18 months by primary treatment group.")
+
+```
+
+#### BMI
+```{r 18months_summary_demographics_bmi, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of Age at 18 months
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(bmi != 0 & !is.na(bmi)) %>%
+    mutate(`Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment group
+    ggplot(aes(bmi, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 60) +
+    xlab("BMI") +
+    ylab("N") +
+    ggtitle(label = "BMI distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table of summary statistics
+test <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(bmi),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name, -label) %>%
+    kable(col.names = c("Metric", "Primary Treatment", "N", "Missing", "Mean (SD)", "Median (IQR)", "Range"),
+          caption = "BMI at 18 months by primary treatment group.")
+
+```
+
+#### Ethnicity
+```{r 18months_summary_demographics_ethnicity, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    mutate(Ethnicity           = ethnicity,
+           `Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment groups
+    ggplot(aes(Ethnicity, fill = `Primary Treatment`)) +
+    geom_bar() +
+    xlab("Ethnicity") +
+    ylab("N") +
+    ggtitle(label = "Ethnicity by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none",
+          axis.text.x = element_text(angle = 90))
+## Table
+test <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(ethnicity),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+spread(test$factor,
+       primary_treatment,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    dplyr::select(-label, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "Ethnicity by Primary Treatment Group.")
+
+
+```
+
+#### Estrogen Receptor Status
+
+The distribution of `allred` is plotted below along with the numbers dichotomised when applying the rule that `allred < 3 == ER Negative` and `allred >= 3 & allred <= 8 == ER Positive` to derive the variable `er_tumour` which takes stated values.
+
+```{r 18months_summary_demographics_estrogen_receptor, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    mutate(Allred              = allred_baseline,
+           `Primary Treatment` = primary_treatment) %>%
+    ## Histograms by treatment groups
+    ggplot(aes(Allred, fill = `Primary Treatment`)) +
+    geom_histogram(bins = 9) +
+    xlab("Allred") +
+    ylab("N") +
+    ggtitle(label = "Allred distribution by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table
+test <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## allred_baseline,
+                                          er_tumour),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    dplyr::select(-label, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "Estrogen Receptor status by primary treatment group.")
+
+```
+
+#### Histological Grade
+
+The distribution of provisional histological grade at 18months tumor assessment is plotted below.  Whilst this is recorded on both body axes only the most severe is summarised below.
+
+```{r 18months_summary_demographics_histo_grade, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    mutate(`Histological Grade` = histo_grade_baseline,
+           `Primary Treatment`  = primary_treatment) %>%
+    ## Histograms by treatment groups
+    ggplot(aes(`Histological Grade`, fill = `Primary Treatment`)) +
+    geom_bar() +
+    xlab("Histological Grade") +
+    ylab("N") +
+    ggtitle(label = "Provisional Histological Grade at 18 months by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Table
+test <- age_gap %>%
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    ungroup() %>%
+    ctru::table_summary(df        = .,
+                        lookup    = master$lookups_fields,
+                        id        = individual_id,
+                        select    = c(histo_grade_baseline),
+                        time      = event_name,
+                        group     = primary_treatment,
+                        nomissing = FALSE,
+                        digits    = 2,
+                        reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    dplyr::select(-label, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "Provisional Histological Grade at 18 months by Primary Treatment Group.")
+
+```
+
+
+#### EQ5D
+
+**NB** The EQ5D Visual Analoguse Scale does not appear to have been recorded as part of this study so is not summarised.
+
+```{r 18months_summary_demographics_eq5d, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of EQ5D at 18 months...
+##
+## Histograms by treatment group of EQ5D Score
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::filter(!is.na(eq5d_score)) %>%
+    ggplot(aes(eq5d_score, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EQ5D Score") +
+    ylab("N") +
+    ggtitle(label = "EQ5D Score by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, ncol = 1, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+eq5d_levels <- c('None', 'Slight', 'Moderate', 'Severe', 'Extreme')
+eq5d <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        dplyr::filter(!is.na(eq5d_score)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      mobility,
+                      self_care,
+                      usual_activity,
+                      pain_discomfort,
+                      anxiety_depression) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(key   = case_when(key == "anxiety_depression" ~ "Anxiety / Depression",
+                                 key == "mobility"           ~ "Mobility",
+                                 key == "pain_discomfort"    ~ "Pain / Discomfort",
+                                 key == "self_care"          ~ "Self Care",
+                                 key == "usual_activity"     ~ "Usual Activity"),
+               Response = factor(Response, levels = eq5d_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
+        unique()
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(eq5d, aes(x = key, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle("EQ5D Domains at 18 months by Primary Treatment") +
+    facet_wrap(~primary_treatment, ncol = 1) +
+    theme_bw()
+## ToDo - Histogram of scores
+## Table output
+test <- age_gap %>%
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## eq5d_number,
+                                          eq5d_score,
+                                          mobility,
+                                          self_care,
+                                          usual_activity,
+                                          pain_discomfort,
+                                          anxiety_depression),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  None, Slight, Moderate, Severe, Extreme, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EQ5D responses at 18 months by Primary Treatment Group.")
+## Tabulate the continuous variables
+test$continuous %>%
+    mutate(Metric = label) %>%
+    dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EQ5D Visual Analogue Scale and Score at 18 months by Primary Treatment Group.")
+
+
+```
+
+```{r 18months_summary_demographics_eq5d_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+eq5d_sjp <- list()
+eq5d_sjp$anxiety_depression <- dplyr::filter(eq5d, key == "Anxiety / Depression") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "Anxiety / Depression",
+                 prnt.plot = FALSE)
+eq5d_sjp$mobility <- dplyr::filter(eq5d, key == "Mobility") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "Mobility",
+                 prnt.plot = FALSE)
+eq5d_sjp$pain_discomfort <- dplyr::filter(eq5d, key == "Pain / Discomfort") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "Pain / Discomfort",
+                 prnt.plot = FALSE)
+eq5d_sjp$self_care <- dplyr::filter(eq5d, key == "Self Care") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "Self Care",
+                 prnt.plot = FALSE)
+eq5d_sjp$usual_activity <- dplyr::filter(eq5d, key == "Usual Activity") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    mutate(`Adjuvant Endocrine` = factor(`Adjuvant Endocrine`, levels = eq5d_levels),
+           `Primary Endocrine`  = factor(`Primary Endocrine`, levels = eq5d_levels),
+           Chemotherapy         = factor(Chemotherapy, levels = eq5d_levels),
+           Radiotherapy         = factor(Radiotherapy, levels = eq5d_levels),
+           Surgery         = factor(Surgery, levels = eq5d_levels)) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "Usual Activity",
+                 prnt.plot = FALSE)
+eq5d_sjp$anxiety_depression$plot
+eq5d_sjp$mobility$plot
+eq5d_sjp$pain_discomfort$plot
+eq5d_sjp$self_care$plot
+eq5d_sjp$usual_activity$plot
+
+```
+
+#### EORTC QLQ C30
+```{r 18months_summary_demographics_c30, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of EORTC QLQ C30 at 18 months...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  ql_scale,
+                  pf_scale,
+                  rf_scale,
+                  ef_scale,
+                  cf_scale,
+                  sf_scale,
+                  fa_scale,
+                  nv_scale,
+                  pa_scale,
+                  dy_scale,
+                  sl_scale,
+                  ap_scale,
+                  co_scale,
+                  di_scale,
+                  fi_scale) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EORTC QLQ C30") +
+    ylab("N") +
+    ggtitle(label = "EORTC QLQ C30 Scaled Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+c30_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
+c30 <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      ql_scale, pf_scale, rf_scale,
+                      ef_scale, cf_scale, sf_scale,
+                      fa_scale, nv_scale, pa_scale,
+                      dy_scale, sl_scale, ap_scale,
+                      co_scale, di_scale, fi_scale,
+                      c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
+                      c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
+                      c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                      c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                      c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                      c30_q26, c30_q27, c30_q28) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(key      = factor(key, levels = c("c30_q1", "c30_q2", "c30_q3", "c30_q4", "c30_q5",
+                                                 "c30_q6", "c30_q7", "c30_q8", "c30_q9", "c30_q10",
+                                                 "c30_q11", "c30_q12", "c30_q13", "c30_q14", "c30_q15",
+                                                 "c30_q16", "c30_q17", "c30_q18", "c30_q19", "c30_q20",
+                                                 "c30_q21", "c30_q22", "c30_q23", "c30_q24", "c30_q25",
+                                                 "c30_q26", "c30_q27", "c30_q28", "c30_q29", "c30_q30")),
+               Response = factor(Response, levels = c30_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
+        ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
+        dplyr::filter(!is.na(Response)) %>%
+        unique() %>%
+        left_join(.,
+                  master$lookups_fields,
+                  by = c("key" = "identifier"))
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(c30, aes(x = primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "EORTC QLQ C30 Domains at 18 months by Primary Treatment",
+            subtitle = "Excludes Missing Responses") +
+    facet_wrap(~label, ncol = 2) +
+    theme_bw()
+## ToDo - Histogram of scores
+## Table
+test <- age_gap %>%
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## ql_scale, pf_scale, rf_scale,
+                                          ## ef_scale, cf_scale, sf_scale,
+                                          ## fa_scale, nv_scale, pa_scale,
+                                          ## dy_scale, sl_scale, ap_scale,
+                                          ## co_scale, di_scale, fi_scale,
+                                          c30_q1, c30_q2, c30_q3, c30_q4, c30_q5,
+                                          c30_q6, c30_q7, c30_q8, c30_q9, c30_q10,
+                                          c30_q11, c30_q12, c30_q13, c30_q14, c30_q15,
+                                          c30_q16, c30_q17, c30_q18, c30_q19, c30_q20,
+                                          c30_q21, c30_q22, c30_q23, c30_q24, c30_q25,
+                                          c30_q26, c30_q27, c30_q28),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ C30 Domains at 18 months by Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ C30 Scaled Scores at 18 months at 18 months by Primary Treatment Group.")
+
+```
+
+```{r 18months_summary_demographics_c30_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+c30_sjp <- list()
+c30_sjp$q1 <- dplyr::filter(c30, key == "c30_q1") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "1. Do you have any trouble doing strenuous activities?",
+                 prnt.plot = FALSE)
+c30_sjp$q2 <- dplyr::filter(c30, key == "c30_q2") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "2. Do you have any trouble taking a long walk?",
+                 prnt.plot = FALSE)
+c30_sjp$q3 <- dplyr::filter(c30, key == "c30_q3") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "3. Do you have any trouble taking a short walk outside of the house?",
+                 prnt.plot = FALSE)
+c30_sjp$q4 <- dplyr::filter(c30, key == "c30_q4") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "4. Do you need to stay in be or a chari during the day",
+                 prnt.plot = FALSE)
+c30_sjp$q5 <- dplyr::filter(c30, key == "c30_q5") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "5. Do you need help with eating, dressing, washing yourself or using the toilet?",
+                 prnt.plot = FALSE)
+c30_sjp$q6 <- dplyr::filter(c30, key == "c30_q6") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "6. Were you limited in doing either your work or other daily activites?",
+                 prnt.plot = FALSE)
+c30_sjp$q7 <- dplyr::filter(c30, key == "c30_q7") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "7. Were you limited in pursuing your hobbies or other leisure activities?",
+                 prnt.plot = FALSE)
+c30_sjp$q8 <- dplyr::filter(c30, key == "c30_q8") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "8. Were you short of breath?",
+                 prnt.plot = FALSE)
+c30_sjp$q9 <- dplyr::filter(c30, key == "c30_q9") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "9. Have you had pain?",
+                 prnt.plot = FALSE)
+c30_sjp$q10 <- dplyr::filter(c30, key == "c30_q10") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "10. Did you need to rest?",
+                 prnt.plot = FALSE)
+c30_sjp$q11 <- dplyr::filter(c30, key == "c30_q11") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "11. Have you had trouble sleeping?",
+                 prnt.plot = FALSE)
+c30_sjp$q12 <- dplyr::filter(c30, key == "c30_q12") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "12. Have you felt weak?",
+                 prnt.plot = FALSE)
+c30_sjp$q13 <- dplyr::filter(c30, key == "c30_q13") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "13. Have you lacked appetite?",
+                 prnt.plot = FALSE)
+c30_sjp$q14 <- dplyr::filter(c30, key == "c30_q14") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "14. Have you felt nauseated?",
+                 prnt.plot = FALSE)
+c30_sjp$q15 <- dplyr::filter(c30, key == "c30_q15") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "15. Have you vomited?",
+                 prnt.plot = FALSE)
+c30_sjp$q16 <- dplyr::filter(c30, key == "c30_q16") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "16. Have you been constipated?",
+                 prnt.plot = FALSE)
+c30_sjp$q17 <- dplyr::filter(c30, key == "c30_q17") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "17. Have you had diarrhea?",
+                 prnt.plot = FALSE)
+c30_sjp$q18 <- dplyr::filter(c30, key == "c30_q18") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "18. Were you tired?",
+                 prnt.plot = FALSE)
+c30_sjp$q19 <- dplyr::filter(c30, key == "c30_q19") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "19. Did pain interfere with your daily activities?",
+                 prnt.plot = FALSE)
+c30_sjp$q20 <- dplyr::filter(c30, key == "c30_q20") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "20. Have you had difficulty in concentrating on things?",
+                 prnt.plot = FALSE)
+c30_sjp$q21 <- dplyr::filter(c30, key == "c30_q21") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "21. Did you feel tense?",
+                 prnt.plot = FALSE)
+c30_sjp$q22 <- dplyr::filter(c30, key == "c30_q22") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "22. Did you worry?",
+                 prnt.plot = FALSE)
+c30_sjp$q23 <- dplyr::filter(c30, key == "c30_q23") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "23. Did you feel irritable?",
+                 prnt.plot = FALSE)
+c30_sjp$q24 <- dplyr::filter(c30, key == "c30_q24") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "24. Did you feel depressed?",
+                 prnt.plot = FALSE)
+c30_sjp$q25 <- dplyr::filter(c30, key == "c30_q25") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "25. Have you had difficulty remembering things?",
+                 prnt.plot = FALSE)
+c30_sjp$q26 <- dplyr::filter(c30, key == "c30_q26") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "26. Has your physical condition or treatment interfered with family life?",
+                 prnt.plot = FALSE)
+c30_sjp$q27 <- dplyr::filter(c30, key == "c30_q27") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "27. Has your physical condition or treatment interfered with scoial activities?",
+                 prnt.plot = FALSE)
+c30_sjp$q28 <- dplyr::filter(c30, key == "c30_q28") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "28. Has your physical condition or treatment interfered with financial difficulties?",
+                 prnt.plot = FALSE)
+## c30_sjp$q29 <- dplyr::filter(c30, key == "c30_q29") %>%
+##     dplyr::select(individual_id, primary_treatment, Response) %>%
+##     spread(primary_treatment, Response) %>%
+##     dplyr::select(-individual_id) %>%
+##     sjp.stackfrq(title = "Has your physical condition or treatment interfered with financial difficulties?",
+##                  prnt.plot = FALSE)
+## c30_sjp$q30 <- dplyr::filter(c30, key == "c30_q30") %>%
+##     dplyr::select(individual_id, primary_treatment, Response) %>%
+##     spread(primary_treatment, Response) %>%
+##     dplyr::select(-individual_id) %>%
+##     sjp.stackfrq(title = "Has your physical condition or treatment interfered with financial difficulties?",
+##                  prnt.plot = FALSE)
+c30_sjp$q1$plot
+c30_sjp$q2$plot
+c30_sjp$q3$plot
+c30_sjp$q4$plot
+c30_sjp$q5$plot
+c30_sjp$q6$plot
+c30_sjp$q7$plot
+c30_sjp$q8$plot
+c30_sjp$q9$plot
+c30_sjp$q10$plot
+c30_sjp$q11$plot
+c30_sjp$q12$plot
+c30_sjp$q13$plot
+c30_sjp$q14$plot
+c30_sjp$q15$plot
+c30_sjp$q16$plot
+c30_sjp$q17$plot
+c30_sjp$q18$plot
+c30_sjp$q19$plot
+c30_sjp$q20$plot
+c30_sjp$q21$plot
+c30_sjp$q22$plot
+c30_sjp$q23$plot
+c30_sjp$q24$plot
+c30_sjp$q25$plot
+c30_sjp$q26$plot
+c30_sjp$q27$plot
+c30_sjp$q28$plot
+## c30_sjp$q29$plot
+## c30_sjp$q30$plot
+
+
+```
+
+#### EORTC QLQ BR23
+```{r 18months_summary_demographics_br23, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of BR23 at 18 months...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  brbi_scale,
+                  brsef_scale,
+                  brfu_scale,
+                  brst_scale,
+                  brbs_scale,
+                  bras_scale,
+                  brhl_scale) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EORTC QLQ BR23") +
+    ylab("N") +
+    ggtitle(label = "EORTC QLQ BR23 Scaled Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+br23_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
+br23 <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      brbi_scale, brsee_scale, brfu_scale,
+                      brst_scale, brbs_scale, bras_scale,
+                      brhl_scale,
+                      br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
+                      br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
+                      br23_q41, br23_q42, br23_q43, br23_q44, br23_q45,
+                      br23_q46, br23_q47, br23_q48, br23_q49, br23_q50,
+                      br23_q51, br23_q52, br23_q53) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(key      = factor(key, levels = c("br23_q31", "br23_q32", "br23_q33", "br23_q34", "br23_q35",
+                                                 "br23_q36", "br23_q37", "br23_q38", "br23_q39", "br23_q40",
+                                                 "br23_q41", "br23_q42", "br23_q43", "br23_q44", "br23_q45",
+                                                 "br23_q46", "br23_q47", "br23_q48", "br23_q49", "br23_q50",
+                                                 "br23_q51", "br23_q52", "br23_q53")),
+               Response = factor(Response, levels = br23_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
+        ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
+        dplyr::filter(!is.na(Response)) %>%
+        unique() %>%
+        left_join(.,
+                  master$lookups_fields,
+                  by = c("key" = "identifier"))
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(br23, aes(x = primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "EORTC QLQ BR23 Domains at 18 months by Primary Treatment",
+            subtitle = "Excludes Missing Responses") +
+    facet_wrap(~label, ncol = 2) +
+    theme_bw()
+## ToDo - Histogram of scores
+## Table
+test <- age_gap %>%
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## brbi_scale, brsee_scale, brfu_scale,
+                                          ## brst_scale, brbs_scale, bras_scale,
+                                          ## brhl_scale,
+                                          br23_q31, br23_q32, br23_q33, br23_q34, br23_q35,
+                                          br23_q36, br23_q37, br23_q38, br23_q39, br23_q40,
+                                          br23_q41, br23_q42, br23_q43, br23_q44, br23_q45,
+                                          br23_q46, br23_q47, br23_q48, br23_q49, br23_q50,
+                                          br23_q51, br23_q52, br23_q53),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ BR23 Domains at 18 months by Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ BR23 scaled scores at 18 months by Primary Treatment Group.")
+
+```
+
+```{r 18months_summary_demographics_br23_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+br23_sjp <- list()
+br23_sjp$q31 <- dplyr::filter(br23, key == "br23_q31") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "31. Did you have a dry mouth?",
+                 prnt.plot = FALSE)
+br23_sjp$q32 <- dplyr::filter(br23, key == "br23_q32") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "32. Did food and drink taste different than usual?",
+                 prnt.plot = FALSE)
+br23_sjp$q33 <- dplyr::filter(br23, key == "br23_q33") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "33. Were your eyes painful, irritated or watery",
+                 prnt.plot = FALSE)
+br23_sjp$q34 <- dplyr::filter(br23, key == "br23_q34") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "34. Have you lost any hair?",
+                 prnt.plot = FALSE)
+br23_sjp$q35 <- dplyr::filter(br23, key == "br23_q35") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "35. Were you upset by the loss of your hair?",
+                 prnt.plot = FALSE)
+br23_sjp$q36 <- dplyr::filter(br23, key == "br23_q36") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "36. Did you feel ill or unwell?",
+                 prnt.plot = FALSE)
+br23_sjp$q37 <- dplyr::filter(br23, key == "br23_q37") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "37. Did you hot flushess?",
+                 prnt.plot = FALSE)
+br23_sjp$q38 <- dplyr::filter(br23, key == "br23_q38") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "38. Did you have headaches?",
+                 prnt.plot = FALSE)
+br23_sjp$q39 <- dplyr::filter(br23, key == "br23_q39") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "39. Have you felt physically less attractive as a result of your disease or treatment?",
+                 prnt.plot = FALSE)
+br23_sjp$q40 <- dplyr::filter(br23, key == "br23_q40") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "40. Have you been feeling less feminine as a result of your disease or treatment",
+                 prnt.plot = FALSE)
+br23_sjp$q41 <- dplyr::filter(br23, key == "br23_q41") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "41. Did you find it difficult to look at yourself naked?",
+                 prnt.plot = FALSE)
+br23_sjp$q42 <- dplyr::filter(br23, key == "br23_q42") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "42. Have you been dissatisfied with your body?",
+                 prnt.plot = FALSE)
+br23_sjp$q43 <- dplyr::filter(br23, key == "br23_q43") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "43. Were you worred about your health in the future?",
+                 prnt.plot = FALSE)
+br23_sjp$q44 <- dplyr::filter(br23, key == "br23_q44") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "44. To what extent were you interested in sex?",
+                 prnt.plot = FALSE)
+br23_sjp$q45 <- dplyr::filter(br23, key == "br23_q45") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "45. To what extent were you sexually active?",
+                 prnt.plot = FALSE)
+br23_sjp$q46 <- dplyr::filter(br23, key == "br23_q46") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "46. To what extent was sex enjoyable for you?",
+                 prnt.plot = FALSE)
+br23_sjp$q47 <- dplyr::filter(br23, key == "br23_q47") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "47. Did you have any pain in your arm or shoulder?",
+                 prnt.plot = FALSE)
+br23_sjp$q48 <- dplyr::filter(br23, key == "br23_q48") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "48. Did you have a swollen arm or hand?",
+                 prnt.plot = FALSE)
+br23_sjp$q49 <- dplyr::filter(br23, key == "br23_q49") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "49. Was it difficult to raise your arm or to move it sideways?",
+                 prnt.plot = FALSE)
+br23_sjp$q50 <- dplyr::filter(br23, key == "br23_q50") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "50. Have you had any pain in the area of your affected breast?",
+                 prnt.plot = FALSE)
+br23_sjp$q51 <- dplyr::filter(br23, key == "br23_q51") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "51. Was the area of your affected breast swollen?",
+                 prnt.plot = FALSE)
+br23_sjp$q52 <- dplyr::filter(br23, key == "br23_q52") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "52. Was the area of your affected breast oversensitive?",
+                 prnt.plot = FALSE)
+br23_sjp$q53 <- dplyr::filter(br23, key == "br23_q53") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "53. Have you had skin problems on or in the area of your affected breast?",
+                 prnt.plot = FALSE)
+br23_sjp$q31$plot
+br23_sjp$q32$plot
+br23_sjp$q33$plot
+br23_sjp$q34$plot
+br23_sjp$q35$plot
+br23_sjp$q36$plot
+br23_sjp$q37$plot
+br23_sjp$q38$plot
+br23_sjp$q39$plot
+br23_sjp$q40$plot
+br23_sjp$q41$plot
+br23_sjp$q42$plot
+br23_sjp$q43$plot
+br23_sjp$q44$plot
+br23_sjp$q45$plot
+br23_sjp$q46$plot
+br23_sjp$q47$plot
+br23_sjp$q48$plot
+br23_sjp$q49$plot
+br23_sjp$q50$plot
+br23_sjp$q51$plot
+br23_sjp$q52$plot
+br23_sjp$q53$plot
+
+
+```
+
+#### EORTC QLQ ELD15
+```{r 18months_summary_demographics_eld15, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+## Generate plots of ELD15 at 18 months...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  mo_scale,
+                  wao_scale,
+                  wo_scale,
+                  mp_scale,
+                  boi_scale,
+                  js_scale,
+                  fs_scale) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("EORTC QLQ ELD15") +
+    ylab("N") +
+    ggtitle(label = "EORTC QLQ ELD15 Scaled Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_grid(Scale~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+eld15_levels <- c("Not at All", "A Little", "Quite a Bit", "Very Much")
+eld15 <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id,
+                      primary_treatment,
+                      event_name,
+                      mo_scale, wao_scale, wo_scale,
+                      mp_scale, boi_scale, fs_scale,
+                      js_scale,
+                      eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
+                      eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
+                      eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68) %>%
+        ## Reshape the data, replace variable names with neater descriptions and plot
+        gather(key = key, value = Response, -individual_id, -primary_treatment, -event_name) %>%
+        mutate(key      = factor(key, levels = c("eld15_q54", "eld15_q55", "eld15_q56", "eld15_q57", "eld15_q58",
+                                                 "eld15_q59", "eld15_q60", "eld15_q61", "eld15_q62", "eld15_q63",
+                                                 "eld15_q64", "eld15_q65", "eld15_q66", "eld15_q67", "eld15_q68")),
+               Response = factor(Response, levels = eld15_levels),
+               Response = factor(Response, levels = rev(levels(Response)))) %>%
+        ## Optionally remove NAs, simply place '## dplyr...' if you wish to include NAs
+        dplyr::filter(!is.na(Response)) %>%
+        unique() %>%
+        left_join(.,
+                  master$lookups_fields,
+                  by = c("key" = "identifier"))
+## Stacked bar-chart of domain responses using base ggplo2
+ggplot(eld15, aes(x = primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "EORTC QLQ ELD15 Domains at 18 months by Primary Treatment",
+            subtitle = "Excludes Missing Responses") +
+    facet_wrap(~label, ncol = 2) +
+    theme_bw()
+## ToDo - Histogram of scores
+## Table
+test <- age_gap %>%
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(## mo_scale, wao_scale, wo_scale,
+                                          ## mp_scale, boi_scale, fs_scale,
+                                          ## js_scale,
+                                          eld15_q54, eld15_q55, eld15_q56, eld15_q57, eld15_q58,
+                                          eld15_q59, eld15_q60, eld15_q61, eld15_q62, eld15_q63,
+                                          eld15_q64, eld15_q65, eld15_q66, eld15_q67, eld15_q68),
+                            time      = event_name,
+                            group     = primary_treatment,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Reshape the factor table and print
+spread(test$factor,
+       value,
+       n_prop,
+       fill = "0 (0.00)") %>%
+    mutate(Dimension = label) %>%
+    dplyr::select(Dimension, primary_treatment,
+                  `Not at All`, `A Little`, `Quite a Bit`, `Very Much`, `<NA>`, -event_name, -label) %>%
+    arrange(Dimension, primary_treatment) %>%
+    kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+          caption = "EORTC QLQ ELD15 Domains at 18 months by Primary Treatment Group.")
+## Tabulate the continuous variables
+## test$continuous %>%
+##     mutate(Metric = label) %>%
+##     dplyr::select(Metric, primary_treatment, n, missing, mean_sd, median_iqr, range, -event_name) %>%
+##     kable(col.names = gsub("primary_treatment", "Primary Treatment", names(.)),
+##           caption = "EORTC QLQ ELD15 scaled scores at 18 months by Primary Treatment Group.")
+
+```
+
+```{r 18months_summary_demographics_eld15_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+eld15_sjp <- list()
+eld15_sjp$q54 <- dplyr::filter(eld15, key == "eld15_q54") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "54. Have you had difficulty with steps or stairs?",
+                 prnt.plot = FALSE)
+eld15_sjp$q55 <- dplyr::filter(eld15, key == "eld15_q55") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "55. Have you had trouble with your joints?",
+                 prnt.plot = FALSE)
+eld15_sjp$q56 <- dplyr::filter(eld15, key == "eld15_q56") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "56. Do you feel unsteady on your feet?",
+                 prnt.plot = FALSE)
+eld15_sjp$q57 <- dplyr::filter(eld15, key == "eld15_q57") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "57. Did you need help with household chores?",
+                 prnt.plot = FALSE)
+eld15_sjp$q58 <- dplyr::filter(eld15, key == "eld15_q58") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "58. Has your relationship with your family become closer?",
+                 prnt.plot = FALSE)
+eld15_sjp$q59 <- dplyr::filter(eld15, key == "eld15_q59") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "59. Have you felt able to talk to your family about your illness?",
+                 prnt.plot = FALSE)
+eld15_sjp$q60 <- dplyr::filter(eld15, key == "eld15_q60") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "60. Have you worred about your family coping with your illness and treatment?",
+                 prnt.plot = FALSE)
+eld15_sjp$q61 <- dplyr::filter(eld15, key == "eld15_q61") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "61. Have you worried about the future of people who are important to you?",
+                 prnt.plot = FALSE)
+eld15_sjp$q62 <- dplyr::filter(eld15, key == "eld15_q62") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "62. Were you worried about your future health?",
+                 prnt.plot = FALSE)
+eld15_sjp$q63 <- dplyr::filter(eld15, key == "eld15_q63") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "63. Did you feel uncertain about the future?",
+                 prnt.plot = FALSE)
+eld15_sjp$q64 <- dplyr::filter(eld15, key == "eld15_q64") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "64. Have you worried about what might happen towards the end of your life?",
+                 prnt.plot = FALSE)
+eld15_sjp$q65 <- dplyr::filter(eld15, key == "eld15_q65") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "65. Have you had a positive outlook on life in the last week?",
+                 prnt.plot = FALSE)
+eld15_sjp$q66 <- dplyr::filter(eld15, key == "eld15_q66") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "66. Have you felt motivated to continue with your normal hobbies or activities?",
+                 prnt.plot = FALSE)
+eld15_sjp$q67 <- dplyr::filter(eld15, key == "eld15_q67") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "67. How much has your illness been a burden to you?",
+                 prnt.plot = FALSE)
+eld15_sjp$q68 <- dplyr::filter(eld15, key == "eld15_q68") %>%
+    dplyr::select(individual_id, primary_treatment, Response) %>%
+    spread(primary_treatment, Response) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title = "68. How much has your treatment been a burden to you?",
+                 prnt.plot = FALSE)
+eld15_sjp$q54$plot
+eld15_sjp$q55$plot
+eld15_sjp$q56$plot
+eld15_sjp$q57$plot
+eld15_sjp$q58$plot
+eld15_sjp$q59$plot
+eld15_sjp$q60$plot
+eld15_sjp$q61$plot
+eld15_sjp$q62$plot
+eld15_sjp$q63$plot
+eld15_sjp$q64$plot
+eld15_sjp$q65$plot
+eld15_sjp$q66$plot
+eld15_sjp$q67$plot
+eld15_sjp$q68$plot
+eld15_sjp$q69$plot
+eld15_sjp$q60$plot
+
+
+```
+
+#### Barthel Activities of Daily Living
+
+**NB** Because the responses are not consistent between questions it is *not* possible to use the `facet_wrap()` function of [ggplot2](http://ggplot2.tidyverse.org/reference/) to plot these all at once.  Instead individual plots are generated and combined using [patchwork](https://github.com/thomasp85/patchwork).
+
+```{r 18months_summary_demographics_adl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 10, eval = TRUE}
+## Generate plots of ELD15 at 18 months...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  adl_score) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("ADL Score") +
+    ylab("N") +
+    ggtitle(label = "Barthel Activities of Daily Living Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+adl <- age_gap %>%
+       ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+       dplyr::filter(event_name == "18 months") %>%
+       dplyr::filter(!is.na(primary_treatment)) %>%
+       ungroup() %>%
+       dplyr::select(individual_id,
+                     primary_treatment,
+                     event_name,
+                     feeding, transfer_bed_chair, personal_toilet,
+                     toiletting, bathing, walking_wheelchair, ascend_descend,
+                     dressing, bowels, bladder) %>%
+       unique()
+## Stacked bar-chart of domain responses using base ggplo2
+adl_plot <- list()
+adl_plot$feeding <- adl %>%
+    dplyr::filter(!is.na(feeding)) %>%
+    mutate(Response = feeding) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Feeding") +
+    theme_bw()
+adl_plot$transfer_bed_chair <- adl %>%
+    dplyr::filter(!is.na(transfer_bed_chair)) %>%
+    mutate(Response = transfer_bed_chair) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Transfer Bed/Chair") +
+    theme_bw()
+adl_plot$personal_toilet <- adl %>%
+    dplyr::filter(!is.na(personal_toilet)) %>%
+    mutate(Response = personal_toilet) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Personal Toilet") +
+    theme_bw()
+adl_plot$toiletting <- adl %>%
+    dplyr::filter(!is.na(toiletting)) %>%
+    mutate(Response = toiletting) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Toiletting") +
+    theme_bw()
+adl_plot$bathing <- adl %>%
+    dplyr::filter(!is.na(bathing)) %>%
+    mutate(Response = bathing) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Bathing") +
+    theme_bw()
+adl_plot$walking_wheelchair <- adl %>%
+    dplyr::filter(!is.na(walking_wheelchair)) %>%
+    mutate(Response = walking_wheelchair) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Walking / Wheelchair") +
+    theme_bw()
+adl_plot$ascend_descend <- adl %>%
+    dplyr::filter(!is.na(ascend_descend)) %>%
+    mutate(Response = ascend_descend) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Ascend / Descend") +
+    theme_bw()
+adl_plot$dressing <- adl %>%
+    dplyr::filter(!is.na(dressing)) %>%
+    mutate(Response = dressing) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Dressing") +
+    theme_bw()
+adl_plot$bowels <- adl %>%
+    dplyr::filter(!is.na(bowels)) %>%
+    mutate(Response = bowels) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Bowels") +
+    theme_bw()
+adl_plot$bladder <- adl %>%
+    dplyr::filter(!is.na(bladder)) %>%
+    mutate(Response = bladder) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Bladder") +
+    theme_bw()
+## Combine all plots using patchworkm, forcing into two columns
+adl_plot$feeding + adl_plot$transfer_bed_chair +
+    adl_plot$personal_toilet + adl_plot$toiletting +
+    adl_plot$bowels + adl_plot$bladder +
+    adl_plot$bathing + adl_plot$walking_wheelchair +
+    adl_plot$ascend_descend + adl_plot$dressing +
+    plot_layout(ncol = 1)
+## ToDo - Histogram of scores
+## ToDo - Table of domains
+
+```
+
+```{r 18months_summary_demographics_adl_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+adl_sjp <- list()
+adl_sjp$feeding <- adl %>%
+    dplyr::select(individual_id, primary_treatment, feeding) %>%
+    spread(primary_treatment, feeding) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Feeding",
+                 prnt.plot = FALSE)
+adl_sjp$transfer_bed_chair <- adl %>%
+    dplyr::select(individual_id, primary_treatment, transfer_bed_chair) %>%
+    spread(primary_treatment, transfer_bed_chair) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Transfer Bed / Chair",
+                 prnt.plot = FALSE)
+adl_sjp$personal_toilet <- adl %>%
+    dplyr::select(individual_id, primary_treatment, personal_toilet) %>%
+    spread(primary_treatment, personal_toilet) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Personal Toilet",
+                 prnt.plot = FALSE)
+adl_sjp$toiletting <- adl %>%
+    dplyr::select(individual_id, primary_treatment, toiletting) %>%
+    spread(primary_treatment, toiletting) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Toiletting",
+                 prnt.plot = FALSE)
+adl_sjp$bowels <- adl %>%
+    dplyr::select(individual_id, primary_treatment, bowels) %>%
+    spread(primary_treatment, bowels) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Bowels",
+                 prnt.plot = FALSE)
+adl_sjp$bladder <- adl %>%
+    dplyr::select(individual_id, primary_treatment, bladder) %>%
+    spread(primary_treatment, bladder) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Bladder",
+                 prnt.plot = FALSE)
+adl_sjp$bathing <- adl %>%
+    dplyr::select(individual_id, primary_treatment, bathing) %>%
+    spread(primary_treatment, bathing) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Bathing",
+                 prnt.plot = FALSE)
+adl_sjp$walking_wheelchair <- adl %>%
+    dplyr::select(individual_id, primary_treatment, walking_wheelchair) %>%
+    spread(primary_treatment, walking_wheelchair) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Walking / Wheelchair",
+                 prnt.plot = FALSE)
+adl_sjp$ascend_descend <- adl %>%
+    dplyr::select(individual_id, primary_treatment, ascend_descend) %>%
+    spread(primary_treatment, ascend_descend) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Ascend / Descend",
+                 prnt.plot = FALSE)
+adl_sjp$dressing <- adl %>%
+    dplyr::select(individual_id, primary_treatment, dressing) %>%
+    spread(primary_treatment, dressing) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Dressing",
+                 prnt.plot = FALSE)
+adl_sjp$feeding$plot
+adl_sjp$transfer_bed_chair$plot
+adl_sjp$personal_toilet$plot
+adl_sjp$toiletting$plot
+adl_sjp$bowels$plot
+adl_sjp$bladder$plot
+adl_sjp$bathing$plot
+adl_sjp$walking_wheelchair$plot
+adl_sjp$ascend_descend$plot
+adl_sjp$dressing$plot
+
+```
+
+#### Instrumental Activities of Daily Living
+
+**NB** Because the responses are not consistent between questions it is *not* possible to use the `facet_wrap()` function of [ggplot2](http://ggplot2.tidyverse.org/reference/) to plot these all at once.  Instead individual plots are generated and combined using [patchwork](https://github.com/thomasp85/patchwork).
+
+```{r 18months_summary_demographics_iadl, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 10,eval = TRUE}
+## Generate plots of ELD15 at 18 months...
+##
+## Histograms of scaled scores by treatment group
+age_gap %>%
+    ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+    dplyr::filter(event_name == "18 months") %>%
+    dplyr::filter(!is.na(primary_treatment)) %>%
+    dplyr::select(individual_id,
+                  primary_treatment,
+                  iadl_score) %>%
+    gather(key   = Scale, value = value, -individual_id, -primary_treatment) %>%
+    dplyr::filter(!is.na(value)) %>%
+    mutate(Scale = gsub("_scale", "", Scale)) %>%
+    unique() %>%
+    ggplot(aes(value, fill = primary_treatment)) +
+    geom_histogram(bins = 60) +
+    xlab("ADL Score") +
+    ylab("N") +
+    ggtitle(label = "Instrumental Activities of Daily Living Scores by Primary Treatment Group",
+            subtitle = "Y-axis varies between plots") +
+    facet_wrap(~primary_treatment, scales = "free_y") +
+    theme_bw() +
+    theme(legend.position = "none")
+## Subset, reshape and tidy questionnaire responses...
+iadl <- age_gap %>%
+        ## Filter 18 months group, with primary_treatment defined and without missing or zero age
+        dplyr::filter(event_name == "18 months") %>%
+        dplyr::filter(!is.na(primary_treatment)) %>%
+        ungroup() %>%
+        dplyr::select(individual_id, primary_treatment, event_name,
+                      telephone, shopping, food_prep, housekeeping, laundry,
+                      transport, medication, finances) %>%
+        unique()
+## Stacked bar-chart of domain responses using base ggplot2.opts
+## Because the responses are not consistent across questions these are plotted indivudally
+## and then combined into one plot
+iadl_plot <- list()
+iadl_plot$telephone <- iadl %>%
+    dplyr::filter(!is.na(telephone)) %>%
+    mutate(Response = telephone) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Telephone") +
+    theme_bw()
+iadl_plot$shopping <- iadl %>%
+    dplyr::filter(!is.na(shopping)) %>%
+    mutate(Response = shopping) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Shopping") +
+    theme_bw()
+iadl_plot$food_prep <- iadl %>%
+    dplyr::filter(!is.na(food_prep)) %>%
+    mutate(Response = food_prep) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Food Preparation") +
+    theme_bw()
+iadl_plot$housekeeping <- iadl %>%
+    dplyr::filter(!is.na(housekeeping)) %>%
+    mutate(Response = housekeeping) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Housekeeping") +
+    theme_bw()
+iadl_plot$laundry <- iadl %>%
+    dplyr::filter(!is.na(laundry)) %>%
+    mutate(Response = laundry) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Laundry") +
+    theme_bw()
+iadl_plot$transport <- iadl %>%
+    dplyr::filter(!is.na(transport)) %>%
+    mutate(Response = transport) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Transport") +
+    theme_bw()
+iadl_plot$medication <- iadl %>%
+    dplyr::filter(!is.na(medication)) %>%
+    mutate(Response = medication) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Medication") +
+    theme_bw()
+iadl_plot$finances <- iadl %>%
+    dplyr::filter(!is.na(finances)) %>%
+    mutate(Response = finances) %>%
+    ggplot(aes(primary_treatment, fill = Response)) +
+    geom_bar(position = "fill") +
+    coord_flip() +
+    xlab("") +
+    ylab("Proportion") +
+    ggtitle(label = "Finances") +
+    theme_bw()
+## Combine using patchwork
+iadl_plot$telephone + iadl_plot$shopping +
+iadl_plot$food_prep + iadl_plot$housekeeping +
+iadl_plot$laundry + iadl_plot$transport +
+iadl_plot$medication + iadl_plot$finances +
+plot_layout(ncol = 1)
+## ToDo - Histogram of scores
+## ToDo - Table of domains
+
+```
+
+```{r 18months_summary_demographics_iadl_sjp, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 3,eval = TRUE}
+## Same graphs using sjPlot::sjp.stackfrq(), plot by each treatment.
+## To combine use something like cow_plot::plot_grid() / sjPlot::plot_grid() /
+## patchwork (see https://github.com/thomasp85/patchwork)
+iadl_sjp <- list()
+iadl_sjp$telephone <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, telephone) %>%
+    spread(primary_treatment, telephone) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Telephone",
+                 prnt.plot = FALSE)
+iadl_sjp$shopping <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, shopping) %>%
+    spread(primary_treatment, shopping) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Shopping",
+                 prnt.plot = FALSE)
+iadl_sjp$food_prep <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, food_prep) %>%
+    spread(primary_treatment, food_prep) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Food Preparation",
+                 prnt.plot = FALSE)
+iadl_sjp$housekeeping <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, housekeeping) %>%
+    spread(primary_treatment, housekeeping) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Housekeeping",
+                 prnt.plot = FALSE)
+iadl_sjp$laundry <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, laundry) %>%
+    spread(primary_treatment, laundry) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Laundry",
+                 prnt.plot = FALSE)
+iadl_sjp$transport <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, transport) %>%
+    spread(primary_treatment, transport) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Transport",
+                 prnt.plot = FALSE)
+iadl_sjp$medication <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, medication) %>%
+    spread(primary_treatment, medication) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Medication",
+                 prnt.plot = FALSE)
+iadl_sjp$finances <- iadl %>%
+    dplyr::select(individual_id, primary_treatment, finances) %>%
+    spread(primary_treatment, finances) %>%
+    dplyr::select(-individual_id) %>%
+    sjp.stackfrq(title     = "Finances",
+                 prnt.plot = FALSE)
+iadl_sjp$telephone$plot
+iadl_sjp$shopping$plot
+iadl_sjp$food_prep$plot
+iadl_sjp$housekeeping$plot
+iadl_sjp$laundry$plot
+iadl_sjp$transport$plot
+iadl_sjp$medication$plot
+iadl_sjp$finances$plot
+
+
+```
