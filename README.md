@@ -52,20 +52,56 @@ You can now clone the study repository which includes all of the code for produc
 
     git clone git@github.com/ns-ctru/age-gap
 
-You will then need to obtain the raw data from the studies project folder and add it to the `lib/data-raw/` directory and run the `lib/data-raw/import.R` file in order to read and clean the data.  Once this has been done you can use the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package to `document()`, `build()` and `install()` the package using the following (since Vignettes consistently fail to build and need to be built seperately).
+You will then need to obtain the raw data from the studies project folder and add it to the `lib/data-raw/` directory and run the `lib/data-raw/import.R` file in order to read and clean the data.  Once this has been done you can use the [devtools](https://cran.r-project.org/web/packages/devtools/index.html) package to `document()`, `build()` and `install()` the package using the following (since Vignettes consistently fail to build and need to be built seperately).  The following code can be used (it could even be placed in an R script file which could be [`source()`](https://www.rdocumentation.org/packages/base/versions/3.4.3/topics/source) or run using [`Rscript`](https://www.rdocumentation.org/packages/utils/versions/3.4.3/topics/Rscript))
 
 	setwd('/path/to/cloned/age-gap/lib')
 	devtools::document()
 	devtools::build(vignettes = FALSE)
 	devtools::install()
 	devtools::build_vignettes()
-	## To make a PDF copy of the report
+	## To make a PDF copy of each of the reports
 	setwd('/path/to/cloned/age-gap/lib')
+	rmarkdown::render("vignettes/baseline.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/baseline.pdf")
+	rmarkdown::render("vignettes/6weeks.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/6weeks.pdf")
+	rmarkdown::render("vignettes/6months.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/6months.pdf")
+	rmarkdown::render("vignettes/12months.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/12months.pdf")
+	rmarkdown::render("vignettes/18months.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/18months.pdf")
+	rmarkdown::render("vignettes/24months.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/24months.pdf")
 	rmarkdown::render("vignettes/survival.Rmd",
 	                  output_format = "pdf_document",
 					  output_file   = "inst/doc/survival.pdf")
 	## To make a M$-Word copy of the report
 	setwd('/path/to/cloned/age-gap/lib')
+	rmarkdown::render("vignettes/baseline.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/baseline.docx")
+	rmarkdown::render("vignettes/6weeks.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/6weeks.docx")
+	rmarkdown::render("vignettes/6months.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/6months.docx")
+	rmarkdown::render("vignettes/12months.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/12months.docx")
+	rmarkdown::render("vignettes/18months.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/18months.docx")
+	rmarkdown::render("vignettes/24months.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/24months.docx")
 	rmarkdown::render("vignettes/survival.Rmd",
 	                  output_format = "word_document",
 					  output_file   = "inst/doc/survival.docx")
