@@ -1,16 +1,16 @@
 ### Survival
 
-### Follow-up
+#### Follow-up
 
-As survival at full five-year follow-up is not currently available the `Study Completion and Discontinuation Form` is being used as a proxy for the time being.  This is, unless a participant withdraws early, meant to be completed at two year follow-up, although this is only true for a fraction of cases as shown in the figure below.  Those who are still being followed up are purposefully included in this table, the distribution reveals how "close" to the stated follow-up date individuals are seen.  Data at baseline correspond to the last data of contact for that person.
+As survival at five-year follow-up is not currently available the `Study Completion and Discontinuation Form` is being used as a proxy for the time being.  This is, unless a participant withdraws early, meant to be completed at two year follow-up, although this is only true for a fraction of cases as shown in the figure below.  Those who are still being followed up are purposefully included in this table, the distribution reveals how "close" to the stated follow-up date individuals are seen.  Data at baseline correspond to the last data of contact for that person.
 
-```{r results-study-completion, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8,eval = TRUE}
+```{r results-survival-study-completion, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
 ## Plot the reasons for study completion/discontinuation
 age_gap %>%
     ## Either replace disc_rsn with text indicating no completion data...
     mutate(`Last Contact Type` = ifelse(!is.na(disc_rsn),
                                         yes = as.character(disc_rsn),
-                                        no  = "No Completion, date last seen.")) %>%
+                                        no  = "No data for Study Completion/Discontinuation...")) %>%
     ## ...or remove those individuals who don't have it.
     ## dplyr::filter(!is.na(disc_rsn)) %>%
 ##ggplot(, aes(as.numeric(survival), colour = disc_rsn)) +
@@ -23,12 +23,93 @@ age_gap %>%
     xlab("Days") +
     ylab("N") +
     ggtitle("Survival by Event Date") +
+    facet_wrap(event_name~`Last Contact Type`, scales = "free") +
     ## facet_wrap(~event_name, ncol = 1) +
-    facet_grid(event_name~`Last Contact Type`, scales = "free") +
+    ## facet_grid(event_name~`Last Contact Type`, scales = "free") +
     ## ToDo - Sort out legend title
     ## scale_fill_colour(name = "Last Contact Type") +
     ## theme(legend.text = "Last Contact") +
     theme_bw() +
     theme(legend.position = "none")
+## Table
+age_gap %>%
+    mutate(disc_rsn =  ifelse(!is.na(disc_rsn),
+                              yes = as.character(disc_rsn),
+                              no  = "No data Case Report Form Completed, last seen...")) %$%
+    table(disc_rsn, event_name, useNA = "ifany") %>%
+    kable(caption = "Study Completion or Discontinuation completion rates.")
+## ToDo - Determine why disc_rsn doesn't summarise with ctru::table_summary()
+## test <- age_gap %>%
+##         mutate(disc_rsn = ifelse(!is.na(disc_rsn),
+##                                  yes = as.character(disc_rsn),
+##                                  no  = "No Completion, last seen..."),
+##                disc_rsn = factor(disc_rsn)) %>%
+##         ungroup() %>%
+##         ctru::table_summary(df        = .,
+##                             lookup    = master$lookups_fields,
+##                             id        = individual_id,
+##                             ## select    = c(`Last Contact Type`),
+##                             select    = c(disc_rsn),
+##                             time      = event_name,
+##                             group     = primary_treatment,
+##                             nomissing = FALSE,
+##                             digits    = 2,
+##                             reshape   = NULL)
+## spread(test$factor,
+##        primary_treatment,
+##        n_prop,
+##        fill = "0 (0.00)") %>%
+##     kable(caption = "Study Completion and Discontinuation by Event")
+
+```
+The above plots and tables are for the observed data to date and show that for the vast majority of people the `Study Completion and Discontinuation` Case Report Form has not been completed.  As this is the only secondary source of deaths available and was being considered for use in lieu of five year follow-up data from NHS Digital being unavailable it is also unusable.  To which end dummy variables have been generated to allow the development of a workflow in this work.  When more reliable and complete data is available the code can be modified to allow its use and give the "true" results (simply modify the code chunk that follows this text in the underlying source file `~/lib/vignettes/survival/results/survival.Rmd` to not be evaluated, i.e. `eval = FALSE`).
+
+```{r results-survival-dummy-death, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+## Derive dummy variables for this work
+age_gap <- age_gap %>%
+           mutate(death = ifelse(runif(n = 1) > 0.75,
+                                 yes = 2,
+                                 no  = 1),
+                  death = as.integer(death))
+
+```
+
+#### Kaplan-Meier plots
+
+```{r results-survival-km-plot, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+## Select out relevant variables and time points for those without a missing primary_treatment
+## ensuring variables are named as per examples for geom_km() and _have_ to force to data frame
+## rather than tibble as otherwise plotting looks strange.
+to_plot <- age_gap %>%
+           dplyr::select(individual_id, event_name, primary_treatment, survival, death) %>%
+           dplyr::filter(event_name == "Baseline") %>%
+           dplyr::filter(!is.na(primary_treatment)) %>%
+           ## dplyr::filter(primary_treatment == "Chemotherapy") %>%
+           dplyr::filter(survival != 0) %>%
+           mutate(time                = as.double(survival),
+                  status              = death,
+                  `Primary Treatment` = primary_treatment) %>%
+           as.data.frame()
+ggplot(to_plot,
+       aes(time   = time,
+           status = status,
+           colour = `Primary Treatment`)) +
+    geom_km() +
+    xlab("Time (Days)") +
+    ylab("Proportion Alive") +
+    theme_bw()
+
+```
+
+#### Non-Parametric Survival
+
+```{r results-survival-km-plot, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = FALSE}
+
+```
+
+
+#### Parametric Survival
+
+```{r results-survival-km-plot, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = FALSE}
 
 ```
