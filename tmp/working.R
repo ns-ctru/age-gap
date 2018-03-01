@@ -1,3 +1,25 @@
+## 2018-03-01 - More work on geom_km()
+##
+## Looks like it _has_ to be a data frame that is passed to ggplot
+to_plot <- age_gap %>%
+           dplyr::select(individual_id, event_name, primary_treatment, survival, death) %>%
+           dplyr::filter(event_name == "Baseline") %>%
+           dplyr::filter(!is.na(primary_treatment)) %>%
+           ## dplyr::filter(primary_treatment == "Chemotherapy") %>%
+           dplyr::filter(survival != 0) %>%
+           mutate(time                = as.double(survival),
+                  status              = death,
+                  `Primary Treatment` = primary_treatment) %>%
+           as.data.frame()
+ggplot(to_plot,
+       aes(time   = time,
+           status = status,
+           colour = `Primary Treatment`)) +
+    geom_km() +
+    ## facet_wrap(~primary_treatment, ncol = 1) +
+    theme_bw()
+
+
 ## 2018-02-20 - geom_km() wrangling
 ##
 ## This works (from the example at https://github.com/sachsmc/ggkm)
@@ -23,10 +45,14 @@ to_plot <- age_gap %>%
            mutate(time                = as.double(survival),
                   status              = death,
                   `Primary Treatment` = primary_treatment)
-ggplot(to_plot,
+
+to_plot %>%
+    dplyr::select(time, status) %>%
+    ## as.data.frame() %>%
+ggplot(## to_plot,
        aes(time   = time,
-           status = status)) + geom_km()
-           colour = `Primary Treatment`)) +
+           status = status)) +
+           ## colour = `Primary Treatment`)) +
     geom_km() +
     facet_wrap(~primary_treatment, ncol = 1) +
     theme_bw()
