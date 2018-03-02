@@ -1,0 +1,61 @@
+## Methods
+
+Adverse events are recorded in three places across the various Case Report Forms (see the [database specification](https://docs.google.com/spreadsheets/d/1mi2BsSIDHnslnxtbm1tCUdvt-uJ883iEHO0QOt0wig8/edit#gid=0) for full details of all variables recorded).  These will be tabulated and graphed to show the frequency with which they occurred throughout the duration of the study.
+
+| Case Report Form                | Fields                                |
+|:--------------------------------|:--------------------------------------|
+| `Adverse Events`                | `Number`                              |
+|                                 | `CTCAE grade`                         |
+|                                 | `start date`                          |
+|                                 | `ongoing`                             |
+|                                 | `end date`                            |
+| `Adverse Events AE`             | `number`                              |
+|                                 | `ctcae`                               |
+|                                 | `start date`                          |
+|                                 | `ongoing`                             |
+|                                 | `end date`                            |
+|`Surgery and Post Operative Pathology` | `[l|r]_surgery_aes_acute`       |
+|                                 | `[l|r]_surgery_aes_chronic`           |
+|                                 | `surgery_aes_acute_gen`               |
+|                                 | `sa__somnolence`                      |
+|                                 | `sa__allergic`                        |
+|                                 | `sa__arrhythmia`                      |
+|                                 | `sa__dvt_embolism`                    |
+|                                 | `sa__infarction`                      |
+|                                 | `sa__stroke`                          |
+|                                 | `sa__atelectasis`                     |
+| `Endocrine Therapy`             | `endocrine_aes`                       |
+|                                 | `et_hot_flushes`                      |
+|                                 | `et_asthenia`                         |
+|                                 | `et_joint_pain`                       |
+|                                 | `et_vaginal_dryness`                  |
+|                                 | `et_hair_thinning`                    |
+|                                 | `et_rash`                             |
+|                                 | `et_nausea`                           |
+|                                 | `et_diarrhoea`                        |
+|                                 | `et_headache`                         |
+|                                 | `et_vaginal_bleeding`                 |
+|                                 | `et_vomiting`                         |
+|                                 | `et_somnolence`                       |
+| `Radiotherapy`                  | `[l|r]_radiotherapy_aes`              |
+|                                 | `[l|r]_skin_erythema`                 |
+|                                 | `[l|r]_pain`                          |
+|                                 | `[l|r]_breast_oedema`                 |
+|                                 | `[l|r]_breast_shrink`                 |
+|                                 | `[l|r]_breast_pain`                   |
+| `Chemotherapy`                  | `chemo_aes`                           |
+|                                 | `c_fatigue`                           |
+|                                 | `c_anaemia`                           |
+|                                 | `c_low_wc_count`                      |
+|                                 | `c_thrombocytopenia`                  |
+|                                 | `c_allergic`                          |
+|                                 | `c_hair_thinning`                     |
+|                                 | `c_nausea`                            |
+|                                 | `c_infection`                         |
+| `Trastuzumab`                   | `trast_aes`                           |
+|                                 | `t_cardiac_fail`                      |
+|                                 | `t_flu_like`                          |
+|                                 | `t_nausea`                            |
+|                                 | `t_diarrhoea`                         |
+|                                 | `t_headache`                          |
+|                                 | `t_allergy`                           |
