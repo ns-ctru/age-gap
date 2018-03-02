@@ -49,7 +49,7 @@ system(cmd)
 ```{r child='common/intro.Rmd', eval = TRUE}
 ```
 
-```{r child='common/methods.Rmd', eval = TRUE}
+```{r child='adverse_events/methods.Rmd', eval = TRUE}
 ```
 
 ```{r child='adverse_events/results.Rmd', eval = TRUE}
