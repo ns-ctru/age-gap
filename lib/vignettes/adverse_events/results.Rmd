@@ -1,0 +1,452 @@
+## Results
+
+Table and bar charts of responses to the various possible adverse events for each type of treatment are summarised below for all time points.  It should be noted that there are a lot of `NA` responses (these represent missing), however for treatment specific responses only those who have indicated that they had an adverse event related to the treatment are then summarised.  For example if someone responded `No` to `Has the participant experienced any adverse events relating to endocrine therapy?` then they are **not** included in the subsequent tables/summaries of the possible endocrine therapy related adverse events.  The same is true for other treatments.
+
+### CRF : Adverse Events
+
+
+```{r adverse_events_results_adverse_events, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+
+```
+
+### CRF : Adverse Events AE
+
+For details of scoring Common Terminology Criteria for Adverse Events (CTCAE) please refer to the document [Age CTCAE criteria for adverse events v1.doc](https://docs.google.com/document/d/149us5qx7Y0ZUHQthcP-eiZgwXCDi2VB5K3jxge-0exI/edit?usp=sharing) (requires you to be logged in to your University of Sheffield account).
+
+```{r adverse_events_results_adverse_events_ae, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+table(master$adverse_events_ae$type) %>%
+    kable(col.names = c("Adverse Event Type", "N"),
+          caption = "Type of Adverse Events Recorded")
+
+table(master$adverse_events_ae$ctcae) %>%
+    kable(col.names = c("CTCAE Grade", "N") %>%
+          caption = "CTCAE (a measure of severity) of Adverse Events")
+
+## Derive the duration and summarise
+master$adverse_events_ae %>%
+    mutate(duration = end_dt - start_dt) %>%
+    ctru::table_summary(df        = age_gap,
+                        lookup    = master$lookups_fields,
+                        id        = individual_id,
+                        select    = c(endocrine_aes),
+                        time      = event_name,
+                        group     = primary_treatment,
+                        nomissing = FALSE,
+                        digits    = 2,
+                        reshape   = NULL)
+
+
+```
+
+### CRF : Endocrine Therapy
+
+```{r adverse_events_results_endocrine_therapy, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+## Overall
+age_gap %>%
+    dplyr::filter(event_name != "Baseline") %>%
+    table(event_name, endocrine_aes) %>%
+    kable(caption = "Adverse Events experienced by individuals who received Endocrine Therapy (of any type) by Event")
+## Summarise the adverse event repsonses By type of primary adjuvant therapy
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(!is.na(primary_adjuvant)) %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(endocrine_aes,
+                                          et_hot_flushes,
+                                          et_asthenia,
+                                          et_joint_pain,
+                                          et_vaginal_dryness,
+                                          et_hair_thinning,
+                                          et_rash,et_nausea,
+                                          et_diarrhoea,
+                                          et_headache,
+                                          et_vaginal_bleeding,
+                                          et_vomiting,
+                                          et_somnolence),
+                            time      = event_name,
+                            group     = primary_adjuvant,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Print tables of these
+dplyr::filter(test$factor,
+              label == "Has the participant experienced any adverse events relating to endocrine therapy?") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = "Has the participant experienced any adverse events relating to endocrine therapy?")
+## Subset and reshape the data for plotting
+age_gap %>%
+    dplyr::filter(event_name != "Baseline") %>%
+    dplyr::filter(!is.na(primary_adjuvant)) %>%
+    ungroup() %>%
+    dplyr::select(individual_id,
+                  event_name,
+                  primary_adjuvant,
+                  endocrine_aes) %>%
+    gather(key = key,
+           value = response,
+           endocrine_aes) %>%
+    ## Merge in the label for variables to make plots more meaningful
+    left_join(.,
+              dplyr::select(master$lookups_fields, identifier, label),
+              by = c("key" = "identifier")) %>%
+    dplyr::filter(key == "endocrine_aes") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = "Has the participant experienced any adverse events relating to endocrine therapy?") +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table and graphs for each of the possible adverse events by event for
+## each of the types of Endocrine Therapy
+## Subset and reshape the data for plotting
+to_plot <- age_gap %>%
+           dplyr::filter(event_name != "Baseline") %>%
+           dplyr::filter(!is.na(primary_adjuvant)) %>%
+           dplyr::filter(endocrine_aes == "Yes") %>%
+           ungroup() %>%
+           dplyr::select(individual_id,
+                         event_name,
+                         primary_adjuvant,
+                         endocrine_aes,
+                         et_hot_flushes,
+                         et_asthenia,
+                         et_joint_pain,
+                         et_vaginal_dryness,
+                         et_hair_thinning,
+                         et_rash,et_nausea,
+                         et_diarrhoea,
+                         et_headache,
+                         et_vaginal_bleeding,
+                         et_vomiting,
+                         et_somnolence) %>%
+           gather(key = key,
+                  value = response,
+                  et_hot_flushes,
+                  et_asthenia,
+                  et_joint_pain,
+                  et_vaginal_dryness,
+                  et_hair_thinning,
+                  et_rash,et_nausea,
+                  et_diarrhoea,
+                  et_headache,
+                  et_vaginal_bleeding,
+                  et_vomiting,
+                  et_somnolence) %>%
+           ## Merge in the label for variables to make plots more meaningful
+           left_join(.,
+                     dplyr::select(master$lookups_fields, identifier, label),
+                     by = c("key" = "identifier"))
+caption_suffix <- " experienced by those who had endocrine therapy related adverse events"
+## Table : Asthenia
+test$factor %>%
+dplyr::filter(label == "Asthenia") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Asthenia",
+                             caption_suffix))
+## Plot : Asthenia
+to_plot %>%
+    dplyr::filter(label == "Asthenia") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Asthenia",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Diarrhoea
+test$factor %>%
+dplyr::filter(label == "Diarrhoea") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Diarrhoea",
+                             caption_suffix))
+## Plot : Diarrhoea
+to_plot %>%
+    dplyr::filter(label == "Diarrhoea") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Diarrhoea",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Hair thinning
+test$factor %>%
+dplyr::filter(label == "Hair thinning") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Hair thinning",
+                             caption_suffix))
+## Plot : Hair thinning
+to_plot %>%
+    dplyr::filter(label == "Hair thinning") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Hair thinning",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Headache
+test$factor %>%
+dplyr::filter(label == "Headache") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Headache",
+                             caption_suffix))
+## Plot : Headache
+to_plot %>%
+    dplyr::filter(label == "Headache") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Headache",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Hot Flushes
+test$factor %>%
+dplyr::filter(label == "Hot flushes") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Hot flushes",
+                             caption_suffix))
+## Plot : Hot flushes
+to_plot %>%
+    dplyr::filter(label == "Hot flushes") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Hot flushes",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Joint pain/stiffness
+test$factor %>%
+dplyr::filter(label == "Joint pain/stiffness") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Joint pain/stiffness",
+                             caption_suffix))
+## Plot : Joint pain/stiffness
+to_plot %>%
+    dplyr::filter(label == "Joint pain/stiffness") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Joint pain/stiffness",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Nausea
+test$factor %>%
+dplyr::filter(label == "Nausea") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Nausea",
+                             caption_suffix))
+## Plot : Nausea
+to_plot %>%
+    dplyr::filter(label == "Nausea") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Nausea",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Rash
+test$factor %>%
+dplyr::filter(label == "Rash") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Rash",
+                             caption_suffix))
+## Plot : Rash
+to_plot %>%
+    dplyr::filter(label == "Rash") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Rash",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Somnolence
+test$factor %>%
+dplyr::filter(label == "Somnolence") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Somnolence",
+                             caption_suffix))
+## Plot : Somnolence
+to_plot %>%
+    dplyr::filter(label == "Somnolence") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Somnolence",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Vaginal bleeding
+test$factor %>%
+dplyr::filter(label == "Vaginal bleeding") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Vaginal bleeding",
+                             caption_suffix))
+## Plot : Vaginal bleeding
+to_plot %>%
+    dplyr::filter(label == "Vaginal bleeding") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Vaginal bleeding",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Vaginal dryness
+test$factor %>%
+dplyr::filter(label == "Vaginal dryness") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Vaginal dryness",
+                             caption_suffix))
+## Plot : Vaginal dryness
+to_plot %>%
+    dplyr::filter(label == "Vaginal dryness") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Vaginal dryness",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table :  Vomiting
+test$factor %>%
+    dplyr::filter(label == "Vomiting") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = paste0("Vomiting",
+                             caption_suffix))
+## Plot : Vomiting
+to_plot %>%
+    dplyr::filter(label == "Vomiting") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Vomiting",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+
+
+```
+
+### CRF : Surgery and Post Operative Pathology
+
+```{r adverse_events_results_surgery_and_post_operative_pathology, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+
+```
+
+### CRF : Chemotherapy
+
+```{r adverse_events_results_chemotherapy, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+
+```
+
+### CRF : Radiotherapy
+
+```{r adverse_events_results_radiotherapy, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+
+```
+
+### CRF : Trastuzumab
+
+```{r adverse_events_results_trastuzumab, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+
+```
