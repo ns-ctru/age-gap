@@ -1207,7 +1207,8 @@ test$factor %>%
            n_prop,
            fill = "0 (0.00)") %>%
     dplyr::select(-label, -radiotherapy) %>%
-    kable(col.names = c("Event", "No", "Yes", "Missing"),
+    ## kable(col.names = c("Event", "No", "Yes", "Missing"),
+    kable(col.names = c("Event", "No", "Yes"),
           caption   = paste0("Skin Erythema",
                              caption_suffix))
 ## Plot : Overall Skin Erythema
