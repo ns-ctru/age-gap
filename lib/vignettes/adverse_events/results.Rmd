@@ -14,13 +14,15 @@ Table and bar charts of responses to the various possible adverse events for eac
 For details of scoring Common Terminology Criteria for Adverse Events (CTCAE) please refer to the document [Age CTCAE criteria for adverse events v1.doc](https://docs.google.com/document/d/149us5qx7Y0ZUHQthcP-eiZgwXCDi2VB5K3jxge-0exI/edit?usp=sharing) (requires you to be logged in to your University of Sheffield account).
 
 ```{r adverse_events_results_adverse_events_ae, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
-table(master$adverse_events_ae$type) %>%
+master$adverse_events_ae %$%
+    table(type, useNA = "ifany") %>%
     kable(col.names = c("Adverse Event Type", "N"),
           caption = "Type of Adverse Events Recorded")
 
-table(master$adverse_events_ae$ctcae) %>%
+master$adverse_events_ae %$%
+    table(ctcae, useNA = "ifany") %>%
     kable(col.names = c("CTCAE Grade", "N"),
-          caption = "CTCAE (a measure of severity) of Adverse Events")
+          caption = "CTCAE (a measure of severity) of Adverse Events. NA == Not Available i.e. Missing")
 
 ## Derive the duration and summarise
 ## test <- master$adverse_events_ae %>%
@@ -49,18 +51,7 @@ test <- age_gap %>%
         ctru::table_summary(df        = .,
                             lookup    = master$lookups_fields,
                             id        = individual_id,
-                            select    = c(endocrine_aes,
-                                          et_hot_flushes,
-                                          et_asthenia,
-                                          et_joint_pain,
-                                          et_vaginal_dryness,
-                                          et_hair_thinning,
-                                          et_rash,et_nausea,
-                                          et_diarrhoea,
-                                          et_headache,
-                                          et_vaginal_bleeding,
-                                          et_vomiting,
-                                          et_somnolence),
+                            select    = c(endocrine_aes),
                             time      = event_name,
                             group     = primary_adjuvant,
                             nomissing = FALSE,
@@ -104,6 +95,31 @@ age_gap %>%
     theme(legend.position = "none")
 ## Table and graphs for each of the possible adverse events by event for
 ## each of the types of Endocrine Therapy
+## Summarise
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(endocrine_aes == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(endocrine_aes,
+                                          et_hot_flushes,
+                                          et_asthenia,
+                                          et_joint_pain,
+                                          et_vaginal_dryness,
+                                          et_hair_thinning,
+                                          et_rash,et_nausea,
+                                          et_diarrhoea,
+                                          et_headache,
+                                          et_vaginal_bleeding,
+                                          et_vomiting,
+                                          et_somnolence),
+                            time      = event_name,
+                            group     = primary_adjuvant,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
 ## Subset and reshape the data for plotting
 to_plot <- age_gap %>%
            dplyr::filter(event_name != "Baseline") %>%
@@ -448,14 +464,7 @@ test <- age_gap %>%
                             lookup    = master$lookups_fields,
                             id        = individual_id,
                             select    = c(surgery_aes_acute,
-                                          surgery_aes_chronic,
-                                          sa_somnolence,
-                                          sa_allergic,
-                                          sa_arrhythmia,
-                                          sa_dvt_embolism,
-                                          sa_infarction,
-                                          sa_stroke,
-                                          sa_atelectasis),
+                                          surgery_aes_chronic),
                             time      = event_name,
                             group     = surgery,
                             nomissing = FALSE,
@@ -467,7 +476,7 @@ dplyr::filter(test$factor,
     spread(surgery,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
+    dplyr::select(-label, -value) %>%
     kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
           caption   = "Has the participant experienced any acute adverse events relating to surgery?")
 dplyr::filter(test$factor,
@@ -554,15 +563,7 @@ test <- age_gap %>%
         ctru::table_summary(df        = .,
                             lookup    = master$lookups_fields,
                             id        = individual_id,
-                            select    = c(chemo_aes,
-                                          c_fatigue,
-                                          c_anaemia,
-                                          c_low_wc_count,
-                                          c_thrombocytopenia,
-                                          c_allergic,
-                                          c_hair_thinning,
-                                          c_nausea,
-                                          c_infection),
+                            select    = c(chemo_aes),
                             time      = event_name,
                             group     = chemotherapy,
                             nomissing = FALSE,
@@ -606,6 +607,28 @@ age_gap %>%
     theme(legend.position = "none")
 ## Table and graphs for each of the possible adverse events by event for
 ## each of the types of Endocrine Therapy
+## Summarise for those who do have adverse events Recorded
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(chemo_aes == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(chemo_aes,
+                                          c_fatigue,
+                                          c_anaemia,
+                                          c_low_wc_count,
+                                          c_thrombocytopenia,
+                                          c_allergic,
+                                          c_hair_thinning,
+                                          c_nausea,
+                                          c_infection),
+                            time      = event_name,
+                            group     = chemotherapy,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
 ## Subset and reshape the data for plotting
 to_plot <- age_gap %>%
            dplyr::filter(event_name != "Baseline") %>%
@@ -886,6 +909,26 @@ age_gap %>%
     theme(legend.position = "none")
 ## Table and graphs for each of the possible adverse events by event for
 ## each of the types of Endocrine Therapy
+## Summarise the radiotherapy adverse Events.
+## Summarise the adverse event repsonses for those who had radiotherapy
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(radiotherapy_aes == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(radiotherapy_aes,
+                                          skin_erythema,
+                                          pain,
+                                          breast_oedema,
+                                          breast_shrink,
+                                          breast_pain),
+                            time      = event_name,
+                            group     = radiotherapy,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
 ## Subset and reshape the data for plotting
 to_plot <- age_gap %>%
            dplyr::filter(event_name != "Baseline") %>%
@@ -1041,13 +1084,7 @@ test <- age_gap %>%
         ctru::table_summary(df        = .,
                             lookup    = master$lookups_fields,
                             id        = individual_id,
-                            select    = c(trast_aes,
-                                          t_cardiac_fail,
-                                          t_flu_like,
-                                          t_nausea,
-                                          t_diarrhoea,
-                                          t_headache,
-                                          t_allergy),
+                            select    = c(trast_aes),
                             time      = event_name,
                             group     = trastuzumab,
                             nomissing = FALSE,
@@ -1091,6 +1128,27 @@ age_gap %>%
     theme(legend.position = "none")
 ## Table and graphs for each of the possible adverse events by event for
 ## each of the types of Endocrine Therapy
+##
+## Summarise adverse events for those who experienced one
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(trast_aes == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(trast_aes,
+                                          t_cardiac_fail,
+                                          t_flu_like,
+                                          t_nausea,
+                                          t_diarrhoea,
+                                          t_headache,
+                                          t_allergy),
+                            time      = event_name,
+                            group     = trastuzumab,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
 ## Subset and reshape the data for plotting
 to_plot <- age_gap %>%
            dplyr::filter(event_name != "Baseline") %>%
@@ -1126,7 +1184,8 @@ test$factor %>%
            n_prop,
            fill = "0 (0.00)") %>%
     dplyr::select(-label, -trastuzumab) %>%
-    kable(col.names = c("Event", "No", "Yes", "Missing"),
+    ## kable(col.names = c("Event", "No", "Yes", "Missing"),
+    kable(col.names = c("Event", "No", "Yes"),
           caption   = paste0("Allergy",
                              caption_suffix))
 ## Plot : Allergy
@@ -1138,6 +1197,126 @@ to_plot %>%
     xlab("Response") +
     ylab("N") +
     ggtitle(label = paste0("Allergy",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Cardiac failure
+test$factor %>%
+    dplyr::filter(label == "Cardiac failure") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -trastuzumab) %>%
+    ## kable(col.names = c("Event", "No", "Yes", "Missing"),
+    kable(col.names = c("Event", "No", "Yes"),
+          caption   = paste0("Cardiac failure",
+                             caption_suffix))
+## Plot : Cardiac failure
+to_plot %>%
+    dplyr::filter(label == "Cardiac failure") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Cardiac failure",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Diarrhoea
+test$factor %>%
+    dplyr::filter(label == "Diarrhoea") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -trastuzumab) %>%
+    ## kable(col.names = c("Event", "No", "Yes", "Missing"),
+    kable(col.names = c("Event", "No", "Yes"),
+          caption   = paste0("Diarrhoea",
+                             caption_suffix))
+## Plot : Diarrhoea
+to_plot %>%
+    dplyr::filter(label == "Diarrhoea") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Diarrhoea",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Flu-like syndrome
+test$factor %>%
+    dplyr::filter(label == "Flu-like syndrome") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -trastuzumab) %>%
+    ## kable(col.names = c("Event", "No", "Yes", "Missing"),
+    kable(col.names = c("Event", "No", "Yes"),
+          caption   = paste0("Flu-like syndrome",
+                             caption_suffix))
+## Plot : Flu-like syndrome
+to_plot %>%
+    dplyr::filter(label == "Flu-like syndrome") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Flu-like syndrome",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Headache
+test$factor %>%
+    dplyr::filter(label == "Headache") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -trastuzumab) %>%
+    ## kable(col.names = c("Event", "No", "Yes", "Missing"),
+    kable(col.names = c("Event", "No", "Yes"),
+          caption   = paste0("Headache",
+                             caption_suffix))
+## Plot : Headache
+to_plot %>%
+    dplyr::filter(label == "Headache") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Headache",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Nausea
+test$factor %>%
+    dplyr::filter(label == "Nausea") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -trastuzumab) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+    ## kable(col.names = c("Event", "No", "Yes"),
+          caption   = paste0("Nausea",
+                             caption_suffix))
+## Plot : Nausea
+to_plot %>%
+    dplyr::filter(label == "Nausea") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Nausea",
                            caption_suffix)) +
     theme_bw() +
     facet_wrap(~event_name, ncol = 1) +
