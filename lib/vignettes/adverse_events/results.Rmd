@@ -429,19 +429,596 @@ to_plot %>%
 
 ### CRF : Surgery and Post Operative Pathology
 
-```{r adverse_events_results_surgery_and_post_operative_pathology, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+
+```{r adverse_events_results_surgery_and_post_operative_pathology, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = FALSE}
+## Summarise the adverse event repsonses By type of primary adjuvant therapy
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(surgery == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(surgery_aes_acute,
+                                          surgery_aes_chronic,
+                                          sa_somnolence,
+                                          sa_allergic,
+                                          sa_arrhythmia,
+                                          sa_dvt_embolism,
+                                          sa_infarction,
+                                          sa_stroke,
+                                          sa_atelectasis),
+                            time      = event_name,
+                            group     = surgery,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Print tables of these
+dplyr::filter(test$factor,
+              label == "Overall Acute Adverse Events relating to surgery") %>%
+    spread(surgery,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = "Has the participant experienced any acute adverse events relating to surgery?")
+dplyr::filter(test$factor,
+              label == "Overall Chronic Adverse Events relating to surgery") %>%
+    spread(primary_adjuvant,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label) %>%
+    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+          caption   = "Has the participant experienced any chronic adverse events relating to surgery?")
+## Subset and reshape the data for plotting
+age_gap %>%
+    dplyr::filter(event_name != "Baseline") %>%
+    dplyr::filter(!is.na(primary_adjuvant)) %>%
+    ungroup() %>%
+    dplyr::select(individual_id,
+                  event_name,
+                  primary_adjuvant,
+                  endocrine_aes) %>%
+    gather(key = key,
+           value = response,
+           endocrine_aes) %>%
+    ## Merge in the label for variables to make plots more meaningful
+    left_join(.,
+              dplyr::select(master$lookups_fields, identifier, label),
+              by = c("key" = "identifier")) %>%
+    dplyr::filter(key == "endocrine_aes") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = "Has the participant experienced any adverse events relating to endocrine therapy?") +
+    theme_bw() +
+    facet_grid(event_name~primary_adjuvant) +
+    theme(legend.position = "none")
+## Table and graphs for each of the possible adverse events by event for
+## each of the types of Endocrine Therapy
+## Subset and reshape the data for plotting
+to_plot <- age_gap %>%
+           dplyr::filter(event_name != "Baseline") %>%
+           dplyr::filter(!is.na(primary_adjuvant)) %>%
+           dplyr::filter(surgery_aes_acute == "Yes" | surgery_aes_chronic == "Yes") %>%
+           ungroup() %>%
+           dplyr::select(individual_id,
+                         event_name,
+                         primary_adjuvant,
+                         surgery_aes_acute,
+                         surgery_aes_chronic,
+                         sa_somnolence,
+                         sa_allergic,
+                         sa_arrhythmia,
+                         sa_dvt_embolism,
+                         sa_infarction,
+                         sa_stroke,
+                         sa_atelectasis) %>%
+           gather(key = key,
+                  value = response,
+                  surgery_aes_acute,
+                  surgery_aes_chronic,
+                  sa_somnolence,
+                  sa_allergic,
+                  sa_arrhythmia,
+                  sa_dvt_embolism,
+                  sa_infarction,
+                  sa_stroke,
+                  sa_atelectasis) %>%
+           ## Merge in the label for variables to make plots more meaningful
+           left_join(.,
+                     dplyr::select(master$lookups_fields, identifier, label),
+                     by = c("key" = "identifier"))
+caption_suffix <- " experienced by those who had surgery related adverse events"
 
 ```
 
 ### CRF : Chemotherapy
 
 ```{r adverse_events_results_chemotherapy, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+## Summarise the adverse event repsonses for those who had chemotherapy
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(chemotherapy == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(chemo_aes,
+                                          c_fatigue,
+                                          c_anaemia,
+                                          c_low_wc_count,
+                                          c_thrombocytopenia,
+                                          c_allergic,
+                                          c_hair_thinning,
+                                          c_nausea,
+                                          c_infection),
+                            time      = event_name,
+                            group     = chemotherapy,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Print tables of these
+dplyr::filter(test$factor,
+              label == "Has the participant experienced any adverse events relating to chemotherapy?") %>%
+    dplyr::filter(chemotherapy == "Yes") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = "Has the participant experienced any adverse events relating to chemotherapy?")
+## Subset and reshape the data for plotting
+age_gap %>%
+    dplyr::filter(event_name != "Baseline") %>%
+    dplyr::filter(chemotherapy == "Yes") %>%
+    ungroup() %>%
+    dplyr::select(individual_id,
+                  event_name,
+                  chemotherapy,
+                  chemo_aes) %>%
+    gather(key = key,
+           value = response,
+           chemo_aes) %>%
+    ## Merge in the label for variables to make plots more meaningful
+    left_join(.,
+              dplyr::select(master$lookups_fields, identifier, label),
+              by = c("key" = "identifier")) %>%
+    dplyr::filter(key == "chemo_aes") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = "Has the participant experienced any adverse events relating to chemotherapy?") +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table and graphs for each of the possible adverse events by event for
+## each of the types of Endocrine Therapy
+## Subset and reshape the data for plotting
+to_plot <- age_gap %>%
+           dplyr::filter(event_name != "Baseline") %>%
+           dplyr::filter(chemo_aes == "Yes") %>%
+           ungroup() %>%
+           dplyr::select(individual_id,
+                         event_name,
+                         chemo_aes,
+                         c_fatigue,
+                         c_anaemia,
+                         c_low_wc_count,
+                         c_thrombocytopenia,
+                         c_allergic,
+                         c_hair_thinning,
+                         c_nausea,
+                         c_infection) %>%
+           gather(key = key,
+                  value = response,
+                  chemo_aes,
+                  c_fatigue,
+                  c_anaemia,
+                  c_low_wc_count,
+                  c_thrombocytopenia,
+                  c_allergic,
+                  c_hair_thinning,
+                  c_nausea,
+                  c_infection) %>%
+           ## Merge in the label for variables to make plots more meaningful
+           left_join(.,
+                     dplyr::select(master$lookups_fields, identifier, label),
+                     by = c("key" = "identifier"))
+caption_suffix <- " experienced by those who had chemotherapy related adverse events"
+## Table :  Allergic reaction to chemotherapy drugs
+test$factor %>%
+    dplyr::filter(label == "Allergic reaction to chemotherapy drugs") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Allergic reaction to chemotherapy drugs",
+                             caption_suffix))
+## Plot : Allergic reaction to chemotherapy drugs
+to_plot %>%
+    dplyr::filter(label == "Allergic reaction to chemotherapy drugs") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Allergic reaction to chemotherapy drugs",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Anaemia
+test$factor %>%
+    dplyr::filter(label == "Anaemia") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Anaemia",
+                             caption_suffix))
+## Plot : Anaemia
+to_plot %>%
+    dplyr::filter(label == "Anaemia") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Anaemia",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Fatigue
+test$factor %>%
+    dplyr::filter(label == "Fatigue") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Fatigue",
+                             caption_suffix))
+## Plot : Fatigue
+to_plot %>%
+    dplyr::filter(label == "Fatigue") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Fatigue",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Hair thinning
+test$factor %>%
+    dplyr::filter(label == "Hair thinning") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Hair thinning",
+                             caption_suffix))
+## Plot : Hair thinning
+to_plot %>%
+    dplyr::filter(label == "Hair thinning") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Hair thinning",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Infection
+test$factor %>%
+    dplyr::filter(label == "Infection") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Infection",
+                             caption_suffix))
+## Plot : Infection
+to_plot %>%
+    dplyr::filter(label == "Infection") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Infection",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Low white cell count
+test$factor %>%
+    dplyr::filter(label == "Low white cell count") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Low white cell count",
+                             caption_suffix))
+## Plot : Low white cell count
+to_plot %>%
+    dplyr::filter(label == "Low white cell count") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Low white cell count",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Nausea
+test$factor %>%
+    dplyr::filter(label == "Nausea") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Nausea",
+                             caption_suffix))
+## Plot : Nausea
+to_plot %>%
+    dplyr::filter(label == "Nausea") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Nausea",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Thrombocytopenia
+test$factor %>%
+    dplyr::filter(label == "Thrombocytopenia") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -chemotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Thrombocytopenia",
+                             caption_suffix))
+## Plot : Thrombocytopenia
+to_plot %>%
+    dplyr::filter(label == "Thrombocytopenia") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Thrombocytopenia",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+
 
 ```
 
 ### CRF : Radiotherapy
 
 ```{r adverse_events_results_radiotherapy, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+## Summarise the adverse event repsonses for those who had radiotherapy
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(radiotherapy == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(radiotherapy_aes,
+                                          skin_erythema,
+                                          pain,
+                                          breast_oedema,
+                                          breast_shrink,
+                                          breast_pain),
+                            time      = event_name,
+                            group     = radiotherapy,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Print tables of these
+dplyr::filter(test$factor,
+              label == "Overall Radiotherapy AES") %>%
+    dplyr::filter(radiotherapy == "Yes") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -radiotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = "Has the participant experienced any adverse events relating to radiotherapy?")
+## Subset and reshape the data for plotting
+age_gap %>%
+    dplyr::filter(event_name != "Baseline") %>%
+    dplyr::filter(radiotherapy == "Yes") %>%
+    ungroup() %>%
+    dplyr::select(individual_id,
+                  event_name,
+                  radiotherapy,
+                  radiotherapy_aes) %>%
+    gather(key = key,
+           value = response,
+           radiotherapy_aes) %>%
+    ## Merge in the label for variables to make plots more meaningful
+    left_join(.,
+              dplyr::select(master$lookups_fields, identifier, label),
+              by = c("key" = "identifier")) %>%
+    dplyr::filter(key == "radiotherapy_aes") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = "Has the participant experienced any adverse events relating to radiotherapy?") +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table and graphs for each of the possible adverse events by event for
+## each of the types of Endocrine Therapy
+## Subset and reshape the data for plotting
+to_plot <- age_gap %>%
+           dplyr::filter(event_name != "Baseline") %>%
+           dplyr::filter(radiotherapy_aes == "Yes") %>%
+           ungroup() %>%
+           dplyr::select(individual_id,
+                         event_name,
+                         radiotherapy_aes,
+                         skin_erythema,
+                         pain,
+                         breast_oedema,
+                         breast_shrink,
+                         breast_pain) %>%
+           gather(key = key,
+                  value = response,
+                  radiotherapy_aes,
+                  skin_erythema,
+                  pain,
+                  breast_oedema,
+                  breast_shrink,
+                  breast_pain) %>%
+           ## Merge in the label for variables to make plots more meaningful
+           left_join(.,
+                     dplyr::select(master$lookups_fields, identifier, label),
+                     by = c("key" = "identifier"))
+caption_suffix <- " experienced by those who had radiotherapy related adverse events"
+## Table :  Overall Breast Oedema
+test$factor %>%
+    dplyr::filter(label == "Overall Breast Oedema") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -radiotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Breast Oedema",
+                             caption_suffix))
+## Plot : Overall Breast Oedema
+to_plot %>%
+    dplyr::filter(label == "Overall Breast Oedema") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Breast Oedema",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Overall Breast Pain
+test$factor %>%
+    dplyr::filter(label == "Overall Breast Pain") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -radiotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Breast Pain",
+                             caption_suffix))
+## Plot : Overall Breast Pain
+to_plot %>%
+    dplyr::filter(label == "Overall Breast Pain") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Breast Pain",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Overall Breast Shrinkage
+test$factor %>%
+    dplyr::filter(label == "Overall Breast Shrinkage") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -radiotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Breast Shrinkage",
+                             caption_suffix))
+## Plot : Overall Breast Shrinkage
+to_plot %>%
+    dplyr::filter(label == "Overall Breast Shrinkage") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Breast Shrinkage",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Overall Pain
+test$factor %>%
+    dplyr::filter(label == "Overall Pain") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -radiotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Pain",
+                             caption_suffix))
+## Plot : Overall Pain
+to_plot %>%
+    dplyr::filter(label == "Overall Pain") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Pain",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table :  Overall Skin Erythema
+test$factor %>%
+    dplyr::filter(label == "Overall Skin Erythema") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -radiotherapy) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Skin Erythema",
+                             caption_suffix))
+## Plot : Overall Skin Erythema
+to_plot %>%
+    dplyr::filter(label == "Overall Skin Erythema") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Skin Erythema",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
 
 ```
 
