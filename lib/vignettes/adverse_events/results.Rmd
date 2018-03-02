@@ -19,21 +19,21 @@ table(master$adverse_events_ae$type) %>%
           caption = "Type of Adverse Events Recorded")
 
 table(master$adverse_events_ae$ctcae) %>%
-    kable(col.names = c("CTCAE Grade", "N") %>%
+    kable(col.names = c("CTCAE Grade", "N"),
           caption = "CTCAE (a measure of severity) of Adverse Events")
 
 ## Derive the duration and summarise
-master$adverse_events_ae %>%
-    mutate(duration = end_dt - start_dt) %>%
-    ctru::table_summary(df        = age_gap,
-                        lookup    = master$lookups_fields,
-                        id        = individual_id,
-                        select    = c(endocrine_aes),
-                        time      = event_name,
-                        group     = primary_treatment,
-                        nomissing = FALSE,
-                        digits    = 2,
-                        reshape   = NULL)
+## test <- master$adverse_events_ae %>%
+##         mutate(duration = end_dt - start_dt) %>%
+##         ctru::table_summary(df        = .,
+##                             lookup    = master$lookups_fields,
+##                             id        = individual_id,
+##                             select    = c(duration),
+##                             time      = event_name,
+##                             group     = primary_treatment,
+##                             nomissing = FALSE,
+##                             digits    = 2,
+##                             reshape   = NULL)
 
 
 ```
@@ -41,11 +41,6 @@ master$adverse_events_ae %>%
 ### CRF : Endocrine Therapy
 
 ```{r adverse_events_results_endocrine_therapy, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
-## Overall
-age_gap %>%
-    dplyr::filter(event_name != "Baseline") %>%
-    table(event_name, endocrine_aes) %>%
-    kable(caption = "Adverse Events experienced by individuals who received Endocrine Therapy (of any type) by Event")
 ## Summarise the adverse event repsonses By type of primary adjuvant therapy
 test <- age_gap %>%
         dplyr::filter(event_name != "Baseline") %>%
@@ -74,11 +69,12 @@ test <- age_gap %>%
 ## Print tables of these
 dplyr::filter(test$factor,
               label == "Has the participant experienced any adverse events relating to endocrine therapy?") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = "Has the participant experienced any adverse events relating to endocrine therapy?")
 ## Subset and reshape the data for plotting
 age_gap %>%
@@ -150,11 +146,12 @@ caption_suffix <- " experienced by those who had endocrine therapy related adver
 ## Table : Asthenia
 test$factor %>%
 dplyr::filter(label == "Asthenia") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Asthenia",
                              caption_suffix))
 ## Plot : Asthenia
@@ -173,11 +170,12 @@ to_plot %>%
 ## Table :  Diarrhoea
 test$factor %>%
 dplyr::filter(label == "Diarrhoea") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Diarrhoea",
                              caption_suffix))
 ## Plot : Diarrhoea
@@ -196,11 +194,12 @@ to_plot %>%
 ## Table :  Hair thinning
 test$factor %>%
 dplyr::filter(label == "Hair thinning") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Hair thinning",
                              caption_suffix))
 ## Plot : Hair thinning
@@ -219,11 +218,12 @@ to_plot %>%
 ## Table :  Headache
 test$factor %>%
 dplyr::filter(label == "Headache") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Headache",
                              caption_suffix))
 ## Plot : Headache
@@ -242,11 +242,12 @@ to_plot %>%
 ## Table :  Hot Flushes
 test$factor %>%
 dplyr::filter(label == "Hot flushes") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Hot flushes",
                              caption_suffix))
 ## Plot : Hot flushes
@@ -265,11 +266,12 @@ to_plot %>%
 ## Table :  Joint pain/stiffness
 test$factor %>%
 dplyr::filter(label == "Joint pain/stiffness") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Joint pain/stiffness",
                              caption_suffix))
 ## Plot : Joint pain/stiffness
@@ -288,11 +290,12 @@ to_plot %>%
 ## Table :  Nausea
 test$factor %>%
 dplyr::filter(label == "Nausea") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Nausea",
                              caption_suffix))
 ## Plot : Nausea
@@ -311,11 +314,12 @@ to_plot %>%
 ## Table :  Rash
 test$factor %>%
 dplyr::filter(label == "Rash") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Rash",
                              caption_suffix))
 ## Plot : Rash
@@ -334,11 +338,12 @@ to_plot %>%
 ## Table :  Somnolence
 test$factor %>%
 dplyr::filter(label == "Somnolence") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Somnolence",
                              caption_suffix))
 ## Plot : Somnolence
@@ -357,11 +362,12 @@ to_plot %>%
 ## Table :  Vaginal bleeding
 test$factor %>%
 dplyr::filter(label == "Vaginal bleeding") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Vaginal bleeding",
                              caption_suffix))
 ## Plot : Vaginal bleeding
@@ -380,11 +386,12 @@ to_plot %>%
 ## Table :  Vaginal dryness
 test$factor %>%
 dplyr::filter(label == "Vaginal dryness") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Vaginal dryness",
                              caption_suffix))
 ## Plot : Vaginal dryness
@@ -403,11 +410,12 @@ to_plot %>%
 ## Table :  Vomiting
 test$factor %>%
     dplyr::filter(label == "Vomiting") %>%
-    spread(primary_adjuvant,
+    spread(value,
            n_prop,
            fill = "0 (0.00)") %>%
-    dplyr::select(-label) %>%
-    kable(col.names = c("Event", "Response", "Primary", "Adjuvant", "Neoadjuvant"),
+    dplyr::select(event_name, primary_adjuvant, No, Yes, `<NA>`, -label) %>%
+    arrange(event_name, primary_adjuvant) %>%
+    kable(col.names = c("Event", "Endocrine Therapy", "No", "Yes", "Missing"),
           caption   = paste0("Vomiting",
                              caption_suffix))
 ## Plot : Vomiting
@@ -1025,5 +1033,114 @@ to_plot %>%
 ### CRF : Trastuzumab
 
 ```{r adverse_events_results_trastuzumab, echo = FALSE, cache = FALSE, fig.width = 8, fig.height = 8, eval = TRUE}
+## Summarise the adverse event repsonses for those who had trastuzumab
+test <- age_gap %>%
+        dplyr::filter(event_name != "Baseline") %>%
+        dplyr::filter(trastuzumab == "Yes") %>%
+        ungroup() %>%
+        ctru::table_summary(df        = .,
+                            lookup    = master$lookups_fields,
+                            id        = individual_id,
+                            select    = c(trast_aes,
+                                          t_cardiac_fail,
+                                          t_flu_like,
+                                          t_nausea,
+                                          t_diarrhoea,
+                                          t_headache,
+                                          t_allergy),
+                            time      = event_name,
+                            group     = trastuzumab,
+                            nomissing = FALSE,
+                            digits    = 2,
+                            reshape   = NULL)
+## Print tables of these
+dplyr::filter(test$factor,
+              label == "Has the participant experienced any adverse events relating to trastuzumab?") %>%
+    dplyr::filter(trastuzumab == "Yes") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -trastuzumab) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = "Has the participant experienced any adverse events relating to trastuzumab?")
+## Subset and reshape the data for plotting
+age_gap %>%
+    dplyr::filter(event_name != "Baseline") %>%
+    dplyr::filter(trastuzumab == "Yes") %>%
+    ungroup() %>%
+    dplyr::select(individual_id,
+                  event_name,
+                  trastuzumab,
+                  trast_aes) %>%
+    gather(key = key,
+           value = response,
+           trast_aes) %>%
+    ## Merge in the label for variables to make plots more meaningful
+    left_join(.,
+              dplyr::select(master$lookups_fields, identifier, label),
+              by = c("key" = "identifier")) %>%
+    dplyr::filter(key == "trast_aes") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = "Has the participant experienced any adverse events relating to trastuzumab?") +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
+## Table and graphs for each of the possible adverse events by event for
+## each of the types of Endocrine Therapy
+## Subset and reshape the data for plotting
+to_plot <- age_gap %>%
+           dplyr::filter(event_name != "Baseline") %>%
+           dplyr::filter(trast_aes == "Yes") %>%
+           ungroup() %>%
+           dplyr::select(individual_id,
+                         event_name,
+                         trast_aes,
+                         t_cardiac_fail,
+                         t_flu_like,
+                         t_nausea,
+                         t_diarrhoea,
+                         t_headache,
+                         t_allergy) %>%
+           gather(key = key,
+                  value = response,
+                  trast_aes,
+                  t_cardiac_fail,
+                  t_flu_like,
+                  t_nausea,
+                  t_diarrhoea,
+                  t_headache,
+                  t_allergy) %>%
+           ## Merge in the label for variables to make plots more meaningful
+           left_join(.,
+                     dplyr::select(master$lookups_fields, identifier, label),
+                     by = c("key" = "identifier"))
+caption_suffix <- " experienced by those who had trastuzumab related adverse events"
+## Table :  Allergy
+test$factor %>%
+    dplyr::filter(label == "Allergy") %>%
+    spread(value,
+           n_prop,
+           fill = "0 (0.00)") %>%
+    dplyr::select(-label, -trastuzumab) %>%
+    kable(col.names = c("Event", "No", "Yes", "Missing"),
+          caption   = paste0("Allergy",
+                             caption_suffix))
+## Plot : Allergy
+to_plot %>%
+    dplyr::filter(label == "Allergy") %>%
+    ggplot(aes(response,
+               fill = event_name)) +
+    geom_bar() +
+    xlab("Response") +
+    ylab("N") +
+    ggtitle(label = paste0("Allergy",
+                           caption_suffix)) +
+    theme_bw() +
+    facet_wrap(~event_name, ncol = 1) +
+    theme(legend.position = "none")
 
 ```
