@@ -21,7 +21,44 @@ You will then need to obtain the raw data from the studies project folder and ad
 	devtools::document()
 	devtools::build(vignettes = FALSE)
 	devtools::install()
-	devtools::build_vignettes()
+	## Normally you would build vignettes with...
+	##
+	##    devtools::build_vignettes()
+	##
+	## ...however because I wished to include a (floating) table of contents
+	## in the html versions these are defined as..
+	##
+	##   output:
+	##     rmarkdown::html_document:
+	##       toc: true
+	##       toc_float: true
+	##
+	## ...and therefore won't be built by devtools::build_vignettes().
+	## Instead the following code produces HTML, PDF or M$-Word versions and
+	## ensures the output is located in inst/doc/*.[html|pdf]
+	##
+	## To make HTML copy of each report
+	rmarkdown::render("vignettes/baseline.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/baseline.html")
+	rmarkdown::render("vignettes/6weeks.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/6weeks.html")
+	rmarkdown::render("vignettes/6months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/6months.html")
+	rmarkdown::render("vignettes/12months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/12months.html")
+	rmarkdown::render("vignettes/18months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/18months.html")
+	rmarkdown::render("vignettes/24months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/24months.html")
+	rmarkdown::render("vignettes/survival.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/survival.html")
 	## To make a PDF copy of each of the reports
 	setwd('/path/to/cloned/age-gap/lib')
 	rmarkdown::render("vignettes/baseline.Rmd",
