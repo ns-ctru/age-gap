@@ -40,7 +40,7 @@ ggplot2.opts$binwidth <- 30
 ## exclusions <- c()
 
 ## Generate the appendixes
-cmd <- c('cd survival && ./populate.sh && cd ..')
+cmd <- c('./populate.sh')
 system(cmd)
 
 ```
