@@ -35,76 +35,76 @@ You will then need to obtain the raw data from the studies project folder and ad
 	##
 	## ...and therefore won't be built by devtools::build_vignettes().
 	## Instead the following code produces HTML, PDF or M$-Word versions and
-	## ensures the output is located in inst/doc/*.[html|pdf]
+	## ensures the output is located in inst/doc/*.[html|pdf|docx]
 	##
 	## To make HTML copy of each report
 	rmarkdown::render("vignettes/baseline.Rmd",
 	                  output_format = "html_document",
-					  output_file   = "inst/doc/baseline.html")
+					  output_file   = "../inst/doc/baseline.html")
 	rmarkdown::render("vignettes/6weeks.Rmd",
 	                  output_format = "html_document",
-					  output_file   = "inst/doc/6weeks.html")
+					  output_file   = "../inst/doc/6weeks.html")
 	rmarkdown::render("vignettes/6months.Rmd",
 	                  output_format = "html_document",
-					  output_file   = "inst/doc/6months.html")
+					  output_file   = "../inst/doc/6months.html")
 	rmarkdown::render("vignettes/12months.Rmd",
 	                  output_format = "html_document",
-					  output_file   = "inst/doc/12months.html")
+					  output_file   = "../inst/doc/12months.html")
 	rmarkdown::render("vignettes/18months.Rmd",
 	                  output_format = "html_document",
-					  output_file   = "inst/doc/18months.html")
+					  output_file   = "../inst/doc/18months.html")
 	rmarkdown::render("vignettes/24months.Rmd",
 	                  output_format = "html_document",
-					  output_file   = "inst/doc/24months.html")
+					  output_file   = "../inst/doc/24months.html")
 	rmarkdown::render("vignettes/survival.Rmd",
 	                  output_format = "html_document",
-					  output_file   = "inst/doc/survival.html")
+					  output_file   = "../inst/doc/survival.html")
 	## To make a PDF copy of each of the reports
 	setwd('/path/to/cloned/age-gap/lib')
 	rmarkdown::render("vignettes/baseline.Rmd",
 	                  output_format = "pdf_document",
-					  output_file   = "inst/doc/baseline.pdf")
+					  output_file   = "../inst/doc/baseline.pdf")
 	rmarkdown::render("vignettes/6weeks.Rmd",
 	                  output_format = "pdf_document",
-					  output_file   = "inst/doc/6weeks.pdf")
+					  output_file   = "../inst/doc/6weeks.pdf")
 	rmarkdown::render("vignettes/6months.Rmd",
 	                  output_format = "pdf_document",
-					  output_file   = "inst/doc/6months.pdf")
+					  output_file   = "../inst/doc/6months.pdf")
 	rmarkdown::render("vignettes/12months.Rmd",
 	                  output_format = "pdf_document",
-					  output_file   = "inst/doc/12months.pdf")
+					  output_file   = "../inst/doc/12months.pdf")
 	rmarkdown::render("vignettes/18months.Rmd",
 	                  output_format = "pdf_document",
-					  output_file   = "inst/doc/18months.pdf")
+					  output_file   = "../inst/doc/18months.pdf")
 	rmarkdown::render("vignettes/24months.Rmd",
 	                  output_format = "pdf_document",
-					  output_file   = "inst/doc/24months.pdf")
+					  output_file   = "../inst/doc/24months.pdf")
 	rmarkdown::render("vignettes/survival.Rmd",
 	                  output_format = "pdf_document",
-					  output_file   = "inst/doc/survival.pdf")
+					  output_file   = "../inst/doc/survival.pdf")
 	## To make a M$-Word copy of the report
 	setwd('/path/to/cloned/age-gap/lib')
 	rmarkdown::render("vignettes/baseline.Rmd",
 	                  output_format = "word_document",
-					  output_file   = "inst/doc/baseline.docx")
+					  output_file   = "../inst/doc/baseline.docx")
 	rmarkdown::render("vignettes/6weeks.Rmd",
 	                  output_format = "word_document",
-					  output_file   = "inst/doc/6weeks.docx")
+					  output_file   = "../inst/doc/6weeks.docx")
 	rmarkdown::render("vignettes/6months.Rmd",
 	                  output_format = "word_document",
-					  output_file   = "inst/doc/6months.docx")
+					  output_file   = "../inst/doc/6months.docx")
 	rmarkdown::render("vignettes/12months.Rmd",
 	                  output_format = "word_document",
-					  output_file   = "inst/doc/12months.docx")
+					  output_file   = "../inst/doc/12months.docx")
 	rmarkdown::render("vignettes/18months.Rmd",
 	                  output_format = "word_document",
-					  output_file   = "inst/doc/18months.docx")
+					  output_file   = "../inst/doc/18months.docx")
 	rmarkdown::render("vignettes/24months.Rmd",
 	                  output_format = "word_document",
-					  output_file   = "inst/doc/24months.docx")
+					  output_file   = "../inst/doc/24months.docx")
 	rmarkdown::render("vignettes/survival.Rmd",
 	                  output_format = "word_document",
-					  output_file   = "inst/doc/survival.docx")
+					  output_file   = "../inst/doc/survival.docx")
 
 
 
