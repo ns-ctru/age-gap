@@ -20,14 +20,24 @@ Primary Treatment Grouping (variable : `primary_treatment`) is derived using the
 
 A series of reports have been produced under the [vignettes]() structure available when writing/developing R packages.  This has the advantage that reports are rendered/compiled automatically when installing and updating the `age-gap` package (which you can browse under the [`lib/`](https://github.com/ns-ctru/age-gap/tree/master/lib) directory).  It was a deliberate design choice to include a report/summary for each time point as the tables and figures are extensive given the *huge* number of outcomes, questionnaires and questions involved.  With modern web-browsers allowing multiple tabs it is simple and straight-forward to have copies of each of these open and switch between tabs to compare results.  In addition a report comparing repsonses over time has been produced.
 
-Links to the reports in HTML are below.
+The reports can be found on the network drives at the following locations, there are three forms of each a `*.Rmd` version which is the source [RMarkdown](https://rmarkdown.rstudio.com/) file which when processed with `render('[timepoint].Rmd')` produces a `*.html` version which can be viewed in a web-browser and a second `*.R` version which is a copy of code chunks from the document.
 
-* [Baseline](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/baseline.html)
-* [6 Weeks](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6weeks.html)
-* [6 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6months.html)
-* [12 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/12months.html)
-* [18 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/18months.html)
-* [24 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/24months.html)
+| Time Point | Location                  |
+|:-----------|:--------------------------|
+| Baseline   | `~/PR_Age_Gap/General/Statistics/lib/vignettes/baseline.Rmd` |
+| 6 Months   | `~/PR_Age_Gap/General/Statistics/lib/vignettes/6months.Rmd`  |
+| 12 Months  | `~/PR_Age_Gap/General/Statistics/lib/vignettes/12months.Rmd` |
+| 18 Months  | `~/PR_Age_Gap/General/Statistics/lib/vignettes/18months.Rmd` |
+| 24 Months  | `~/PR_Age_Gap/General/Statistics/lib/vignettes/24months.Rmd` |
+
+Each document listed above is a "master" file and includes a number of child documents from the associated directory of the same name.
+
+<!-- * [Baseline](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/baseline.html) -->
+<!-- * [6 Weeks](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6weeks.html) -->
+<!-- * [6 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6months.html) -->
+<!-- * [12 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/12months.html) -->
+<!-- * [18 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/18months.html) -->
+<!-- * [24 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/24months.html) -->
 
 ##### How to update
 
