@@ -20,24 +20,22 @@ Primary Treatment Grouping (variable : `primary_treatment`) is derived using the
 
 A series of reports have been produced under the [vignettes](http://r-pkgs.had.co.nz/vignettes.html) structure available when writing/developing R packages.  However they are not defined as `output: html_vignette` because for some unfathomable reason they stalled on package `build()`.  Instead they need rendering individually, so from [RStudio](https://www.rstudio.com/) you should navigate so that your working directory is the `~/PR_Age_Gap/General/Statistics/lib/vignettes/` and then `render("[timepoint].Rmd")` to roduce the HTML report (replacing `[timepoint]` appropriately).  It was a deliberate design choice to include a report/summary for each time point as the tables and figures are extensive given the *huge* number of outcomes, questionnaires and questions involved.  With modern web-browsers allowing multiple tabs it is simple and straight-forward to have copies of each of these open and switch between tabs to compare results.
 
-The reports can be found on the network drives at the following locations, there are three forms of each a `*.Rmd` version which is the source [RMarkdown](https://rmarkdown.rstudio.com/) file which when processed with `render('[timepoint].Rmd')` produces a `*.html` version which can be viewed in a web-browser and a second `*.R` version which is a copy of code chunks from the document.
+The underlying code that generates the reports can be found on the network drives at the following locations, there are three forms of each a `*.Rmd` version which is the source [RMarkdown](https://rmarkdown.rstudio.com/), and following the instructions below under [Software](#software) you can create PDF/HTML/docx reports under `~/PR_Age_Gap/General/Statistics/lib/inst/doc/` (currently only HTML are present as the author feels these are the most flexible and easiest to read/navigate).
 
-| Time Point | Location                  |
+| Outcomes   | Location                  |
 |:-----------|:--------------------------|
 | Baseline   | `~/PR_Age_Gap/General/Statistics/lib/vignettes/baseline.Rmd` |
 | 6 Months   | `~/PR_Age_Gap/General/Statistics/lib/vignettes/6months.Rmd`  |
 | 12 Months  | `~/PR_Age_Gap/General/Statistics/lib/vignettes/12months.Rmd` |
 | 18 Months  | `~/PR_Age_Gap/General/Statistics/lib/vignettes/18months.Rmd` |
 | 24 Months  | `~/PR_Age_Gap/General/Statistics/lib/vignettes/24months.Rmd` |
+| Adverse Events | `~/PR_Age_Gap/General/Statistics/lib/vignettes/adverse_events.Rmd` |
+| Survival | `~/PR_Age_Gap/General/Statistics/lib/vignettes/survival.Rmd` |
 
-Each document listed above is a "master" file and includes a number of child documents from the associated directory of the same name, these take a common structure and so a scripted approach to automating the updating of these child documents has been taken and how to update them is described below.
+**NB** The survival report is far from complete, mainly because the required data was not available and other responsibilities such as handover of this and other projects precluded spending time developing the workflow with dummy variables.
 
-<!-- * [Baseline](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/baseline.html) -->
-<!-- * [6 Weeks](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6weeks.html) -->
-<!-- * [6 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/6months.html) -->
-<!-- * [12 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/12months.html) -->
-<!-- * [18 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/18months.html) -->
-<!-- * [24 Months](https://github.com/ns-ctru/age-gap/tree/master/lib/inst/doc/24months.html) -->
+Each document listed above is a "master" file and includes a number of child documents from the associated directory of the same name (i.e. `baseline.Rmd` includes child documents from the `baseline` sub-directory), these take a common structure and so a scripted approach to automating the updating of these child documents has been taken and how to update them is described below.
+
 
 ##### How to update
 
@@ -49,7 +47,7 @@ Because summarising at different follow-ups is an exercise in [iteration](https:
 
 #### Survival
 
-At the time of writing the primary outcome, five year survival, was not available.  In order to establish a workflow the data from the *Study Completion and Discontinuation* Case Report Form was used, specifically the fields `study_completion_dt`, `disc_death_dt`, `disc_rsn`, `death_cause_1`, `death_cause_2` and `death_cause_3` (refer to the [database specification for descriptions](https://docs.google.com/spreadsheets/d/1mi2BsSIDHnslnxtbm1tCUdvt-uJ883iEHO0QOt0wig8/edit#gid=0)).  The code for merging this with the main data can be found under `lib/data-raw/import.R` on lines 1625-1634 where a `[left_join()](https://www.rdocumentation.org/packages/dplyr/versions/0.7.3/topics/join)` is done to the data frame that results from the preceeding `[full_join()](https://www.rdocumentation.org/packages/dplyr/versions/0.7.3/topics/join)`.  Its quite possible that the survival data will come from a new file derived externally to Prospect.  In this case you will have to write code to read in the file (likely in CSV format), tidy it up and then replace the afforementioned lines with code to bind the key variables with the previous files based on the variables `individual_id` and `site`.
+At the time of writing the primary outcome, five year survival, was not available.  In order to establish a workflow the data from the *Study Completion and Discontinuation* Case Report Form was used, specifically the fields `study_completion_dt`, `disc_death_dt`, `disc_rsn`, `death_cause_1`, `death_cause_2` and `death_cause_3` (refer to the [database specification for descriptions](https://docs.google.com/spreadsheets/d/1mi2BsSIDHnslnxtbm1tCUdvt-uJ883iEHO0QOt0wig8/edit#gid=0)).  The code for merging this with the main data can be found under `lib/data-raw/import.R` on lines 1625-1634 where a [`left_join()`](https://www.rdocumentation.org/packages/dplyr/versions/0.7.3/topics/join) is done to the data frame that results from the preceeding [`full_join()`](https://www.rdocumentation.org/packages/dplyr/versions/0.7.3/topics/join).  Its quite likely that the survival data will come from a new file derived externally to Prospect.  In this case you will have to write code to read in the file (likely in CSV format), tidy it up and then replace the afforementioned lines with code to bind the key variables with the previous files based on the variables `individual_id` and `site`.
 
 ### Software
 
@@ -69,6 +67,32 @@ You will then need to obtain the raw data from the studies project folder and ad
 	devtools::build(vignettes = FALSE)
 	devtools::install()
 	devtools::build_vignettes()
+	## To make a HTML copy of each of the reports
+	setwd('/path/to/cloned/age-gap/lib')
+	rmarkdown::render("vignettes/baseline.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/baseline.html")
+	rmarkdown::render("vignettes/6weeks.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/6weeks.html")
+	rmarkdown::render("vignettes/6months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/6months.html")
+	rmarkdown::render("vignettes/12months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/12months.html")
+	rmarkdown::render("vignettes/18months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/18months.html")
+	rmarkdown::render("vignettes/24months.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/24months.html")
+	rmarkdown::render("vignettes/adverse_events.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/adverse_events.html")
+	rmarkdown::render("vignettes/survival.Rmd",
+	                  output_format = "html_document",
+					  output_file   = "inst/doc/survival.html")
 	## To make a PDF copy of each of the reports
 	setwd('/path/to/cloned/age-gap/lib')
 	rmarkdown::render("vignettes/baseline.Rmd",
@@ -89,7 +113,10 @@ You will then need to obtain the raw data from the studies project folder and ad
 	rmarkdown::render("vignettes/24months.Rmd",
 	                  output_format = "pdf_document",
 					  output_file   = "inst/doc/24months.pdf")
-	rmarkdown::render("vignettes/survival.Rmd",
+	rmarkdown::render("vignettes/adverse_events.Rmd",
+	                  output_format = "pdf_document",
+					  output_file   = "inst/doc/adverse_events.pdf")
+    rmarkdown::render("vignettes/survival.Rmd",
 	                  output_format = "pdf_document",
 					  output_file   = "inst/doc/survival.pdf")
 	## To make a M$-Word copy of the report
@@ -112,7 +139,10 @@ You will then need to obtain the raw data from the studies project folder and ad
 	rmarkdown::render("vignettes/24months.Rmd",
 	                  output_format = "word_document",
 					  output_file   = "inst/doc/24months.docx")
-	rmarkdown::render("vignettes/survival.Rmd",
+	rmarkdown::render("vignettes/adverse_events.Rmd",
+	                  output_format = "word_document",
+					  output_file   = "inst/doc/adverse_events.docx")
+    rmarkdown::render("vignettes/survival.Rmd",
 	                  output_format = "word_document",
 					  output_file   = "inst/doc/survival.docx")
 
