@@ -118,7 +118,7 @@ This project makes use of some convenience packages/functions that are not hoste
 
 ### Vignettes
 
-A series of reports have been produced under the [vignettes](http://r-pkgs.had.co.nz/vignettes.html) structure available when writing/developing R packages.  This has the advantage that reports are rendered/compiled automatically when building the `age-gap` package (which you can browse under the [`lib/`](https://github.com/ns-ctru/age-gap/tree/master/lib) directory).  It was a deliberate design choice to include a report/summary for each time point as the tables and figures are extensive given the *huge* number of outcomes, questionnaires and questions involved.  With modern web-browsers allowing multiple tabs it is simple and straight-forward to have copies of each of these open and switch between tabs to compare results.  In addition a report comparing repsonses over time has been produced.
+A series of reports have been produced under the [vignettes](http://r-pkgs.had.co.nz/vignettes.html) structure available when writing/developing R packages.  This has the advantage that reports are rendered/compiled automatically when building the `age-gap` package (which you can browse under the [`lib/`](https://github.com/ns-ctru/age-gap/tree/master/lib) directory).  It was a deliberate design choice to include a report/summary for each time point as the tables and figures are extensive given the *huge* number of outcomes, questionnaires and questions involved.  With modern web-browsers allowing multiple tabs it is simple and straight-forward to have copies of each of these open and switch between tabs to compare results.
 
 Links to the reports in HTML are below.
 
