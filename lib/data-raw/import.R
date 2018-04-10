@@ -3039,7 +3039,7 @@ stata_lookups_fields <- master$lookups_fields %>%
 write_dta(stata_lookups_fields,
           path    = paste0(path, "lookups_fields.", file_ext),
           version = stata_version)
-write_dta(stata_adverse_events_ae,
+write_dta(master$adverse_events_ae,
           path    = paste0(path, "adverse_events_ae.", file_ext),
           version = stata_version)
 rm(stata_age_gap,
