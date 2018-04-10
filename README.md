@@ -31,6 +31,9 @@ Table: Derived files that are output in additional formats.
 | CSV                           | `~/data/csv/*.csv`                     |
 Table: Location of datasets in additional formats.
 
+
+**WARNING** CSV files have been produced for convenience, it is the authors recommendation that these are **NOT** opened and analysed in Excel or any other spreadsheet software because of the lack of ability to record workflow or changes to the data.  Gross errors can be inadvertantly introduced with little to no way of checking where or when they occurred.
+
 #### Primary Treatment Grouping
 
 Primary Treatment Grouping (variable : `primary_treatment`) is derived using the rules defined in the function `agegap_encode()` this is an R file located at `lib/R/agegap_encode.R`.  It is called repeatedly because not everyone has any treatment recorded at six weeks follow-up so the six month data is then looked at, if that too is missing 12 month data and so on.  The code calling this function repeatedly can be found on lines 2265-2412 of the file `lib/data-raw/import.R` although these should not need modifying.  Additionally the relevant methods sections should be modified to reflect the new rules.  Currently this is only the `### Primary Treatment` section on lines 9-39 of `lib/vignettes/survival/methods.Rmd`.
