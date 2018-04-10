@@ -3001,6 +3001,10 @@ write_csv(master$lookups_fields,
           path   = paste0(path, "lookups_fields.", file_ext),
           na     = na,
           append = append_csv)
+write_csv(master$adverse_events_ae,
+          path   = paste0(path, "adverse_events_ae.", file_ext),
+          na     = na,
+          append = append_csv)
 ## SPSS
 path       <- "../../data/spss/"
 file_ext   <- "sav"
@@ -3010,6 +3014,8 @@ write_sav(master$lookups,
           path    = paste0(path, "lookups.", file_ext))
 write_sav(master$lookups_fields,
           path    = paste0(path, "lookups_fields.", file_ext))
+write_sav(master$adverse_events_ae,
+          path    = paste0(path, "adverse_events_ae.", file_ext))
 ## Stata
 path          <- "../../data/stata/"
 file_ext      <- "dta"
@@ -3032,6 +3038,9 @@ stata_lookups_fields <- master$lookups_fields %>%
                                identifier = gsub("cont_tlk_hlth_", ".", identifier))
 write_dta(stata_lookups_fields,
           path    = paste0(path, "lookups_fields.", file_ext),
+          version = stata_version)
+write_dta(stata_adverse_events_ae,
+          path    = paste0(path, "adverse_events_ae.", file_ext),
           version = stata_version)
 rm(stata_age_gap,
    stata_lookups,
