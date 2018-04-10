@@ -24,6 +24,8 @@ The last section of importing the data (see file `lib/data-raw/import.R`) output
 | `adverse_events_ae`              | Long      | A copy of the `Adverse Events - AeEvent.csv` exported from Prospect. |
 Table: Derived files that are output in additional formats.
 
+Each of the above files can be found in the following location based on the format it is saved in...
+
 | Data Format                   | Location (within Statistics Directory) |
 |:------------------------------|:---------------------------------------|
 | Stata                         | `~/data/stata/*.dta`                   |
