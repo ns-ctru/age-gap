@@ -12,6 +12,25 @@ Detailed Statistical Analysis Plans are provided under `~/doc/sap` although it s
 
 Much of the work done here has been to establish a *work-flow* acknowledging that the final data set in terms of who is allocated to which Primary Treatment (variable : `primary_treatment`) group for their analysis and what their survival status is at a follow-up date are yet to be determined.  As such a few tweaks may be required to the data to ensure when classifications are finalised and survival data is available.  These changes should be made to the `lib/data-raw/import.R` file which reads in and combines the multitude of individual files, if the nomenclature used is maintained then minimal changes will need to be made to the documents in the `vignettes/` directory which produce the reports.
 
+#### Additional Formats
+
+The last section of importing the data (see file `lib/data-raw/import.R`) outputs some of the derived datasets to three different formats, [Stata](https://www.stata.com), [SPSS](https://www.ibm.com/analytics/data-science/predictive-analytics/spss-statistical-software) and [Comma-Separated Values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values).  The derived files that are output and the location of these files is shown in the tables below
+
+| Derived Data Frame (in R)     | Long/Wide | Description                           |
+|:------------------------------|:----------|:-------------------------------------|
+| `age_gap`                     | Long      | A "master" data set of questionnaires and measurements at all time points with baseline measurements for inclusion as co-variates. |
+| `lookups`                     | Wide      | A copy of the `Lookups.csv` exported from Prospect. |
+| `lookups_fields`              | Wide      | A copy of the `fields` worksheet from the [Prospect database specification](https://docs.google.com/spreadsheets/u/1/d/1mi2BsSIDHnslnxtbm1tCUdvt-uJ883iEHO0QOt0wig8/edit?usp=drive_web&ouid=105758021878199349070) maintained by Data Management augmented with definitions of derived variables. |
+| `adverse_events_ae`              | Long      | A copy of the `Adverse Events - AeEvent.csv` exported from Prospect. |
+Table: Derived files that are output in additional formats.
+
+| Data Format                   | Location (within Statistics Directory) |
+|:------------------------------|:---------------------------------------|
+| Stata                         | `~/data/stata/*.dta`                   |
+| SPSS                          | `~/data/spss/*.sav`                    |
+| CSV                           | `~/data/csv/*.csv`                     |
+Table: Location of datasets in additional formats.
+
 #### Primary Treatment Grouping
 
 Primary Treatment Grouping (variable : `primary_treatment`) is derived using the rules defined in the function `agegap_encode()` this is an R file located at `lib/R/agegap_encode.R`.  It is called repeatedly because not everyone has any treatment recorded at six weeks follow-up so the six month data is then looked at, if that too is missing 12 month data and so on.  The code calling this function repeatedly can be found on lines 2265-2412 of the file `lib/data-raw/import.R` although these should not need modifying.  Additionally the relevant methods sections should be modified to reflect the new rules.  Currently this is only the `### Primary Treatment` section on lines 9-39 of `lib/vignettes/survival/methods.Rmd`.
