@@ -14,9 +14,9 @@ Much of the work done here has been to establish a *work-flow* acknowledging tha
 
 #### Additional Formats
 
-The last section of importing the data (see file `lib/data-raw/import.R`) outputs some of the derived datasets to three different formats, [Stata](https://www.stata.com), [SPSS](https://www.ibm.com/analytics/data-science/predictive-analytics/spss-statistical-software) and [Comma-Separated Values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values).  The derived files that are output and the location of these files is shown in the tables below
+The last section of importing the data (see file `lib/data-raw/import.R`) outputs some of the derived datasets to three different formats, [Stata](https://www.stata.com), [SPSS](https://www.ibm.com/analytics/data-science/predictive-analytics/spss-statistical-software) and [Comma-Separated Values (CSV)](https://en.wikipedia.org/wiki/Comma-separated_values).  The derived files that are output and the location of these files under the project directory (`xdrive/PR_Age_Gap/General/Statistics/`) is shown in the tables below
 
-| Derived Data Frame (in R)     | Long/Wide | Description                           |
+| Data Frame Derived in R       | Long/Wide | Description                          |
 |:------------------------------|:----------|:-------------------------------------|
 | `age_gap`                     | Long      | A "master" data set of questionnaires and measurements at all time points with baseline measurements for inclusion as co-variates. |
 | `lookups`                     | Wide      | A copy of the `Lookups.csv` exported from Prospect. |
