@@ -2970,4 +2970,69 @@ save(master, age_gap, primary_treatment_numbers,
      all_var, factor_vars, continuous_vars,
      file = '../data/age-gap.RData',
      compression_level = 9)
-## write_dta(age_gap, version = 14, path = 'stata/age_gap.dta')
+## Output to a multitude of different formats.  There are XX key files written as
+## follows...
+##
+## Data Frame            | Description
+## ----------------------|--------------------------------------------------------
+## age_gap               | A combined "master" data frame with left/right axis
+##                       | variables and many other derived variables included.
+## ----------------------|--------------------------------------------------------
+## master$lookups        | A copy of the database specification used to label
+##                       | factor variables.
+## ----------------------|--------------------------------------------------------
+## master$lookups_fields | Descriptor of fields in age_gap data frame.
+library(haven)
+##
+## CSV
+path       <- "../../data/csv/"
+file_ext   <- "csv"
+na         <- ""
+append_csv <- FALSE
+write_csv(age_gap,
+          path   = paste0(path, "age_gap.", file_ext),
+          na     = na,
+          append = append_csv)
+write_csv(master$lookups,
+          path   = paste0(path, "lookups.", file_ext),
+          na     = na,
+          append = append_csv)
+write_csv(master$lookups_fields,
+          path   = paste0(path, "lookups_fields.", file_ext),
+          na     = na,
+          append = append_csv)
+## SPSS
+path       <- "../../data/spss/"
+file_ext   <- "sav"
+write_sav(age_gap,
+          path    = paste0(path, "age_gap.", file_ext))
+write_sav(master$lookups,
+          path    = paste0(path, "lookups.", file_ext))
+write_sav(master$lookups_fields,
+          path    = paste0(path, "lookups_fields.", file_ext))
+## Stata
+path          <- "../../data/stata/"
+file_ext      <- "dta"
+stata_version <-  14
+## Before writing need to replace '_' with '.' in variable names
+stata_age_gap <- age_gap
+names(stata_age_gap) <- gsub("influence_dcsn_", "", names(stata_age_gap))
+names(stata_age_gap) <- gsub("cont_tlk_hlth_", "", names(stata_age_gap))
+write_dta(stata_age_gap,
+          path    = paste0(path, "age_gap.", file_ext),
+          version = stata_version)
+stata_lookups <- master$lookups %>%
+                 mutate(field = gsub("influence_dcsn_", ".", field),
+                        field = gsub("cont_tlk_hlth_", ".", field))
+write_dta(stata_lookups,
+           path    = paste0(path, "lookups.", file_ext),
+           version = stata_version)
+stata_lookups_fields <- master$lookups_fields %>%
+                        mutate(identifier = gsub("influence_dcsn_", ".", identifier),
+                               identifier = gsub("cont_tlk_hlth_", ".", identifier))
+write_dta(stata_lookups_fields,
+          path    = paste0(path, "lookups_fields.", file_ext),
+          version = stata_version)
+rm(stata_age_gap,
+   stata_lookups,
+   stata_lookups_fields)
